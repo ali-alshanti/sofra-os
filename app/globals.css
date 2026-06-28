@@ -355,7 +355,17 @@
   }
 }
 
+/* Kitchen Display System — urgent ticket border pulse */
+@keyframes ticket-pulse {
+  0%, 100% { border-color: oklch(0.577 0.245 27.325); }
+  50%       { border-color: oklch(0.577 0.245 27.325 / 0.35); }
+}
+
 @layer utilities {
+  .ticket-pulse-urgent {
+    animation: ticket-pulse 2s ease-in-out infinite;
+  }
+
   /* Display — largest type, hero sections */
   .typography-display {
     @apply font-heading;
