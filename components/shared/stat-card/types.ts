@@ -13,9 +13,18 @@ export interface StatCardBadgeStyle {
   color: string;
 }
 
+export type StatCardVariant = "default" | "compact";
+
 export interface StatCardProps {
+  /**
+   * "default" — full card with icon container, 32px value, top-right indicator.
+   * "compact" — no icon, 24px value, label-above layout (Employee KPIs style).
+   */
+  variant?: StatCardVariant;
   title: string;
   value: string;
+  /** Optional CSS color override for the value text */
+  valueColor?: string;
   description?: string;
   icon?: LucideIcon;
   /** CSS color string for the icon container background */

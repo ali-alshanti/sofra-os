@@ -18,7 +18,15 @@ const TREND_STYLE: Record<TrendDirection, { bg: string; color: string }> = {
 
 // ─── Loading skeleton ─────────────────────────────────────────────────────────
 
-function StatCardSkeleton() {
+function StatCardSkeleton({ compact = false }: { compact?: boolean }) {
+  if (compact) {
+    return (
+      <div className="glass-card premium-shadow rounded-2xl p-5 flex flex-col gap-2 animate-pulse border border-border">
+        <div className="h-3 w-24 rounded bg-muted" />
+        <div className="h-6 w-16 rounded bg-muted" />
+      </div>
+    );
+  }
   return (
     <div className="glass-card premium-shadow rounded-2xl p-6 flex flex-col justify-between min-h-35 animate-pulse border border-border">
       <div className="flex justify-between items-start">
@@ -33,24 +41,95 @@ function StatCardSkeleton() {
   );
 }
 
-// ─── StatCard ─────────────────────────────────────────────────────────────────
+// ─── Compact variant ──────────────────────────────────────────────────────────
+// Used for dense KPI rows (Employees feature) — no icon, 24px value, label on top.
 
-export function StatCard({
+function CompactStatCard({
   title,
   value,
+  valueColor,
   description,
-  icon: Icon,
-  iconBg,
-  iconColor,
-  trend,
   badge,
   badgeStyle,
-  pulse = false,
+  pulse,
   pulseLabel,
-  loading = false,
+  trend,
   className,
 }: StatCardProps) {
-  if (loading) return <StatCardSkeleton />;
+  const TrendIcon = trend ? TREND_ICON[trend.direction] : null;
+  const trendStyle = trend ? TREND_STYLE[trend.direction] : null;
+
+  return (
+    <div
+      className={cn(
+        "glass-card premium-shadow rounded-2xl p-5",
+        "flex flex-col gap-2",
+        "border border-border transition-all hover:border-primary/40",
+        className,
+      )}
+    >
+      {/* Label */}
+      <span className="typography-caption text-muted-foreground">{title}</span>
+
+      {/* Value row — value + optional right element */}
+      <div className="flex items-center justify-between gap-2">
+        <span
+          className="text-[24px] font-bold leading-none tracking-tight"
+          style={{ color: valueColor ?? "var(--foreground)" }}
+        >
+          {value}
+        </span>
+
+        {/* Right indicator */}
+        {trend && TrendIcon && trendStyle ? (
+          <span
+            className="inline-flex items-center gap-0.5 text-xs font-medium"
+            style={{ color: trendStyle.color }}
+          >
+            <TrendIcon size={13} />
+            {trend.value}
+          </span>
+        ) : pulse ? (
+          <span
+            className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full animate-pulse"
+            style={{
+              background: "oklch(0.596 0.145 163.225 / 0.1)",
+              color:      "oklch(0.596 0.145 163.225)",
+            }}
+          >
+            {pulseLabel ?? "Live"}
+          </span>
+        ) : badge && badgeStyle ? (
+          <span
+            className="text-xs font-bold px-2 py-0.5 rounded-full"
+            style={{ background: badgeStyle.bg, color: badgeStyle.color }}
+          >
+            {badge}
+          </span>
+        ) : badge ? (
+          <span className="text-xs text-muted-foreground font-medium">{badge}</span>
+        ) : null}
+      </div>
+
+      {description && (
+        <p className="typography-small text-muted-foreground">{description}</p>
+      )}
+    </div>
+  );
+}
+
+// ─── StatCard (dispatcher) ────────────────────────────────────────────────────
+
+export function StatCard({
+  variant = "default",
+  loading = false,
+  ...props
+}: StatCardProps) {
+  if (loading) return <StatCardSkeleton compact={variant === "compact"} />;
+  if (variant === "compact") return <CompactStatCard {...props} />;
+
+  const { title, value, valueColor, description, icon: Icon, iconBg, iconColor,
+          trend, badge, badgeStyle, pulse, pulseLabel, className } = props;
 
   const TrendIcon = trend ? TREND_ICON[trend.direction] : null;
   const trendStyle = trend ? TREND_STYLE[trend.direction] : null;
@@ -66,7 +145,6 @@ export function StatCard({
     >
       {/* Top row — icon + right indicator */}
       <div className="flex justify-between items-start gap-3">
-        {/* Icon container */}
         {Icon && (
           <div
             className="p-3 rounded-xl shrink-0"
@@ -79,7 +157,6 @@ export function StatCard({
           </div>
         )}
 
-        {/* Right indicator: trend badge, plain badge, or pulse */}
         <div className="ml-auto">
           {trend && TrendIcon && trendStyle ? (
             <span
@@ -118,7 +195,10 @@ export function StatCard({
         <p className="typography-caption uppercase tracking-widest text-muted-foreground">
           {title}
         </p>
-        <p className="mt-1 text-[32px] font-semibold leading-tight tracking-[-0.02em] text-foreground">
+        <p
+          className="mt-1 text-[32px] font-semibold leading-tight tracking-[-0.02em]"
+          style={{ color: valueColor ?? "var(--foreground)" }}
+        >
           {value}
         </p>
         {description && (
