@@ -1,0 +1,73 @@
+"use client";
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCurrentUser } from "./use-auth";
+import { QUERY_KEYS } from "@/lib/constants/query-keys";
+import {
+  getTables,
+  updateTableStatus,
+  getReservations,
+  cancelReservation,
+} from "@/services/tables";
+import type { TableStatus } from "@/features/tables/components/table-card";
+
+// ─── useTables ────────────────────────────────────────────────────────────────
+
+export function useTables() {
+  const { user } = useCurrentUser();
+  const restaurantId = user?.restaurant_id ?? "";
+
+  return useQuery({
+    queryKey: QUERY_KEYS.tables.floor(restaurantId),
+    queryFn:  () => getTables(restaurantId),
+    enabled:  !!restaurantId,
+    staleTime: 30 * 1000,          // tables change frequently
+    refetchInterval: 30 * 1000,    // auto-refresh occupancy every 30s
+  });
+}
+
+// ─── useUpdateTableStatus ─────────────────────────────────────────────────────
+
+export function useUpdateTableStatus() {
+  const queryClient  = useQueryClient();
+  const { user }     = useCurrentUser();
+  const restaurantId = user?.restaurant_id ?? "";
+
+  return useMutation({
+    mutationFn: ({ tableId, status }: { tableId: string; status: TableStatus }) =>
+      updateTableStatus(tableId, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.tables.all });
+      // Dashboard occupancy KPIs also update
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.all });
+    },
+  });
+}
+
+// ─── useReservations ──────────────────────────────────────────────────────────
+
+export function useReservations() {
+  const { user } = useCurrentUser();
+  const restaurantId = user?.restaurant_id ?? "";
+
+  return useQuery({
+    queryKey: QUERY_KEYS.tables.reservations(restaurantId),
+    queryFn:  () => getReservations(restaurantId),
+    enabled:  !!restaurantId,
+    staleTime: 60 * 1000,
+    refetchInterval: 60 * 1000,
+  });
+}
+
+// ─── useCancelReservation ─────────────────────────────────────────────────────
+
+export function useCancelReservation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (reservationId: string) => cancelReservation(reservationId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.tables.all });
+    },
+  });
+}

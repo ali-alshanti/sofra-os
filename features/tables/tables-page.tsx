@@ -2,28 +2,27 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { AppShell } from "@/components/layout/app-shell";
+import { AppShell }   from "@/components/layout/app-shell";
 import { PageHeader } from "@/components/shared/page-header";
-import { Button } from "@/components/ui/button";
-import { FloorPlan } from "./components/floor-plan";
-import { ReservationPanel } from "./components/reservation-panel";
-import { StatusLegend } from "./components/status-legend";
+import { Button }     from "@/components/ui/button";
+import { FloorPlan }         from "./components/floor-plan";
+import { ReservationPanel }  from "./components/reservation-panel";
+import { StatusLegend }      from "./components/status-legend";
+import { useTables, useReservations } from "@/lib/hooks/use-tables";
 
 export function TablesFeature() {
   const [selectedTableId, setSelectedTableId] = useState<string | undefined>();
 
+  const { data: tablesData, isLoading: tablesLoading } = useTables();
+  const { data: reservations = [], isLoading: reservationsLoading } = useReservations();
+
   return (
     <AppShell>
-      {/*
-        Override AppShell's default content padding with -m-6 so we can control
-        the layout ourselves — matching Stitch's full-bleed two-column structure.
-      */}
       <div className="flex h-full -m-6 overflow-hidden">
 
-        {/* ── Left: Floor Area ────────────────────────────────────────────── */}
+        {/* ── Left: Floor Area ─────────────────────────────────────────────── */}
         <div className="flex flex-1 flex-col overflow-hidden">
 
-          {/* Compact page header inside the floor area */}
           <div className="shrink-0 px-6 pt-5 pb-4">
             <PageHeader
               title="Floor Plan & Reservations"
@@ -38,16 +37,20 @@ export function TablesFeature() {
             <StatusLegend className="mt-3" />
           </div>
 
-          {/* Floor plan — fills remaining height, scrollable */}
           <FloorPlan
+            tables={tablesLoading ? undefined : tablesData?.squareTables}
+            barSeats={tablesLoading ? undefined : tablesData?.barSeats}
             selectedTableId={selectedTableId}
             onTableSelect={setSelectedTableId}
             className="flex-1"
           />
         </div>
 
-        {/* ── Right: Reservation Panel — true full-height sidebar ─────────── */}
-        <ReservationPanel className="hidden md:flex shrink-0" />
+        {/* ── Right: Reservation Panel ──────────────────────────────────────── */}
+        <ReservationPanel
+          reservations={reservations}
+          className="hidden md:flex shrink-0"
+        />
 
       </div>
     </AppShell>
