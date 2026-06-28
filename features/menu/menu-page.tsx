@@ -126,12 +126,6 @@ export function MenuFeature() {
               </h3>
             </div>
 
-            {/*
-              AddMenuCard must share the same grid as MenuCard
-              (Stitch design: it's the last cell in the product grid).
-              MenuGrid creates its own grid wrapper, so we render
-              MenuCard + AddMenuCard together here.
-            */}
             <div className={GRID_CLASSES}>
               {filteredItems.map((item) => (
                 <MenuCard

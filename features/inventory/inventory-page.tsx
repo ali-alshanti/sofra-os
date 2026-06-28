@@ -97,9 +97,9 @@ export function InventoryFeature() {
     <AppShell>
       <div className="space-y-6">
         <InventoryHeader
-          onRefresh={() => console.log("refresh")}
-          onExport={() => console.log("export")}
-          onAddItem={() => console.log("add item")}
+          onRefresh={() => undefined}
+          onExport={() => undefined}
+          onAddItem={() => undefined}
         />
 
         <InventorySummary stats={PLACEHOLDER_STATS} />
@@ -116,9 +116,9 @@ export function InventoryFeature() {
 
         <InventoryTable
           items={filteredItems}
-          onView={(id) => console.log("view", id)}
-          onEdit={(id) => console.log("edit", id)}
-          onDelete={(id) => console.log("delete", id)}
+          onView={(id) => undefined}
+          onEdit={(id) => undefined}
+          onDelete={(id) => undefined}
           pagination={
             <Pagination
               currentPage={currentPage}

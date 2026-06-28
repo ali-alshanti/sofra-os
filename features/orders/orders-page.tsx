@@ -19,7 +19,7 @@ import {
 } from "./components/orders-filters";
 import { OrdersTable } from "./components/orders-table";
 import { OrderRow, type OrderData } from "./components/order-row";
-import { OrdersPagination } from "./components/orders-pagination";
+import { Pagination } from "@/components/shared/pagination";
 
 // ─── Orders KPI Data ──────────────────────────────────────────────────────────
 
@@ -163,7 +163,7 @@ export function OrdersFeature() {
         {/* Table + Pagination */}
         <OrdersTable
           footer={
-            <OrdersPagination
+            <Pagination
               currentPage={currentPage}
               totalPages={15}
               totalItems={142}

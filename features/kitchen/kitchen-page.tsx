@@ -10,10 +10,8 @@ import type { TicketStatus } from "./components/kitchen-ticket";
 export function KitchenFeature() {
   const [filters, setFilters] = useState<KitchenFiltersValue>(DEFAULT_KITCHEN_FILTERS);
 
-  function handleAction(id: string, status: TicketStatus) {
-    // Placeholder — will call API to advance ticket status
-    console.log("advance", id, status);
-  }
+  // TODO: connect to API — advance ticket from current status to next
+  function handleAction(_id: string, _status: TicketStatus) {}
 
   const filteredOrders = PLACEHOLDER_ORDERS.filter((order) => {
     if (filters.station  !== "all" && order.station.toLowerCase() !== filters.station) return false;
@@ -34,9 +32,9 @@ export function KitchenFeature() {
     <AppShell>
       <div className="space-y-6">
         <KitchenHeader
-          onRefresh={() => console.log("refresh")}
-          onFilter={() => console.log("filter")}
-          onFullscreen={() => console.log("fullscreen")}
+          onRefresh={() => undefined}
+          onFilter={() => undefined}
+          onFullscreen={() => undefined}
         />
 
         <KitchenFilters
