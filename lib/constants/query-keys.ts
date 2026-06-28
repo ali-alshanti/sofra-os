@@ -14,11 +14,11 @@ export const QUERY_KEYS = {
   },
 
   orders: {
-    all: ["orders"] as const,
-    lists: () => [...QUERY_KEYS.orders.all, "list"] as const,
-    list: (filters?: Record<string, unknown>) =>
-      [...QUERY_KEYS.orders.lists(), filters] as const,
-    detail: (id: string) => [...QUERY_KEYS.orders.all, "detail", id] as const,
+    all:     ["orders"] as const,
+    lists:   () => [...QUERY_KEYS.orders.all, "list"] as const,
+    list:    (filters?: Record<string, unknown>) => [...QUERY_KEYS.orders.lists(), filters] as const,
+    detail:  (id: string)          => [...QUERY_KEYS.orders.all, "detail",  id] as const,
+    summary: (restaurantId: string) => [...QUERY_KEYS.orders.all, "summary", restaurantId] as const,
   },
 
   menu: {
