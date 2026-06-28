@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -35,7 +36,7 @@ function FieldRow({
   label:    string;
   htmlFor:  string;
   hint?:    string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-3 sm:items-start">

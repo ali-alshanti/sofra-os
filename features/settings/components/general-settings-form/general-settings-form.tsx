@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { ImagePlus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { SettingsSectionCard } from "@/features/settings/components/settings-section-card";
@@ -12,7 +13,7 @@ function FieldRow({
 }: {
   label:   string;
   htmlFor: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-3 sm:items-center">

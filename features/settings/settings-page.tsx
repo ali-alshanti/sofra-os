@@ -187,7 +187,7 @@ export function SettingsFeature() {
         />
 
         {/* Main Layout */}
-        <div className="flex flex-1 gap-6 items-start">
+        <div className="flex flex-col flex-1 gap-6 items-start lg:flex-row">
 
           {/* Sidebar — sticky on desktop */}
           <aside className="hidden lg:block w-64 shrink-0 sticky top-0">
@@ -197,12 +197,11 @@ export function SettingsFeature() {
             />
           </aside>
 
-          {/* Mobile tab strip */}
-          <div className="lg:hidden w-full overflow-x-auto pb-2">
+          {/* Mobile section nav — scrollable vertical list above the forms */}
+          <div className="lg:hidden w-full overflow-y-auto max-h-56 rounded-xl border border-border bg-card p-2">
             <SettingsSidebar
               activeSection={activeSection}
               onSectionChange={handleSectionChange}
-              className="flex-row flex-nowrap"
             />
           </div>
 

@@ -75,7 +75,9 @@ export function SettingsSidebar({
 }: SettingsSidebarProps) {
   return (
     <nav
+      role="tablist"
       aria-label="Settings navigation"
+      aria-orientation="vertical"
       className={cn(
         "flex flex-col gap-1",
         className,
