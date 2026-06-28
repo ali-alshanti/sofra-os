@@ -43,12 +43,11 @@ export const QUERY_KEYS = {
   },
 
   customers: {
-    all: ["customers"] as const,
-    lists: () => [...QUERY_KEYS.customers.all, "list"] as const,
-    list: (filters?: Record<string, unknown>) =>
-      [...QUERY_KEYS.customers.lists(), filters] as const,
-    detail: (id: string) =>
-      [...QUERY_KEYS.customers.all, "detail", id] as const,
+    all:     ["customers"] as const,
+    lists:   () => [...QUERY_KEYS.customers.all, "list"] as const,
+    list:    (filters?: Record<string, unknown>) => [...QUERY_KEYS.customers.lists(), filters] as const,
+    detail:  (id: string)          => [...QUERY_KEYS.customers.all, "detail",  id] as const,
+    summary: (restaurantId: string) => [...QUERY_KEYS.customers.all, "summary", restaurantId] as const,
   },
 
   employees: {
