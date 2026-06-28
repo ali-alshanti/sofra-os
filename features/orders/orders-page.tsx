@@ -6,12 +6,12 @@ import {
   Clock,
   CheckCircle,
   DollarSign,
+  Plus,
 } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import {
   OrdersFilters,
   DEFAULT_FILTERS,

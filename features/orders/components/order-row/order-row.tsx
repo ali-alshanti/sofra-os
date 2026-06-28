@@ -33,7 +33,7 @@ export interface OrderData {
   };
   itemsCount: number;
   total: number;
-  status: OrderStatus;
+  status: Exclude<OrderStatus, "all">;
   createdAt: Date | string;
 }
 
@@ -50,8 +50,7 @@ const STATUS_CONFIG: Record<
   cancelled: { label: "Cancelled", bg: "oklch(0.577 0.245 27.325 / 0.1)",  color: "oklch(0.577 0.245 27.325)" },
 };
 
-function StatusBadge({ status }: { status: OrderStatus }) {
-  if (status === "all") return null;
+function StatusBadge({ status }: { status: Exclude<OrderStatus, "all"> }) {
   const { label, bg, color } = STATUS_CONFIG[status];
   return (
     <span

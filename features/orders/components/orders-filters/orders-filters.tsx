@@ -129,6 +129,7 @@ export function OrdersFilters({
         <Input
           type="search"
           placeholder="Search orders, items, tables…"
+          aria-label="Search orders"
           value={value.search}
           onChange={(e) => onChange({ search: e.target.value })}
           className="h-9 pl-9 text-sm"
@@ -140,7 +141,7 @@ export function OrdersFilters({
         value={value.status}
         onValueChange={(v) => onChange({ status: v as OrderStatus })}
       >
-        <SelectTrigger className="h-9 w-[160px] text-sm">
+        <SelectTrigger className="h-9 w-40 text-sm">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent>
@@ -157,7 +158,7 @@ export function OrdersFilters({
         value={value.tableId}
         onValueChange={(v) => onChange({ tableId: v })}
       >
-        <SelectTrigger className="h-9 w-[140px] text-sm">
+        <SelectTrigger className="h-9 w-40 text-sm">
           <SelectValue placeholder="Table" />
         </SelectTrigger>
         <SelectContent>
@@ -174,7 +175,7 @@ export function OrdersFilters({
         value={value.waiterId}
         onValueChange={(v) => onChange({ waiterId: v })}
       >
-        <SelectTrigger className="h-9 w-[150px] text-sm">
+        <SelectTrigger className="h-9 w-40 text-sm">
           <SelectValue placeholder="Waiter" />
         </SelectTrigger>
         <SelectContent>
@@ -191,7 +192,7 @@ export function OrdersFilters({
         value={value.orderType}
         onValueChange={(v) => onChange({ orderType: v as OrderType })}
       >
-        <SelectTrigger className="h-9 w-[140px] text-sm">
+        <SelectTrigger className="h-9 w-40 text-sm">
           <SelectValue placeholder="Order Type" />
         </SelectTrigger>
         <SelectContent>

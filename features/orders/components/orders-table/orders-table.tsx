@@ -61,7 +61,11 @@ export function OrdersTable({
   footer,
   className,
 }: OrdersTableProps) {
-  const isEmpty = !loading && !children;
+  const isEmpty =
+    !loading &&
+    (children === undefined ||
+      children === null ||
+      (Array.isArray(children) && children.length === 0));
 
   return (
     <div className={cn("glass-card premium-shadow rounded-[16px] overflow-hidden", className)}>
