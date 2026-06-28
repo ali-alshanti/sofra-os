@@ -66,16 +66,16 @@ export function InsightCard({
       {insight.cta && (
         <div className="pt-1">
           <Button
+            asChild
             variant="ghost"
             size="sm"
             className="h-7 gap-1 px-0 text-primary hover:bg-transparent hover:text-primary/80 text-xs font-medium"
-            onClick={(e) => {
-              e.stopPropagation();
-              window.location.href = insight.cta!.href;
-            }}
+            onClick={(e) => e.stopPropagation()}
           >
-            {insight.cta.label}
-            <ArrowUpRight size={13} />
+            <a href={insight.cta.href}>
+              {insight.cta.label}
+              <ArrowUpRight size={13} />
+            </a>
           </Button>
         </div>
       )}

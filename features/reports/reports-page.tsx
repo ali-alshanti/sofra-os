@@ -6,6 +6,7 @@ import {
   Star,
   AlertTriangle,
   Users,
+  type LucideIcon,
 } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
 import { Pagination } from "@/components/shared/pagination";
@@ -55,8 +56,8 @@ const PLACEHOLDER_CATEGORIES: CategorySales[] = [
 
 const PLACEHOLDER_INSIGHTS: Array<
   Insight & {
-    icon:      React.ComponentType<{ size?: number }>;
-    iconBg?:   string;
+    icon:       LucideIcon;
+    iconBg?:    string;
     iconColor?: string;
   }
 > = [
@@ -165,9 +166,9 @@ export function ReportsFeature() {
 
         {/* 1 — Header */}
         <ReportHeader
-          onExport={  () => undefined}
-          onRefresh={ () => undefined}
-          onSchedule={() => undefined}
+          onExport={  () => undefined }
+          onRefresh={ () => undefined }
+          onSchedule={() => undefined }
         />
 
         {/* 2 — KPI Summary */}
@@ -202,9 +203,9 @@ export function ReportsFeature() {
         {/* 6 — Reports Table */}
         <ReportsTable
           reports={PLACEHOLDER_REPORTS}
-          onView={     (id) => undefined}
-          onDownload={ (id) => undefined}
-          onDelete={   (id) => undefined}
+          onView={    (_id) => undefined }
+          onDownload={ (_id) => undefined }
+          onDelete={  (_id) => undefined }
           pagination={
             <Pagination
               currentPage={currentPage}

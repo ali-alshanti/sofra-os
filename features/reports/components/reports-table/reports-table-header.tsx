@@ -1,4 +1,5 @@
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 
 export const REPORTS_COLUMNS = [
   { key: "name",        label: "Report Name",  className: ""           },
@@ -18,7 +19,7 @@ export function ReportsTableHeader() {
         {REPORTS_COLUMNS.map((col) => (
           <TableHead
             key={col.key}
-            className={`typography-caption uppercase tracking-widest text-muted-foreground font-medium ${col.className}`}
+            className={cn("typography-caption uppercase tracking-widest text-muted-foreground font-medium", col.className)}
           >
             {col.label}
           </TableHead>

@@ -14,7 +14,7 @@ const BAR_COLORS = [
   "oklch(0.696 0.170 162.480)",  // emerald-500
   "oklch(0.765 0.177 163.223)",  // emerald-400
   "oklch(0.845 0.143 164.978)",  // emerald-300
-  "oklch(0.929 0.013 255.508)",  // slate-200
+  "oklch(0.704 0.040 256.788)",  // slate-400  — visible on both light and dark
 ] as const;
 
 export function CategoryChartPlaceholder() {
