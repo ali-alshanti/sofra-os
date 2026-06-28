@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { ThemeProvider } from "@/lib/providers/theme-provider";
+import { ReactQueryProvider } from "@/lib/providers/react-query-provider";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -9,14 +10,15 @@ interface ProvidersProps {
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
-      {/* Future providers go here, wrapping children further inward */}
-      {children}
-    </ThemeProvider>
+    <ReactQueryProvider>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        {children}
+      </ThemeProvider>
+    </ReactQueryProvider>
   );
 }
