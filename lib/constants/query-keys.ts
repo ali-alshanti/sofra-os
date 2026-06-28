@@ -6,9 +6,11 @@ export const QUERY_KEYS = {
   },
 
   dashboard: {
-    all: ["dashboard"] as const,
-    summary: () => [...QUERY_KEYS.dashboard.all, "summary"] as const,
-    stats: () => [...QUERY_KEYS.dashboard.all, "stats"] as const,
+    all:             ["dashboard"] as const,
+    summary:         (restaurantId: string) => [...QUERY_KEYS.dashboard.all, "summary",          restaurantId] as const,
+    revenue:         (restaurantId: string) => [...QUERY_KEYS.dashboard.all, "revenue",          restaurantId] as const,
+    topItems:        (restaurantId: string) => [...QUERY_KEYS.dashboard.all, "top-items",        restaurantId] as const,
+    inventoryAlerts: (restaurantId: string) => [...QUERY_KEYS.dashboard.all, "inventory-alerts", restaurantId] as const,
   },
 
   orders: {
