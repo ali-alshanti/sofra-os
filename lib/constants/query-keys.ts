@@ -22,12 +22,13 @@ export const QUERY_KEYS = {
   },
 
   menu: {
-    all: ["menu"] as const,
-    lists: () => [...QUERY_KEYS.menu.all, "list"] as const,
-    list: (filters?: Record<string, unknown>) =>
-      [...QUERY_KEYS.menu.lists(), filters] as const,
-    detail: (id: string) => [...QUERY_KEYS.menu.all, "detail", id] as const,
-    categories: () => [...QUERY_KEYS.menu.all, "categories"] as const,
+    all:        ["menu"] as const,
+    lists:      () => [...QUERY_KEYS.menu.all, "list"] as const,
+    list:       (filters?: Record<string, unknown>) => [...QUERY_KEYS.menu.lists(), filters] as const,
+    detail:     (id: string) => [...QUERY_KEYS.menu.all, "detail", id] as const,
+    categories: (restaurantId: string) => [...QUERY_KEYS.menu.all, "categories", restaurantId] as const,
+    items:      (restaurantId: string, categoryId?: string, search?: string) =>
+      [...QUERY_KEYS.menu.all, "items", restaurantId, categoryId, search] as const,
   },
 
   inventory: {

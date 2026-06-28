@@ -1,89 +1,63 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
-import { AppShell } from "@/components/layout/app-shell";
+import { Plus, UtensilsCrossed } from "lucide-react";
+import { AppShell }   from "@/components/layout/app-shell";
 import { PageHeader } from "@/components/shared/page-header";
-import { Button } from "@/components/ui/button";
-import { CategorySidebar, type CategoryItemData } from "./components/category-sidebar";
-import { MenuCard, type MenuItem } from "./components/menu-card";
-import { AddMenuCard } from "./components/add-menu-card";
-
-// ─── Placeholder Data ─────────────────────────────────────────────────────────
-
-const CATEGORIES: CategoryItemData[] = [
-  { id: "appetizers", name: "Appetizers", count: 12 },
-  { id: "mains",      name: "Mains",      count: 24 },
-  { id: "desserts",   name: "Desserts",   count: 8  },
-  { id: "drinks",     name: "Drinks",     count: 16 },
-];
-
-const MENU_ITEMS: MenuItem[] = [
-  {
-    id: "1",
-    name: "Saffron Sea Bass",
-    description: "Wild-caught bass with aromatic saffron-infused arborio rice and spring greens.",
-    price: 34.00,
-    category: "mains",
-    available: true,
-    badge: "Best Seller",
-    imageSrc: "https://lh3.googleusercontent.com/aida-public/AB6AXuDMvSr46b0xgOg-jJriXLR9U2xLNEqf_oBtpSJ9-lmnVY4ZRBhiQJWVLRfGOrJb0qLh_kYJSsPWhNBprEIyr0I_JCEk8dm8BLYYcDlmt1jppjXDpM05mQhE3HE-xmSIuGAZJ8Zit8VKZvgnpELL6dQFIvX6RdrtNHhpydNN8ET6gOPKTGABt5vt72WLXAj4a3uhSqSDKtaHZojj36geS6eK_qlwM-C2mKa_Mg97xWa78vqVEWNF_-zrM18fWZYWrj80ikXFZlD6qA",
-  },
-  {
-    id: "2",
-    name: "Wagyu Ribeye",
-    description: "12oz A5 Wagyu beef aged for 45 days, served with truffle butter bone marrow.",
-    price: 85.00,
-    category: "mains",
-    available: true,
-    imageSrc: "https://lh3.googleusercontent.com/aida-public/AB6AXuDgCeW9nSGsCTQEtSUUmVOh-u5WXrEHIGh3_B9ZqW38S4DCBYYk0mpGxkURiePt8jE_zTCeAdsAl4maCcU0MbIrwVt6oQOk23EOJQVkbMxB3Hrbd8Ss4U6JBjdDF_QzIknoUDnvmfpcTsp88huF9d3jtmY-uccn3OLvzJWd1JAnaoWOlkXVlS0EEzdEqvv5Emy8uBKv3iauxMRH7vvGrp6vPhlF8VO_d3igU4KnXm3RIcCcoh3SysipmSARZbyoEiy72cUfYrLzCg",
-  },
-  {
-    id: "3",
-    name: "Wild Boar Ragu",
-    description: "Slow-simmered Tuscan ragu with hand-cut wide ribbons of egg pasta.",
-    price: 28.00,
-    category: "mains",
-    available: true,
-    imageSrc: "https://lh3.googleusercontent.com/aida-public/AB6AXuC3z4cVRbG_2qeOcKp8fIFRwpBrtKVT3JQmTZ3tUlBt3AhLDQSmzaKiBoEUbQkUbYp67STfl6oQ4AweDaIMVs0T0Re0CWPXYw6IK4orz6HzrGsanzTMms4aQJ0-H_y7uLxYlEzf5h791jprYFFz5Od_hl7vygx12zVriJRIzFpzVjaxaV6FeNdYfL6_pGZ59Kp1ExD9hErtbOYCwtqfJVbVNlpGD301LagKYyRqSxJX79kyxoIRUp1etcWg_07i5z0wDIIUSaG_Nw",
-  },
-  {
-    id: "4",
-    name: "Roasted Cauliflower",
-    description: "Zatar spiced cauliflower with tahini emulsion and mint oil.",
-    price: 22.00,
-    category: "mains",
-    available: false,
-    imageSrc: "https://lh3.googleusercontent.com/aida-public/AB6AXuCxPdsLTfmcrL4F6pFnqOySX9QBgjHju5zzIkcwjuOAvr7d7nEQQLmZVC5EbZXo277QKKZjrsuyWfxR-AZfQabGWbUYdRbEVUmcYD8VjZwE6LUdwgoLge3-qjBsufwq289bF2vk-6vbWqlJ3WzgRW0wH4AXzz8a1CViRm2JtVc1nG5xtI0dZQSS-v4NCykqQx_LSPW5c1qjiVbq5t-Jh4lCqjF8c0ypJWBchwoT62BCO8uPT2uH9H3XDCtM6_ocm-IX-3yFEBMpcg",
-  },
-  {
-    id: "5",
-    name: "Crispy Sliders",
-    description: "Buttermilk fried chicken on toasted brioche with honey-habanero glaze.",
-    price: 18.00,
-    category: "mains",
-    available: true,
-    imageSrc: "https://lh3.googleusercontent.com/aida-public/AB6AXuAhrzPLsWphyUtBuE5EM3ooaW2NM1cBUq6boKyflgrtjiNwIYXIT27mjM51yIIPtl1809pV4TsbrL9wBVS78UPMuxiCkFaKWknnHZkYXwfCN4U2s5x-Ng6vcNq61CAYGbwDOmImsX9mzpYHdV4l7SiMqe2xifrBm4Y4LKFvArUDcZim5sJ-OJGzvi2vGJq65GS62eCHgv3j9wtFygX4XGWOmvAICc2exrtaJykAQPNNnns1az1sjjmEx-gpFZO0CqTpt_o2K-XF3w",
-  },
-];
-
-// ─── Responsive grid shared between cards and AddMenuCard ─────────────────────
+import { EmptyState } from "@/components/shared/empty-state";
+import { Button }     from "@/components/ui/button";
+import { CategorySidebar } from "./components/category-sidebar";
+import { MenuCard }        from "./components/menu-card";
+import { AddMenuCard }     from "./components/add-menu-card";
+import { useMenuCategories, useMenuItems, useUpdateMenuItemAvailability } from "@/lib/hooks/use-menu";
 
 const GRID_CLASSES = "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3";
 
-// ─── Menu Feature ─────────────────────────────────────────────────────────────
+// Skeleton card for loading state
+function MenuCardSkeleton() {
+  return (
+    <div className="rounded-2xl border border-border/30 bg-card overflow-hidden animate-pulse">
+      <div className="h-48 bg-muted" />
+      <div className="p-5 space-y-3">
+        <div className="flex justify-between">
+          <div className="h-5 w-32 rounded bg-muted" />
+          <div className="h-5 w-14 rounded bg-muted" />
+        </div>
+        <div className="h-3 w-full rounded bg-muted/60" />
+        <div className="h-3 w-4/5 rounded bg-muted/60" />
+        <div className="pt-2 flex justify-between border-t border-border/20">
+          <div className="h-3 w-20 rounded bg-muted/60" />
+          <div className="h-5 w-10 rounded-full bg-muted" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function MenuFeature() {
-  const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[1].id);
-  const [items, setItems] = useState<MenuItem[]>(MENU_ITEMS);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
-  const activeCategory = CATEGORIES.find((c) => c.id === selectedCategory);
-  const filteredItems = items.filter((item) => item.category === selectedCategory);
+  // ─── Data ──────────────────────────────────────────────────────────────────
+  const { data: categories = [], isLoading: catsLoading } = useMenuCategories();
 
-  function handleAvailabilityChange(id: string, available: boolean) {
-    setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, available } : item)),
-    );
+  // Default to first category once loaded
+  const activeCategoryId = selectedCategory || categories[0]?.id || "";
+
+  const { data: items = [], isLoading: itemsLoading } = useMenuItems(
+    activeCategoryId || undefined,
+  );
+
+  const updateAvailability = useUpdateMenuItemAvailability();
+
+  const activeCategory = categories.find((c) => c.id === activeCategoryId);
+
+  // ─── Handlers ──────────────────────────────────────────────────────────────
+  function handleCategoryChange(id: string) {
+    setSelectedCategory(id);
+  }
+
+  function handleAvailabilityChange(itemId: string, available: boolean) {
+    updateAvailability.mutate({ itemId, available });
   }
 
   return (
@@ -107,9 +81,9 @@ export function MenuFeature() {
 
           {/* Category Sidebar */}
           <CategorySidebar
-            categories={CATEGORIES}
-            selectedId={selectedCategory}
-            onCategoryChange={setSelectedCategory}
+            categories={catsLoading ? [] : categories}
+            selectedId={activeCategoryId}
+            onCategoryChange={handleCategoryChange}
             className="self-start md:sticky md:top-20"
           />
 
@@ -119,23 +93,46 @@ export function MenuFeature() {
             <div className="flex items-center gap-3">
               <span className="h-2 w-2 rounded-full bg-primary" />
               <h3 className="text-[24px] font-medium leading-[1.4] text-foreground">
-                {activeCategory?.name}{" "}
-                <span className="text-base font-normal text-muted-foreground ml-2">
-                  ({activeCategory?.count} Items)
-                </span>
+                {activeCategory?.name ?? "Menu"}{" "}
+                {!itemsLoading && (
+                  <span className="text-base font-normal text-muted-foreground ml-2">
+                    ({items.length} Items)
+                  </span>
+                )}
               </h3>
             </div>
 
-            <div className={GRID_CLASSES}>
-              {filteredItems.map((item) => (
-                <MenuCard
-                  key={item.id}
-                  item={item}
-                  onAvailabilityChange={handleAvailabilityChange}
-                />
-              ))}
-              <AddMenuCard />
-            </div>
+            {/* Grid */}
+            {itemsLoading ? (
+              <div className={GRID_CLASSES}>
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <MenuCardSkeleton key={i} />
+                ))}
+                <AddMenuCard />
+              </div>
+            ) : items.length === 0 && !catsLoading ? (
+              <div className={GRID_CLASSES}>
+                <div className="col-span-full">
+                  <EmptyState
+                    icon={UtensilsCrossed}
+                    title="No items in this category"
+                    description="Add your first menu item to get started."
+                  />
+                </div>
+                <AddMenuCard />
+              </div>
+            ) : (
+              <div className={GRID_CLASSES}>
+                {items.map((item) => (
+                  <MenuCard
+                    key={item.id}
+                    item={item}
+                    onAvailabilityChange={handleAvailabilityChange}
+                  />
+                ))}
+                <AddMenuCard />
+              </div>
+            )}
           </section>
 
         </div>
