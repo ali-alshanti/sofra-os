@@ -9,39 +9,27 @@ import {
   UserCog,
   BarChart2,
   Settings,
-  type LucideIcon,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { ROUTES } from "@/lib/constants/routes";
 import { APP_NAME } from "@/lib/constants/app";
-
-// ─── Types ───────────────────────────────────────────────────────────────────
-
-interface NavItem {
-  label: string;
-  icon: LucideIcon;
-  href: string;
-}
+import { ROUTES } from "@/lib/constants/routes";
+import { SidebarNav, type NavItem } from "@/components/layout/sidebar/sidebar-nav";
+import { SidebarNavItem } from "@/components/layout/sidebar/sidebar-nav-item";
 
 // ─── Navigation Config ───────────────────────────────────────────────────────
 
 const NAV_ITEMS: NavItem[] = [
   { label: "Dashboard", icon: LayoutDashboard, href: ROUTES.DASHBOARD },
-  { label: "Orders", icon: ShoppingBag, href: ROUTES.ORDERS },
-  { label: "Menu", icon: UtensilsCrossed, href: ROUTES.MENU },
-  { label: "Tables", icon: LayoutGrid, href: ROUTES.TABLES },
-  { label: "Kitchen", icon: ChefHat, href: ROUTES.KITCHEN },
-  { label: "Inventory", icon: Package, href: ROUTES.INVENTORY },
-  { label: "Customers", icon: Users, href: ROUTES.CUSTOMERS },
-  { label: "Employees", icon: UserCog, href: ROUTES.EMPLOYEES },
-  { label: "Reports", icon: BarChart2, href: ROUTES.REPORTS },
+  { label: "Orders",    icon: ShoppingBag,    href: ROUTES.ORDERS },
+  { label: "Menu",      icon: UtensilsCrossed, href: ROUTES.MENU },
+  { label: "Tables",    icon: LayoutGrid,     href: ROUTES.TABLES },
+  { label: "Kitchen",   icon: ChefHat,        href: ROUTES.KITCHEN },
+  { label: "Inventory", icon: Package,        href: ROUTES.INVENTORY },
+  { label: "Customers", icon: Users,          href: ROUTES.CUSTOMERS },
+  { label: "Employees", icon: UserCog,        href: ROUTES.EMPLOYEES },
+  { label: "Reports",   icon: BarChart2,      href: ROUTES.REPORTS },
 ];
 
-const BOTTOM_ITEMS: NavItem[] = [
-  { label: "Settings", icon: Settings, href: ROUTES.SETTINGS },
-];
-
-// ─── Sub-components ──────────────────────────────────────────────────────────
+// ─── Logo ─────────────────────────────────────────────────────────────────────
 
 function SidebarLogo() {
   return (
@@ -56,66 +44,27 @@ function SidebarLogo() {
   );
 }
 
-interface SidebarNavItemProps {
-  item: NavItem;
-  active?: boolean;
-}
-
-function SidebarNavItem({ item, active = false }: SidebarNavItemProps) {
-  const Icon = item.icon;
-
-  return (
-    <a
-      href={item.href}
-      className={cn(
-        "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
-        active
-          ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-          : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-      )}
-    >
-      <Icon
-        className={cn(
-          "h-4 w-4 shrink-0 transition-colors",
-          active
-            ? "text-primary"
-            : "text-sidebar-foreground group-hover:text-primary",
-        )}
-      />
-      {item.label}
-    </a>
-  );
-}
-
-function SidebarNav() {
-  return (
-    <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
-      {NAV_ITEMS.map((item) => (
-        <SidebarNavItem key={item.href} item={item} />
-      ))}
-    </nav>
-  );
-}
+// ─── Bottom ───────────────────────────────────────────────────────────────────
 
 function SidebarBottom() {
   return (
     <div className="shrink-0 border-t border-sidebar-border px-3 py-4">
-      <div className="flex flex-col gap-1">
-        {BOTTOM_ITEMS.map((item) => (
-          <SidebarNavItem key={item.href} item={item} />
-        ))}
-      </div>
+      <SidebarNavItem
+        icon={Settings}
+        label="Settings"
+        href={ROUTES.SETTINGS}
+      />
 
       {/* User profile placeholder */}
-      <div className="mt-3 flex items-center gap-3 rounded-lg px-3 py-2">
+      <div className="mt-2 flex items-center gap-3 rounded-lg px-3 py-2">
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
           U
         </div>
-        <div className="flex flex-col">
-          <span className="text-sm font-medium text-sidebar-foreground">
+        <div className="flex min-w-0 flex-col">
+          <span className="truncate text-sm font-medium text-sidebar-foreground">
             User Name
           </span>
-          <span className="typography-caption text-muted-foreground">
+          <span className="typography-caption truncate text-muted-foreground">
             user@sofra.os
           </span>
         </div>
@@ -130,7 +79,7 @@ export function Sidebar() {
   return (
     <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
       <SidebarLogo />
-      <SidebarNav />
+      <SidebarNav items={NAV_ITEMS} />
       <SidebarBottom />
     </aside>
   );
