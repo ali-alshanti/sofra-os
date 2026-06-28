@@ -39,7 +39,7 @@ export function ReservationPanel({
     <aside
       className={cn(
         "flex w-full flex-col border-border bg-card",
-        "md:w-80 md:border-l",
+        "md:w-[320px] md:border-l",
         className,
       )}
     >

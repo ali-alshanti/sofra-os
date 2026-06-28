@@ -14,6 +14,7 @@ const STATUS_CONFIG: Record<
     badge: string;
     badgeText: string;
     label: string;
+    shadow?: boolean;
   }
 > = {
   available: {
@@ -30,6 +31,7 @@ const STATUS_CONFIG: Record<
     badge: "rgba(255,255,255,0.2)",
     badgeText: "#ffffff",
     label: "Occupied",
+    shadow: true,
   },
   reserved: {
     bg: "#ffb95f",                         /* tertiary-fixed-dim / amber */
@@ -37,6 +39,7 @@ const STATUS_CONFIG: Record<
     badge: "rgba(255,255,255,0.3)",
     badgeText: "#2a1700",
     label: "Reserved",
+    shadow: true,
   },
   cleaning: {
     bg: "oklch(0.968 0.007 247.896)",      /* slate-100 */
@@ -76,6 +79,7 @@ function RoundTable({
         "table-obj flex flex-col items-center justify-center",
         "w-24 h-24 rounded-full cursor-pointer",
         "transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg",
+        config.shadow && "shadow-sm",
         className,
       )}
       style={{
@@ -113,6 +117,7 @@ function SquareTable({
         "flex flex-col justify-between overflow-hidden",
         "min-h-32 cursor-pointer",
         "transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg",
+        config.shadow && "shadow-sm",
         className,
       )}
       style={{

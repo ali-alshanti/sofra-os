@@ -72,33 +72,35 @@ export function FloorPlan({
       <div className="p-8 min-w-[900px]">
 
         {/* ── Main Dining Area ─────────────────────────────────────── */}
-        <div className="grid grid-cols-6 gap-6">
-          {tables.map((table) => (
-            <div
-              key={table.id}
-              className={cn(
-                table.colSpan === 2 ? "col-span-2" : "col-span-1",
-                "h-32",
-                table.colSpan === 2 && "h-44",
-              )}
-            >
-              <TableCard
-                table={table}
-                onClick={onTableSelect}
+        <div className="grid grid-cols-6 gap-8">
+          {tables.map((table) => {
+            const isLarge = table.colSpan === 2;
+            return (
+              <div
+                key={table.id}
                 className={cn(
-                  "h-full w-full",
-                  selectedTableId === table.id && "ring-2 ring-offset-2 ring-primary",
+                  isLarge ? "col-span-2 h-48" : "col-span-1 h-32",
                 )}
-              />
-            </div>
-          ))}
+              >
+                <TableCard
+                  table={table}
+                  onClick={onTableSelect}
+                  className={cn(
+                    "h-full w-full",
+                    isLarge ? "p-6 rounded-2xl" : "p-4 rounded-xl",
+                    selectedTableId === table.id && "ring-2 ring-offset-2 ring-primary",
+                  )}
+                />
+              </div>
+            );
+          })}
         </div>
 
         {/* ── Section divider ──────────────────────────────────────── */}
         <div className="my-8 border-b-2 border-dashed border-border" />
 
         {/* ── Bar Seats (round) ────────────────────────────────────── */}
-        <div className="flex flex-wrap gap-6">
+        <div className="flex flex-wrap gap-8">
           {barSeats.map((seat) => (
             <TableCard
               key={seat.id}
