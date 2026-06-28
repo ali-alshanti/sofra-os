@@ -65,7 +65,7 @@ export function KitchenColumn({
   const cfg = COLUMN_CONFIG[status];
 
   return (
-    <div className={cn("flex w-80 shrink-0 flex-col gap-4", className)}>
+    <div className={cn("flex min-w-0 flex-col gap-4", className)}>
 
       {/* Column header — sticky, glass effect */}
       <div

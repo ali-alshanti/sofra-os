@@ -105,8 +105,7 @@ export function KitchenBoard({
   return (
     <div
       className={cn(
-        "flex gap-6 overflow-x-auto pb-4",
-        "grid-cols-1 sm:grid-cols-2 xl:flex",
+        "grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4",
         className,
       )}
     >
