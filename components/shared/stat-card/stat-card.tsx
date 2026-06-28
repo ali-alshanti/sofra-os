@@ -20,7 +20,7 @@ const TREND_STYLE: Record<TrendDirection, { bg: string; color: string }> = {
 
 function StatCardSkeleton() {
   return (
-    <div className="glass-card premium-shadow rounded-2xl p-6 flex flex-col justify-between min-h-35 animate-pulse">
+    <div className="glass-card premium-shadow rounded-2xl p-6 flex flex-col justify-between min-h-35 animate-pulse border border-border">
       <div className="flex justify-between items-start">
         <div className="w-9 h-9 rounded-lg bg-muted" />
         <div className="w-14 h-5 rounded-full bg-muted" />
@@ -60,7 +60,7 @@ export function StatCard({
       className={cn(
         "glass-card premium-shadow rounded-2xl p-6",
         "flex flex-col justify-between min-h-35",
-        "transition-all hover:border-primary/40",
+        "border border-border transition-all hover:border-primary/40",
         className,
       )}
     >
