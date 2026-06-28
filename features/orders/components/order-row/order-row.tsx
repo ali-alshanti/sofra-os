@@ -16,31 +16,14 @@ import { Button } from "@/components/ui/button";
 import { initials } from "@/lib/utils/string";
 import { formatCurrency } from "@/lib/utils/format-currency";
 import { formatTime } from "@/lib/utils/format-date";
-import type { OrderStatus } from "@/features/orders/components/orders-filters";
+import type { OrderStatusValue, OrderData } from "@/features/orders/types";
 
-// ─── Types ─────────────────────────────────────────────────────────────────────
-
-export interface OrderData {
-  id: string;
-  tableNumber: string;
-  customer: {
-    name: string;
-    avatarSrc?: string;
-  };
-  waiter: {
-    name: string;
-    avatarSrc?: string;
-  };
-  itemsCount: number;
-  total: number;
-  status: Exclude<OrderStatus, "all">;
-  createdAt: Date | string;
-}
+export type { OrderData };
 
 // ─── Status Badge ──────────────────────────────────────────────────────────────
 
 const STATUS_CONFIG: Record<
-  Exclude<OrderStatus, "all">,
+  OrderStatusValue,
   { label: string; bg: string; color: string }
 > = {
   pending:   { label: "Pending",   bg: "oklch(0.962 0.059 95.617 / 0.5)",  color: "oklch(0.414 0.112 45.904)" },
@@ -50,7 +33,7 @@ const STATUS_CONFIG: Record<
   cancelled: { label: "Cancelled", bg: "oklch(0.577 0.245 27.325 / 0.1)",  color: "oklch(0.577 0.245 27.325)" },
 };
 
-function StatusBadge({ status }: { status: Exclude<OrderStatus, "all"> }) {
+function StatusBadge({ status }: { status: OrderStatusValue }) {
   const { label, bg, color } = STATUS_CONFIG[status];
   return (
     <span

@@ -1,6 +1,6 @@
 import { UtensilsCrossed } from "lucide-react";
 import { MenuCard } from "@/features/menu/components/menu-card";
-import { EmptyState } from "@/components/dashboard/empty-state";
+import { EmptyState } from "@/components/shared/empty-state";
 import { cn } from "@/lib/utils";
 import type { MenuItem, MenuCardProps } from "@/features/menu/components/menu-card";
 

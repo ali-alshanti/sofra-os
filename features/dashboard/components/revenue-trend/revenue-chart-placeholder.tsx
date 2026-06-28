@@ -44,13 +44,8 @@ export function RevenueChartPlaceholder() {
           <div
             key={i}
             className="flex-1 rounded-t-sm transition-opacity"
-            style={{
-              height: `${bar.h}%`,
-              background: bar.primary
-                ? "oklch(0.596 0.145 163.225)"      /* emerald-600 / primary */
-                : "oklch(0.929 0.013 255.508)",      /* slate-200 / surface-container */
-              opacity: bar.primary ? 0.9 : 1,
-            }}
+            className={bar.primary ? "bg-primary opacity-90" : "bg-border"}
+            style={{ height: `${bar.h}%` }}
           />
         ))}
 
@@ -60,7 +55,7 @@ export function RevenueChartPlaceholder() {
             <div
               key={label}
               className="w-full flex justify-end"
-              style={{ borderTop: "1px solid oklch(0.929 0.013 255.508 / 0.3)" }}
+              className="border-t border-border/30"
             >
               <span className="typography-caption text-muted-foreground pr-2 -mt-2">
                 {label}

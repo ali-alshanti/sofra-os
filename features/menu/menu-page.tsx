@@ -93,7 +93,7 @@ export function MenuFeature() {
         {/* Page Header */}
         <PageHeader
           title="Menu & Categories"
-          subtitle="Manage your restaurant offerings and organizational structure."
+          description="Manage your restaurant offerings and organizational structure."
           actions={
             <Button size="sm" className="gap-2">
               <Plus size={16} />

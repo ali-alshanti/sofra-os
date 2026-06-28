@@ -15,7 +15,7 @@ interface ChartCardProps {
 
 function ChartCardSkeleton() {
   return (
-    <div className="glass-card premium-shadow rounded-[16px] p-6 animate-pulse">
+    <div className="glass-card premium-shadow rounded-2xl p-6 animate-pulse">
       <div className="flex justify-between items-start mb-6">
         <div className="space-y-2">
           <div className="h-5 w-36 rounded bg-muted" />
@@ -42,7 +42,7 @@ export function ChartCard({
   if (loading) return <ChartCardSkeleton />;
 
   return (
-    <div className={cn("glass-card premium-shadow rounded-[16px] p-6", className)}>
+    <div className={cn("glass-card premium-shadow rounded-2xl p-6", className)}>
       {/* Header */}
       <div className="flex items-start justify-between gap-4 mb-6">
         <div className="space-y-0.5 min-w-0">

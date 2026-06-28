@@ -133,7 +133,7 @@ export function MenuCard({
               "text-[14px] font-bold shrink-0",
               unavailable ? "opacity-60" : "",
             )}
-            style={{ color: "oklch(0.596 0.145 163.225)" }}
+            className={cn(unavailable ? "opacity-60" : "", "text-primary")}
           >
             {formatCurrency(item.price)}
           </span>
@@ -153,7 +153,7 @@ export function MenuCard({
         {/* Availability toggle — pushed to bottom via mt-auto */}
         <div
           className="mt-auto flex items-center justify-between pt-4"
-          style={{ borderTop: "1px solid oklch(0.929 0.013 255.508 / 0.2)" }}
+          className="border-t border-border/20"
         >
           <span className="typography-caption text-muted-foreground">Availability</span>
           <Switch

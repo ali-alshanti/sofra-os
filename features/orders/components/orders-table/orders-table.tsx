@@ -68,7 +68,7 @@ export function OrdersTable({
       (Array.isArray(children) && children.length === 0));
 
   return (
-    <div className={cn("glass-card premium-shadow rounded-[16px] overflow-hidden", className)}>
+    <div className={cn("glass-card premium-shadow rounded-2xl overflow-hidden", className)}>
       <div className="overflow-x-auto">
         <Table>
           <OrdersTableHeader />

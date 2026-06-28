@@ -137,7 +137,7 @@ export function OrdersFeature() {
         {/* Page Header */}
         <PageHeader
           title="Orders"
-          subtitle="Manage and track all restaurant orders in real time."
+          description="Manage and track all restaurant orders in real time."
           actions={
             <Button size="sm" className="gap-2">
               <Plus size={16} />

@@ -46,7 +46,7 @@ export function DashboardFeature() {
       <div className="space-y-6">
         <PageHeader
           title="Executive Overview"
-          subtitle="Real-time performance across all floor operations."
+          description="Real-time performance across all floor operations."
           actions={<DateRangePicker />}
         />
 

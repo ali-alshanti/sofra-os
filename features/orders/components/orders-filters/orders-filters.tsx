@@ -11,22 +11,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import type { OrderStatusFilter, OrderType } from "@/features/orders/types";
 
-// ─── Types ─────────────────────────────────────────────────────────────────────
+// ─── Re-exports for consumers that import from this file ──────────────────────
+export type { OrderStatusFilter as OrderStatus, OrderType };
 
-export type OrderStatus =
-  | "all"
-  | "pending"
-  | "preparing"
-  | "ready"
-  | "served"
-  | "cancelled";
-
-export type OrderType = "all" | "dine-in" | "takeaway" | "delivery";
+// ─── Filter value ─────────────────────────────────────────────────────────────
 
 export interface OrdersFiltersValue {
   search: string;
-  status: OrderStatus;
+  status: OrderStatusFilter;
   tableId: string;
   waiterId: string;
   orderType: OrderType;
@@ -46,7 +40,7 @@ export const DEFAULT_FILTERS: OrdersFiltersValue = {
 
 // ─── Static Options ────────────────────────────────────────────────────────────
 
-const STATUS_OPTIONS: { value: OrderStatus; label: string }[] = [
+const STATUS_OPTIONS: { value: OrderStatusFilter; label: string }[] = [
   { value: "all",       label: "All Statuses" },
   { value: "pending",   label: "Pending" },
   { value: "preparing", label: "Preparing" },
@@ -139,7 +133,7 @@ export function OrdersFilters({
       {/* Status */}
       <Select
         value={value.status}
-        onValueChange={(v) => onChange({ status: v as OrderStatus })}
+        onValueChange={(v) => onChange({ status: v as OrderStatusFilter })}
       >
         <SelectTrigger className="h-9 w-40 text-sm">
           <SelectValue placeholder="Status" />
