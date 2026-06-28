@@ -59,7 +59,7 @@ export function MenuCard({
   return (
     <div
       className={cn(
-        "product-card group relative overflow-hidden rounded-2xl border transition-all duration-300",
+        "product-card group relative flex flex-col overflow-hidden rounded-2xl border transition-all duration-300",
         "bg-card hover:shadow-xl hover:-translate-y-1",
         "border-border/30",
         className,
@@ -117,7 +117,7 @@ export function MenuCard({
       </div>
 
       {/* ── Content section ──────────────────────────────────────────── */}
-      <div className="p-5">
+      <div className="flex flex-1 flex-col p-5">
         {/* Name + Price */}
         <div className="flex justify-between items-start gap-2 mb-2">
           <h4
@@ -139,19 +139,20 @@ export function MenuCard({
           </span>
         </div>
 
-        {/* Description */}
+        {/* Description — fixed 2 lines to keep cards aligned */}
         <p
           className={cn(
-            "text-sm mb-4 line-clamp-2",
+            "text-sm line-clamp-2 mb-4",
             unavailable ? "text-muted-foreground/60" : "text-muted-foreground",
           )}
+          style={{ minHeight: "2.5rem" }}
         >
           {item.description}
         </p>
 
-        {/* Availability toggle */}
+        {/* Availability toggle — pushed to bottom via mt-auto */}
         <div
-          className="flex items-center justify-between pt-4"
+          className="mt-auto flex items-center justify-between pt-4"
           style={{ borderTop: "1px solid oklch(0.929 0.013 255.508 / 0.2)" }}
         >
           <span className="typography-caption text-muted-foreground">Availability</span>

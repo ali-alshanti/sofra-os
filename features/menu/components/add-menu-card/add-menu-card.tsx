@@ -14,7 +14,7 @@ export function AddMenuCard({ onClick, className }: AddMenuCardProps) {
       className={cn(
         "group w-full rounded-2xl border-2 border-dashed border-border",
         "flex flex-col items-center justify-center p-8",
-        "min-h-[308px] cursor-pointer transition-all",
+        "h-full min-h-48 cursor-pointer transition-all",
         "hover:border-primary hover:bg-primary/5",
         className,
       )}

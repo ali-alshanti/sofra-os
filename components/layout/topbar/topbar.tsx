@@ -1,13 +1,32 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import { SearchInput } from "@/components/layout/topbar/search-input";
 import { NotificationsButton } from "@/components/layout/topbar/notifications-button";
 import { ThemeToggle } from "@/components/layout/topbar/theme-toggle";
 import { UserMenu } from "@/components/layout/topbar/user-menu";
 
-interface TopbarProps {
-  title?: string;
+const ROUTE_TITLES: Record<string, string> = {
+  "/dashboard":  "Dashboard",
+  "/orders":     "Orders",
+  "/menu":       "Menu",
+  "/tables":     "Tables",
+  "/kitchen":    "Kitchen",
+  "/inventory":  "Inventory",
+  "/customers":  "Customers",
+  "/employees":  "Employees",
+  "/reports":    "Reports",
+  "/settings":   "Settings",
+};
+
+function usePageTitle(): string {
+  const pathname = usePathname();
+  const segment = "/" + (pathname.split("/")[1] ?? "");
+  return ROUTE_TITLES[segment] ?? "Sofra OS";
 }
 
-export function Topbar({ title = "Dashboard" }: TopbarProps) {
+export function Topbar() {
+  const title = usePageTitle();
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b border-border bg-card px-6">
       {/* Left — title + search */}
