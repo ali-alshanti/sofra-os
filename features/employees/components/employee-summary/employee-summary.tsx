@@ -13,8 +13,7 @@ interface EmployeeSummaryProps {
 
 export function EmployeeSummary({ stats }: EmployeeSummaryProps) {
   return (
-    <div className="rounded-2xl border border-border bg-card shadow-sm p-6">
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           variant="compact"
           title="Total Employees"
@@ -41,7 +40,6 @@ export function EmployeeSummary({ stats }: EmployeeSummaryProps) {
           value={stats.avgAttendance}
           trend={{ value: "+2.4%", direction: "up" }}
         />
-      </div>
     </div>
   );
 }
