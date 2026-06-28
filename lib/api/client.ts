@@ -1,4 +1,5 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
+import { env } from "@/config/env";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -11,7 +12,7 @@ export interface ApiError {
 // ─── Client ──────────────────────────────────────────────────────────────────
 
 export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: env.API_URL,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
