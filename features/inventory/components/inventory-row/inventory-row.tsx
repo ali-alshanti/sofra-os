@@ -17,8 +17,8 @@ import type { InventoryItem, InventoryStatus } from "@/features/inventory/types"
 
 const QUANTITY_COLOR: Record<InventoryStatus, string> = {
   in_stock:     "text-foreground",
-  low_stock:    "text-[#f69f0d]",                    /* on-tertiary-container amber */
-  out_of_stock: "oklch(0.577 0.245 27.325)",         /* error red */
+  low_stock:    "text-[#f69f0d]",
+  out_of_stock: "text-destructive",
 };
 
 // ─── Category badge ───────────────────────────────────────────────────────────
@@ -87,7 +87,7 @@ export function InventoryRow({ item, onView, onEdit, onDelete }: InventoryRowPro
   return (
     <TableRow className="group border-border hover:bg-primary/[0.02] transition-colors">
       {/* Item — thumbnail + name */}
-      <TableCell className="py-4 px-6">
+      <TableCell className="py-4 px-3">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-muted">
             {item.imageSrc && (
@@ -103,52 +103,45 @@ export function InventoryRow({ item, onView, onEdit, onDelete }: InventoryRowPro
       </TableCell>
 
       {/* SKU */}
-      <TableCell className="py-4 px-6 text-[14px] text-muted-foreground font-mono">
+      <TableCell className="py-4 px-3 text-[14px] text-muted-foreground font-mono">
         {item.sku}
       </TableCell>
 
       {/* Category */}
-      <TableCell className="py-4 px-6">
+      <TableCell className="py-4 px-3">
         <CategoryBadge name={item.category.name} />
       </TableCell>
 
       {/* Supplier */}
-      <TableCell className="py-4 px-6 text-sm text-foreground">
+      <TableCell className="py-4 px-3 text-sm text-foreground">
         {item.supplier.name}
       </TableCell>
 
       {/* Quantity + Unit */}
-      <TableCell className="py-4 px-6">
-        <span
-          className={cn("font-bold text-sm", QUANTITY_COLOR[item.status])}
-          style={
-            item.status === "out_of_stock"
-              ? { color: "oklch(0.577 0.245 27.325)" }
-              : undefined
-          }
-        >
+      <TableCell className="py-4 px-3">
+        <span className={cn("font-bold text-sm", QUANTITY_COLOR[item.status])}>
           {item.quantity}
         </span>{" "}
         <span className="text-xs text-muted-foreground font-normal">{item.unit}</span>
       </TableCell>
 
       {/* Reorder point */}
-      <TableCell className="py-4 px-6 text-[14px] text-muted-foreground font-mono">
+      <TableCell className="py-4 px-3 text-[14px] text-muted-foreground font-mono">
         {item.reorderPoint}
       </TableCell>
 
       {/* Status */}
-      <TableCell className="py-4 px-6">
+      <TableCell className="py-4 px-3">
         <InventoryStatusBadge status={item.status} />
       </TableCell>
 
       {/* Last Updated */}
-      <TableCell className="py-4 px-6 text-xs text-muted-foreground whitespace-nowrap">
+      <TableCell className="py-4 px-3 text-xs text-muted-foreground whitespace-nowrap">
         {formatRelativeDate(updatedDate)}
       </TableCell>
 
       {/* Actions */}
-      <TableCell className="py-4 px-6 text-right">
+      <TableCell className="py-4 px-3 text-right">
         <InventoryActionsMenu
           item={item}
           onView={onView}

@@ -44,6 +44,7 @@ export function StatCard({
   iconColor,
   trend,
   badge,
+  badgeStyle,
   pulse = false,
   pulseLabel,
   loading = false,
@@ -68,13 +69,13 @@ export function StatCard({
         {/* Icon container */}
         {Icon && (
           <div
-            className="p-2 rounded-lg shrink-0"
+            className="p-3 rounded-xl shrink-0"
             style={{
               background: iconBg ?? "var(--muted)",
               color:      iconColor ?? "var(--muted-foreground)",
             }}
           >
-            <Icon size={24} />
+            <Icon size={22} />
           </div>
         )}
 
@@ -97,6 +98,13 @@ export function StatCard({
                 </span>
               )}
             </div>
+          ) : badge && badgeStyle ? (
+            <span
+              className="text-xs font-bold px-2 py-1 rounded-full"
+              style={{ background: badgeStyle.bg, color: badgeStyle.color }}
+            >
+              {badge}
+            </span>
           ) : badge ? (
             <span className="text-[13px] tracking-[0.02em] text-muted-foreground">
               {badge}

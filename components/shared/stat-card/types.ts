@@ -7,6 +7,12 @@ export interface StatCardTrend {
   direction: TrendDirection;
 }
 
+/** Custom colors for a styled pill badge */
+export interface StatCardBadgeStyle {
+  bg: string;
+  color: string;
+}
+
 export interface StatCardProps {
   title: string;
   value: string;
@@ -18,8 +24,10 @@ export interface StatCardProps {
   iconColor?: string;
   /** Percentage trend with direction */
   trend?: StatCardTrend;
-  /** Plain text badge (e.g., "72% Occ.") */
+  /** Plain text badge label */
   badge?: string;
+  /** When provided with badge, renders a colored pill instead of plain text */
+  badgeStyle?: StatCardBadgeStyle;
   /** Animated pulse dot — for live/real-time states */
   pulse?: boolean;
   pulseLabel?: string;

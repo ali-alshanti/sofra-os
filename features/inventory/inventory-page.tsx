@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
-import { OrdersPagination } from "@/features/orders/components/orders-pagination";
+import { Pagination } from "@/components/shared/pagination";
 import { InventoryHeader } from "./components/inventory-header";
 import { InventorySummary, type InventoryStats } from "./components/inventory-summary";
 import { InventoryFilters } from "./components/inventory-filters";
@@ -120,11 +120,12 @@ export function InventoryFeature() {
           onEdit={(id) => console.log("edit", id)}
           onDelete={(id) => console.log("delete", id)}
           pagination={
-            <OrdersPagination
+            <Pagination
               currentPage={currentPage}
               totalPages={Math.ceil(482 / 10)}
               totalItems={482}
               pageSize={10}
+              itemLabel="items"
               onPageChange={setCurrentPage}
             />
           }

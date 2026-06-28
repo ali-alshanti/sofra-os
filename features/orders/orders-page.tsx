@@ -168,6 +168,7 @@ export function OrdersFeature() {
               totalPages={15}
               totalItems={142}
               pageSize={10}
+              itemLabel="orders"
               onPageChange={setCurrentPage}
             />
           }

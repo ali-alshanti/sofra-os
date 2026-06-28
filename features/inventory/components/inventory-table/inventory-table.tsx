@@ -16,15 +16,15 @@ import type { InventoryItem } from "@/features/inventory/types";
 // ─── Column definitions ────────────────────────────────────────────────────────
 
 const COLUMNS = [
-  { key: "item",        label: "Item",         className: ""              },
-  { key: "sku",         label: "SKU",          className: "w-[110px]"    },
-  { key: "category",    label: "Category",     className: "w-[120px]"    },
-  { key: "supplier",    label: "Supplier",     className: ""              },
-  { key: "quantity",    label: "Quantity",     className: "w-[110px]"    },
-  { key: "reorder",     label: "Reorder Level",className: "w-[120px]"   },
-  { key: "status",      label: "Status",       className: "w-[140px]"    },
-  { key: "lastUpdated", label: "Last Updated", className: "w-[140px]"    },
-  { key: "actions",     label: "",             className: "w-[48px]"     },
+  { key: "item",        label: "Item",          className: ""         },
+  { key: "sku",         label: "SKU",           className: "w-24"     },
+  { key: "category",    label: "Category",      className: "w-28"     },
+  { key: "supplier",    label: "Supplier",      className: ""         },
+  { key: "quantity",    label: "Quantity",      className: "w-24"     },
+  { key: "reorder",     label: "Reorder Level", className: "w-24"     },
+  { key: "status",      label: "Status",        className: "w-32"     },
+  { key: "lastUpdated", label: "Last Updated",  className: "w-28"     },
+  { key: "actions",     label: "",              className: "w-10"     },
 ] as const;
 
 // ─── Loading skeleton ─────────────────────────────────────────────────────────
@@ -33,7 +33,7 @@ function SkeletonRow() {
   return (
     <TableRow className="border-border animate-pulse">
       {COLUMNS.map((col) => (
-        <TableCell key={col.key} className={cn("py-4 px-6", col.className)}>
+        <TableCell key={col.key} className={cn("py-4 px-3", col.className)}>
           <div className="h-4 rounded bg-muted" />
         </TableCell>
       ))}
@@ -74,8 +74,7 @@ export function InventoryTable({
         className,
       )}
     >
-      <div className="overflow-x-auto">
-        <Table>
+      <Table>
           {/* Header */}
           <TableHeader>
             <TableRow className="bg-muted/40 border-border hover:bg-muted/40">
@@ -83,7 +82,7 @@ export function InventoryTable({
                 <TableHead
                   key={col.key}
                   className={cn(
-                    "py-4 px-6 typography-caption uppercase tracking-widest text-muted-foreground font-medium",
+                    "py-4 px-3 typography-caption uppercase tracking-widest text-muted-foreground font-medium",
                     col.className,
                   )}
                 >
@@ -124,8 +123,7 @@ export function InventoryTable({
               ))
             )}
           </TableBody>
-        </Table>
-      </div>
+      </Table>
 
       {/* Pagination slot */}
       {pagination && (
