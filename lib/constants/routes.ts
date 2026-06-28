@@ -9,6 +9,8 @@ export const ROUTES = {
 
   TABLES: "/tables",
 
+  KITCHEN: "/kitchen",
+
   INVENTORY: "/inventory",
 
   CUSTOMERS: "/customers",
