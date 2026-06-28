@@ -9,6 +9,8 @@ import {
   getTopSellingItems,
   getInventoryAlerts,
 } from "@/services/dashboard";
+// Re-uses inventory service for low-stock data (single source of truth)
+import { getLowStockItems } from "@/services/inventory";
 
 // ─── useDashboardSummary ──────────────────────────────────────────────────────
 

@@ -32,12 +32,14 @@ export const QUERY_KEYS = {
   },
 
   inventory: {
-    all: ["inventory"] as const,
-    lists: () => [...QUERY_KEYS.inventory.all, "list"] as const,
-    list: (filters?: Record<string, unknown>) =>
-      [...QUERY_KEYS.inventory.lists(), filters] as const,
-    detail: (id: string) =>
-      [...QUERY_KEYS.inventory.all, "detail", id] as const,
+    all:        ["inventory"] as const,
+    lists:      () => [...QUERY_KEYS.inventory.all, "list"] as const,
+    list:       (filters?: Record<string, unknown>) => [...QUERY_KEYS.inventory.lists(), filters] as const,
+    detail:     (id: string)          => [...QUERY_KEYS.inventory.all, "detail",     id] as const,
+    summary:    (restaurantId: string) => [...QUERY_KEYS.inventory.all, "summary",    restaurantId] as const,
+    lowStock:   (restaurantId: string) => [...QUERY_KEYS.inventory.all, "low-stock",  restaurantId] as const,
+    categories: (restaurantId: string) => [...QUERY_KEYS.inventory.all, "categories", restaurantId] as const,
+    suppliers:  (restaurantId: string) => [...QUERY_KEYS.inventory.all, "suppliers",  restaurantId] as const,
   },
 
   customers: {
