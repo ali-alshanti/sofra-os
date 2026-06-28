@@ -1,3 +1,5 @@
+"use client";
+
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -10,6 +12,7 @@ import {
   BarChart2,
   Settings,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { APP_NAME } from "@/lib/constants/app";
 import { ROUTES } from "@/lib/constants/routes";
 import { SidebarNav, type NavItem } from "@/components/layout/sidebar/sidebar-nav";
@@ -47,12 +50,16 @@ function SidebarLogo() {
 // ─── Bottom ───────────────────────────────────────────────────────────────────
 
 function SidebarBottom() {
+  const pathname = usePathname();
+  const settingsActive = pathname === ROUTES.SETTINGS || pathname.startsWith(ROUTES.SETTINGS + "/");
+
   return (
     <div className="shrink-0 border-t border-sidebar-border px-3 py-4">
       <SidebarNavItem
         icon={Settings}
         label="Settings"
         href={ROUTES.SETTINGS}
+        active={settingsActive}
       />
 
       {/* User profile placeholder */}
