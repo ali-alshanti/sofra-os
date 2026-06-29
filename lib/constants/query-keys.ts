@@ -69,6 +69,14 @@ export const QUERY_KEYS = {
     reservations: (restaurantId: string) => [...QUERY_KEYS.tables.all, "reservations", restaurantId] as const,
   },
 
+  settings: {
+    all:           ["settings"] as const,
+    restaurant:    (restaurantId: string) => [...QUERY_KEYS.settings.all, "restaurant",    restaurantId] as const,
+    businessHours: (restaurantId: string) => [...QUERY_KEYS.settings.all, "business-hours", restaurantId] as const,
+    notifications: (restaurantId: string) => [...QUERY_KEYS.settings.all, "notifications",  restaurantId] as const,
+    integrations:  (restaurantId: string) => [...QUERY_KEYS.settings.all, "integrations",   restaurantId] as const,
+  },
+
   reports: {
     all:              ["reports"] as const,
     dashboard:        (restaurantId: string) => [...QUERY_KEYS.reports.all, "dashboard",         restaurantId] as const,

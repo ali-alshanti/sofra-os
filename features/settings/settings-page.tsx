@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Save, RotateCcw } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
 import { PageHeader } from "@/components/shared/page-header";
@@ -15,74 +15,23 @@ import { SystemSettingsForm } from "./components/system-settings-form";
 import { NotificationsSettings } from "./components/notifications-settings";
 import { IntegrationsSettings } from "./components/integrations-settings";
 
+import {
+  useRestaurantSettings,
+  useUpdateRestaurantSettings,
+  useIntegrations,
+  useUpdateIntegration,
+} from "@/lib/hooks/use-settings";
+
 import type {
   RestaurantSettings,
   SettingsSection,
   DayOfWeek,
   DaySchedule,
   NotificationType,
+  Integration,
 } from "./types";
 
-// ─── Placeholder defaults ─────────────────────────────────────────────────────
-
-const DEFAULT_SETTINGS: RestaurantSettings = {
-  general: {
-    restaurantName: "Sofra Kitchen",
-    address:        "123 Main Street, Dubai, UAE",
-    phone:          "+971 50 000 0000",
-    email:          "hello@sofrakitchen.ae",
-  },
-  businessHours: {
-    monday:    { open: true,  openTime: "08:00", closeTime: "22:00" },
-    tuesday:   { open: true,  openTime: "08:00", closeTime: "22:00" },
-    wednesday: { open: true,  openTime: "08:00", closeTime: "22:00" },
-    thursday:  { open: true,  openTime: "08:00", closeTime: "23:00" },
-    friday:    { open: true,  openTime: "08:00", closeTime: "23:30" },
-    saturday:  { open: true,  openTime: "10:00", closeTime: "23:30" },
-    sunday:    { open: false, openTime: "10:00", closeTime: "22:00" },
-  },
-  currency: {
-    currency: "AED",
-    taxRate:  5,
-    taxLabel: "VAT",
-  },
-  system: {
-    theme:      "system",
-    language:   "en",
-    timezone:   "Asia/Dubai",
-    dateFormat: "DD/MM/YYYY",
-  },
-  notifications: {
-    newOrder:       true,
-    orderReady:     true,
-    lowStock:       true,
-    newReservation: false,
-    staffAlert:     false,
-    dailySummary:   true,
-  },
-  integrations: [
-    {
-      id:          "pos-square",
-      name:        "Square POS",
-      description: "Sync orders and payments with Square point-of-sale.",
-      status:      "connected",
-    },
-    {
-      id:          "delivery-talabat",
-      name:        "Talabat",
-      description: "Accept delivery orders directly from the Talabat platform.",
-      status:      "disconnected",
-    },
-    {
-      id:          "accounting-xero",
-      name:        "Xero",
-      description: "Export daily revenue and expense data to Xero accounting.",
-      status:      "disconnected",
-    },
-  ],
-};
-
-// ─── Section order — must match SettingsSidebar SECTIONS array ─────────────────
+// ─── Section order ─────────────────────────────────────────────────────────────
 
 const SECTION_ORDER: SettingsSection[] = [
   "general",
@@ -96,13 +45,37 @@ const SECTION_ORDER: SettingsSection[] = [
 // ─── Settings Feature ─────────────────────────────────────────────────────────
 
 export function SettingsFeature() {
-  const [settings, setSettings]         = useState<RestaurantSettings>(DEFAULT_SETTINGS);
-  const [savedSettings, setSavedSettings] = useState<RestaurantSettings>(DEFAULT_SETTINGS);
+  // ── Remote data ─────────────────────────────────────────────────────────────
+  const { data: remoteSettings, isLoading } = useRestaurantSettings();
+  const { data: remoteIntegrations }        = useIntegrations();
+
+  const updateSettings    = useUpdateRestaurantSettings();
+  const updateIntegration = useUpdateIntegration();
+
+  // ── Local state (mirrors server state; enables dirty-check) ─────────────────
+  const [settings, setSettings]         = useState<RestaurantSettings | null>(null);
+  const [savedSettings, setSavedSettings] = useState<RestaurantSettings | null>(null);
   const [activeSection, setActiveSection] = useState<SettingsSection>("general");
+  const [isSaving, setIsSaving]           = useState(false);
+  const [integrations, setIntegrations]   = useState<Integration[]>([]);
 
-  const isDirty = JSON.stringify(settings) !== JSON.stringify(savedSettings);
+  // Seed local state from DB once loaded
+  useEffect(() => {
+    if (remoteSettings && !settings) {
+      setSettings(remoteSettings);
+      setSavedSettings(remoteSettings);
+    }
+  }, [remoteSettings, settings]);
 
-  // ─── Section refs for scrollIntoView ────────────────────────────────────────
+  // Keep integrations in sync with remote (catalogue)
+  useEffect(() => {
+    if (remoteIntegrations) setIntegrations(remoteIntegrations);
+  }, [remoteIntegrations]);
+
+  // ── Derived ─────────────────────────────────────────────────────────────────
+  const isDirty = !!settings && JSON.stringify(settings) !== JSON.stringify(savedSettings);
+
+  // ── Section refs for scrollIntoView ─────────────────────────────────────────
   const sectionRefs = useRef<Partial<Record<SettingsSection, HTMLElement | null>>>({});
 
   const handleSectionChange = useCallback((section: SettingsSection) => {
@@ -110,46 +83,87 @@ export function SettingsFeature() {
     sectionRefs.current[section]?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
-  // ─── Patch helpers ────────────────────────────────────────────────────────────
+  // ── Patch helpers ────────────────────────────────────────────────────────────
 
   function patchGeneral(patch: Partial<RestaurantSettings["general"]>) {
-    setSettings((s) => ({ ...s, general: { ...s.general, ...patch } }));
+    setSettings((s) => s ? { ...s, general: { ...s.general, ...patch } } : s);
   }
 
   function patchBusinessHours(day: DayOfWeek, patch: Partial<DaySchedule>) {
-    setSettings((s) => ({
+    setSettings((s) => s ? ({
       ...s,
       businessHours: {
         ...s.businessHours,
         [day]: { ...s.businessHours[day], ...patch },
       },
-    }));
+    }) : s);
   }
 
   function patchCurrency(patch: Partial<RestaurantSettings["currency"]>) {
-    setSettings((s) => ({ ...s, currency: { ...s.currency, ...patch } }));
+    setSettings((s) => s ? { ...s, currency: { ...s.currency, ...patch } } : s);
   }
 
   function patchSystem(patch: Partial<RestaurantSettings["system"]>) {
-    setSettings((s) => ({ ...s, system: { ...s.system, ...patch } }));
+    setSettings((s) => s ? { ...s, system: { ...s.system, ...patch } } : s);
   }
 
   function patchNotification(type: NotificationType, enabled: boolean) {
-    setSettings((s) => ({
+    setSettings((s) => s ? ({
       ...s,
       notifications: { ...s.notifications, [type]: enabled },
-    }));
+    }) : s);
   }
 
-  function handleSave() {
-    setSavedSettings(settings);
+  // ── Save ─────────────────────────────────────────────────────────────────────
+
+  async function handleSave() {
+    if (!settings) return;
+    setIsSaving(true);
+    try {
+      await updateSettings.mutateAsync(settings);
+      setSavedSettings(settings);
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   function handleDiscard() {
-    setSettings(savedSettings);
+    if (savedSettings) setSettings(savedSettings);
   }
 
-  // ─── Render ──────────────────────────────────────────────────────────────────
+  // ── Integration handlers ──────────────────────────────────────────────────────
+
+  async function handleConnect(id: string) {
+    const updated = await updateIntegration.mutateAsync({ id, status: "connected" });
+    setIntegrations(updated);
+  }
+
+  async function handleDisconnect(id: string) {
+    const updated = await updateIntegration.mutateAsync({ id, status: "disconnected" });
+    setIntegrations(updated);
+  }
+
+  // ── Render (loading state) ────────────────────────────────────────────────────
+
+  if (isLoading || !settings) {
+    return (
+      <AppShell>
+        <div className="flex flex-col min-h-full animate-pulse">
+          <div className="mb-6 h-16 rounded-xl bg-muted" />
+          <div className="flex gap-6">
+            <div className="hidden lg:block w-64 h-96 rounded-xl bg-muted" />
+            <div className="flex-1 space-y-6">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="h-48 rounded-xl bg-muted" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </AppShell>
+    );
+  }
+
+  // ── Render ────────────────────────────────────────────────────────────────────
 
   return (
     <AppShell>
@@ -168,6 +182,7 @@ export function SettingsFeature() {
                   size="sm"
                   className="gap-2"
                   onClick={handleDiscard}
+                  disabled={isSaving}
                 >
                   <RotateCcw size={14} />
                   Reset
@@ -176,11 +191,11 @@ export function SettingsFeature() {
               <Button
                 size="sm"
                 className="gap-2"
-                disabled={!isDirty}
+                disabled={!isDirty || isSaving}
                 onClick={handleSave}
               >
                 <Save size={14} />
-                Save Changes
+                {isSaving ? "Saving…" : "Save Changes"}
               </Button>
             </div>
           }
@@ -197,7 +212,7 @@ export function SettingsFeature() {
             />
           </aside>
 
-          {/* Mobile section nav — scrollable vertical list above the forms */}
+          {/* Mobile section nav */}
           <div className="lg:hidden w-full overflow-y-auto max-h-56 rounded-xl border border-border bg-card p-2">
             <SettingsSidebar
               activeSection={activeSection}
@@ -219,37 +234,43 @@ export function SettingsFeature() {
                   <GeneralSettingsForm
                     values={settings.general}
                     onChange={patchGeneral}
+                    disabled={isSaving}
                   />
                 )}
                 {section === "business-hours" && (
                   <BusinessHoursForm
                     businessHours={settings.businessHours}
                     onChange={patchBusinessHours}
+                    disabled={isSaving}
                   />
                 )}
                 {section === "currency-tax" && (
                   <CurrencyTaxForm
                     values={settings.currency}
                     onChange={patchCurrency}
+                    disabled={isSaving}
                   />
                 )}
                 {section === "system" && (
                   <SystemSettingsForm
                     values={settings.system}
                     onChange={patchSystem}
+                    disabled={isSaving}
                   />
                 )}
                 {section === "notifications" && (
                   <NotificationsSettings
                     values={settings.notifications}
                     onChange={patchNotification}
+                    disabled={isSaving}
                   />
                 )}
                 {section === "integrations" && (
                   <IntegrationsSettings
-                    integrations={settings.integrations}
-                    onConnect={(_id) => undefined}
-                    onDisconnect={(_id) => undefined}
+                    integrations={integrations}
+                    onConnect={handleConnect}
+                    onDisconnect={handleDisconnect}
+                    disabled={updateIntegration.isPending}
                   />
                 )}
               </div>
@@ -260,6 +281,7 @@ export function SettingsFeature() {
         {/* Sticky action bar */}
         <SettingsActionBar
           isDirty={isDirty}
+          loading={isSaving}
           onSave={handleSave}
           onDiscard={handleDiscard}
         />
