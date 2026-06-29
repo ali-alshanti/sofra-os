@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCurrentUser } from "./use-auth";
+import { useToast } from "@/lib/providers/toast-provider";
 import { QUERY_KEYS } from "@/lib/constants/query-keys";
 import {
   getTables,
@@ -21,25 +22,27 @@ export function useTables() {
     queryKey: QUERY_KEYS.tables.floor(restaurantId),
     queryFn:  () => getTables(restaurantId),
     enabled:  !!restaurantId,
-    staleTime: 30 * 1000,          // tables change frequently
-    refetchInterval: 30 * 1000,    // auto-refresh occupancy every 30s
+    staleTime: 30 * 1000,
+    refetchInterval: 30 * 1000,
   });
 }
 
 // ─── useUpdateTableStatus ─────────────────────────────────────────────────────
 
 export function useUpdateTableStatus() {
-  const queryClient  = useQueryClient();
-  const { user }     = useCurrentUser();
-  const restaurantId = user?.restaurant_id ?? "";
+  const queryClient = useQueryClient();
+  const { toastSuccess, toastError } = useToast();
 
   return useMutation({
     mutationFn: ({ tableId, status }: { tableId: string; status: TableStatus }) =>
       updateTableStatus(tableId, status),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.tables.all });
-      // Dashboard occupancy KPIs also update
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.all });
+      toastSuccess("Table status updated.");
+    },
+    onError: (err) => {
+      toastError(err instanceof Error ? err.message : "Failed to update table status.");
     },
   });
 }
@@ -63,11 +66,16 @@ export function useReservations() {
 
 export function useCancelReservation() {
   const queryClient = useQueryClient();
+  const { toastSuccess, toastError } = useToast();
 
   return useMutation({
     mutationFn: (reservationId: string) => cancelReservation(reservationId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.tables.all });
+      toastSuccess("Reservation cancelled.");
+    },
+    onError: (err) => {
+      toastError(err instanceof Error ? err.message : "Failed to cancel reservation.");
     },
   });
 }

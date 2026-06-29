@@ -2,6 +2,12 @@
   "title":       "الطاولات",
   "description": "إدارة الطاولات والحجوزات.",
 
+  "panel": {
+    "upcoming":       "القادمة",
+    "noReservations": "لا توجد حجوزات لهذا اليوم.",
+    "bookTable":      "احجز طاولة"
+  },
+
   "floorPlan": {
     "title":   "مخطط الطابق",
     "squares": "طاولات المطعم",

@@ -1,5 +1,8 @@
+"use client";
+
 import type { ReactNode } from "react";
 import { Users } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   Table,
   TableBody,
@@ -13,56 +16,43 @@ import { cn } from "@/lib/utils";
 import { CustomerRow } from "@/features/customers/components/customer-row";
 import type { Customer } from "@/features/customers/types";
 
-// ─── Columns ──────────────────────────────────────────────────────────────────
+// ─── Column keys ──────────────────────────────────────────────────────────────
 
-const COLUMNS = [
-  { key: "customer",   label: "Customer",    className: ""         },
-  { key: "contact",    label: "Contact",     className: ""         },
-  { key: "visits",     label: "Visits",      className: "w-20"     },
-  { key: "lastVisit",  label: "Last Visit",  className: "w-32"     },
-  { key: "totalSpent", label: "Total Spent", className: "w-32"     },
-  { key: "loyalty",    label: "Loyalty",     className: "w-32"     },
-  { key: "status",     label: "Status",      className: "w-28"     },
-  { key: "actions",    label: "Actions",     className: "w-16 text-center" },
-] as const;
+const COLUMN_KEYS = ["customer", "contact", "visits", "lastVisit", "totalSpent", "loyalty", "status", "actions"] as const;
+
+const COLUMN_WIDTHS: Record<(typeof COLUMN_KEYS)[number], string> = {
+  customer:   "",
+  contact:    "",
+  visits:     "w-20",
+  lastVisit:  "w-32",
+  totalSpent: "w-32",
+  loyalty:    "w-32",
+  status:     "w-28",
+  actions:    "w-16 text-center",
+};
 
 // ─── Loading skeleton ─────────────────────────────────────────────────────────
 
-function SkeletonRow() {
+function SkeletonRow({ colCount }: { colCount: number }) {
   return (
     <TableRow className="border-border animate-pulse">
-      {COLUMNS.map((col) => (
-        <TableCell key={col.key} className={cn("px-6 py-4", col.className)}>
-          {col.key === "customer" ? (
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-muted shrink-0" />
-              <div className="space-y-1.5">
-                <div className="h-3.5 w-28 rounded bg-muted" />
-                <div className="h-2.5 w-20 rounded bg-muted/60" />
-              </div>
-            </div>
-          ) : col.key === "contact" ? (
-            <div className="space-y-1.5">
-              <div className="h-3 w-24 rounded bg-muted" />
-              <div className="h-2.5 w-32 rounded bg-muted/60" />
-            </div>
-          ) : (
-            <div className="h-4 rounded bg-muted" />
-          )}
+      {Array.from({ length: colCount }).map((_, i) => (
+        <TableCell key={i} className="px-6 py-4">
+          <div className="h-4 rounded bg-muted" />
         </TableCell>
       ))}
     </TableRow>
   );
 }
 
-// ─── Props ─────────────────────────────────────────────────────────────────────
+// ─── Props ────────────────────────────────────────────────────────────────────
 
 interface CustomerTableProps {
-  customers: Customer[];
-  loading?: boolean;
-  onView?: (id: string) => void;
-  onEdit?: (id: string) => void;
-  onDelete?: (id: string) => void;
+  customers:  Customer[];
+  loading?:   boolean;
+  onView?:    (id: string) => void;
+  onEdit?:    (id: string) => void;
+  onDelete?:  (id: string) => void;
   pagination?: ReactNode;
   className?: string;
 }
@@ -78,48 +68,44 @@ export function CustomerTable({
   pagination,
   className,
 }: CustomerTableProps) {
+  const t  = useTranslations("customers.table");
+  const te = useTranslations("customers.empty");
+
   const isEmpty = !loading && customers.length === 0;
 
   return (
-    <div
-      className={cn(
-        "glass-card rounded-2xl overflow-hidden shadow-sm",
-        className,
-      )}
-    >
+    <div className={cn("glass-card rounded-2xl overflow-hidden shadow-sm", className)}>
       <Table>
-        {/* Header */}
         <TableHeader>
           <TableRow className="bg-muted/40 border-border hover:bg-muted/40">
-            {COLUMNS.map((col) => (
+            {COLUMN_KEYS.map((key) => (
               <TableHead
-                key={col.key}
+                key={key}
                 className={cn(
                   "px-6 py-4 typography-caption uppercase tracking-widest text-muted-foreground font-medium",
-                  col.className,
+                  COLUMN_WIDTHS[key],
                 )}
               >
-                {col.label}
+                {t(key)}
               </TableHead>
             ))}
           </TableRow>
         </TableHeader>
 
-        {/* Body */}
         <TableBody className="divide-y divide-border/20">
           {loading ? (
             <>
               {Array.from({ length: 5 }).map((_, i) => (
-                <SkeletonRow key={i} />
+                <SkeletonRow key={i} colCount={COLUMN_KEYS.length} />
               ))}
             </>
           ) : isEmpty ? (
             <TableRow className="border-0 hover:bg-transparent">
-              <TableCell colSpan={COLUMNS.length} className="py-0">
+              <TableCell colSpan={COLUMN_KEYS.length} className="py-0">
                 <EmptyState
                   icon={Users}
-                  title="No customers found"
-                  description="Try adjusting your filters or add a new customer."
+                  title={te("title")}
+                  description={te("description")}
                   className="border-0 bg-transparent"
                 />
               </TableCell>
@@ -138,7 +124,6 @@ export function CustomerTable({
         </TableBody>
       </Table>
 
-      {/* Pagination slot */}
       {pagination && (
         <div className="border-t border-border/30 px-6 py-4">{pagination}</div>
       )}

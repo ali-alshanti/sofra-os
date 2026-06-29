@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { AppShell }   from "@/components/layout/app-shell";
 import { Pagination } from "@/components/shared/pagination";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { EmployeeHeader }  from "./components/employee-header";
 import { EmployeeSummary } from "./components/employee-summary";
 import { EmployeeFilters } from "./components/employee-filters";
@@ -24,9 +25,10 @@ const PAGE_SIZE = 10;
 export function EmployeesFeature() {
   const t = useTranslations("employees");
 
-  const [filters, setFilters]         = useState<EmployeeFiltersValue>(DEFAULT_EMPLOYEE_FILTERS);
-  const [currentPage, setCurrentPage] = useState(1);
-  const queryClient                   = useQueryClient();
+  const [filters, setFilters]               = useState<EmployeeFiltersValue>(DEFAULT_EMPLOYEE_FILTERS);
+  const [currentPage, setCurrentPage]       = useState(1);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const queryClient                         = useQueryClient();
 
   const { data: summary, isLoading: summaryLoading } = useEmployeeSummary();
 
@@ -47,6 +49,13 @@ export function EmployeesFeature() {
 
   function handleRefresh() {
     queryClient.invalidateQueries({ queryKey: QUERY_KEYS.employees.all });
+  }
+
+  function handleConfirmDelete() {
+    if (!pendingDeleteId) return;
+    deleteEmployee.mutate(pendingDeleteId, {
+      onSettled: () => setPendingDeleteId(null),
+    });
   }
 
   return (
@@ -80,7 +89,7 @@ export function EmployeesFeature() {
           loading={employeesLoading}
           onView={() => undefined}
           onEdit={() => undefined}
-          onDelete={(id) => deleteEmployee.mutate(id)}
+          onDelete={(id) => setPendingDeleteId(id)}
           pagination={
             totalPages > 1 ? (
               <Pagination
@@ -93,6 +102,16 @@ export function EmployeesFeature() {
               />
             ) : undefined
           }
+        />
+
+        <ConfirmDialog
+          open={!!pendingDeleteId}
+          onOpenChange={(open) => { if (!open) setPendingDeleteId(null); }}
+          title="Remove Employee"
+          description="This action cannot be undone. The employee record will be permanently removed."
+          confirmLabel="Remove"
+          loading={deleteEmployee.isPending}
+          onConfirm={handleConfirmDelete}
         />
       </div>
     </AppShell>

@@ -4,23 +4,22 @@ import { UtensilsCrossed } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ChartCard } from "@/components/shared/chart-card";
 import { EmptyState } from "@/components/shared/empty-state";
-import { Button } from "@/components/ui/button";
 import { MenuItemRow, type MenuItemRowData } from "./menu-item-row";
 import { useTopSellingItems } from "@/lib/hooks/use-dashboard";
 import { formatCurrency } from "@/lib/utils/format-currency";
 
 export function PopularItemsCard() {
-  const t   = useTranslations("dashboard.topItems");
-  const tc  = useTranslations("common.status");
+  const t = useTranslations("dashboard.topItems");
+  const tc = useTranslations("common.status");
   const { data, isLoading, error } = useTopSellingItems();
 
   const rows: MenuItemRowData[] = (data ?? []).map((item) => ({
-    name:     item.name,
+    name: item.name,
     category: item.category,
-    price:    formatCurrency(item.price),
-    orders:   t("orders", { count: item.orderCount }),
-    trend:    "",
-    trendUp:  true,
+    price: formatCurrency(item.price),
+    orders: t("orders", { count: item.orderCount }),
+    trend: "",
+    trendUp: true,
     imageSrc: item.imageSrc ?? undefined,
   }));
 

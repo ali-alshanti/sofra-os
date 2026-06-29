@@ -19,7 +19,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Cairo covers Arabic script + Latin; used for RTL layouts
 const cairo = Cairo({
   variable: "--font-cairo",
   subsets: ["arabic", "latin"],
@@ -35,14 +34,13 @@ export const metadata: Metadata = {
 // ─── Layout ───────────────────────────────────────────────────────────────────
 
 interface LocaleLayoutProps {
-  children:   React.ReactNode;
-  params:     Promise<{ locale: string }>;
+  children: React.ReactNode;
+  params:   Promise<{ locale: string }>;
 }
 
 export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
   const { locale } = await params;
 
-  // Validate locale
   if (!routing.locales.includes(locale as "en" | "ar")) {
     notFound();
   }
@@ -58,6 +56,11 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       suppressHydrationWarning
     >
       <body className={`min-h-full flex flex-col${isRtl ? " font-cairo" : ""}`}>
+        {/*
+          messages must be passed explicitly so client components receive translations.
+          NextIntlClientProvider uses an inline <script> to transport messages —
+          suppressHydrationWarning on it silences the React 19 console warning.
+        */}
         <NextIntlClientProvider messages={messages} locale={locale}>
           <Providers>{children}</Providers>
         </NextIntlClientProvider>

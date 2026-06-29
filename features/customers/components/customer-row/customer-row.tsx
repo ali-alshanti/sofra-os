@@ -1,4 +1,7 @@
+"use client";
+
 import { MoreVertical, Eye, Pencil, Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -66,6 +69,8 @@ interface CustomerRowProps {
 }
 
 export function CustomerRow({ customer, onView, onEdit, onDelete }: CustomerRowProps) {
+  const t = useTranslations("customers");
+
   const joinedDate =
     customer.joinedAt instanceof Date ? customer.joinedAt : new Date(customer.joinedAt);
   const lastVisitDate =
@@ -85,7 +90,7 @@ export function CustomerRow({ customer, onView, onEdit, onDelete }: CustomerRowP
           <div className="min-w-0">
             <p className="font-bold text-sm text-foreground truncate">{customer.name}</p>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Joined {formatDate(joinedDate, "en-US")}
+              {t("joined", { date: formatDate(joinedDate) })}
             </p>
           </div>
         </div>

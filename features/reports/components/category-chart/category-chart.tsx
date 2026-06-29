@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { ChartCard } from "@/components/shared/chart-card";
 import type { CategorySales } from "@/features/reports/types";
 import { CategoryChartPlaceholder } from "./category-chart-placeholder";
@@ -5,6 +8,7 @@ import { CategoryChartPlaceholder } from "./category-chart-placeholder";
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 interface CategoryChartProps {
+  /** Chart data — consumed once a chart library is introduced */
   data:     CategorySales[];
   loading?: boolean;
   empty?:   boolean;
@@ -12,20 +16,18 @@ interface CategoryChartProps {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function CategoryChart({ data: _data, loading, empty }: CategoryChartProps) {
+export function CategoryChart({ loading, empty }: CategoryChartProps) {
+  const t = useTranslations("reports.categoryChart");
+
   return (
     <ChartCard
-      title="Revenue by Category"
-      description="Contribution of each menu category to total revenue"
+      title={t("title")}
+      description={t("description")}
       loading={loading}
       empty={empty}
-      emptyMessage="No category data for the selected period."
+      emptyMessage={t("empty")}
     >
-      {/*
-        Replace <CategoryChartPlaceholder /> with a real chart that consumes
-        the `data` prop when a chart library is introduced. The public API
-        of this component — data, loading, empty — stays unchanged.
-      */}
+      {/* Replace with a real chart consuming the `data` prop when a chart library is added */}
       <CategoryChartPlaceholder />
     </ChartCard>
   );

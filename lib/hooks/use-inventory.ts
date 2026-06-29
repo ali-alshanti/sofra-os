@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCurrentUser } from "./use-auth";
+import { useToast } from "@/lib/providers/toast-provider";
 import { QUERY_KEYS } from "@/lib/constants/query-keys";
 import {
   getInventoryItems,
@@ -24,7 +25,7 @@ export function useInventoryCategories() {
     queryKey: QUERY_KEYS.inventory.categories(restaurantId),
     queryFn:  () => getInventoryCategories(restaurantId),
     enabled:  !!restaurantId,
-    staleTime: 10 * 60 * 1000,  // categories change rarely
+    staleTime: 10 * 60 * 1000,
   });
 }
 
@@ -95,6 +96,7 @@ export function useLowStockItems(limit = 5) {
 
 export function useUpdateInventoryItem() {
   const queryClient = useQueryClient();
+  const { toastSuccess, toastError } = useToast();
 
   return useMutation({
     mutationFn: ({ itemId, patch }: {
@@ -103,8 +105,11 @@ export function useUpdateInventoryItem() {
     }) => updateInventoryItem(itemId, patch),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.inventory.all });
-      // Also refresh dashboard inventory alerts
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.all });
+      toastSuccess("Item updated successfully.");
+    },
+    onError: (err) => {
+      toastError(err instanceof Error ? err.message : "Failed to update item.");
     },
   });
 }
@@ -113,12 +118,17 @@ export function useUpdateInventoryItem() {
 
 export function useDeleteInventoryItem() {
   const queryClient = useQueryClient();
+  const { toastSuccess, toastError } = useToast();
 
   return useMutation({
     mutationFn: (itemId: string) => deleteInventoryItem(itemId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.inventory.all });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.all });
+      toastSuccess("Item deleted successfully.");
+    },
+    onError: (err) => {
+      toastError(err instanceof Error ? err.message : "Failed to delete item.");
     },
   });
 }

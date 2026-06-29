@@ -1,1 +1,1 @@
-export { KitchenBoard, PLACEHOLDER_ORDERS } from "./kitchen-board";
+export { KitchenBoard } from "./kitchen-board";

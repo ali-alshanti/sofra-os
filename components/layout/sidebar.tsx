@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { usePathname } from "@/lib/navigation";
-import { Link } from "@/lib/navigation";
 import { APP_NAME } from "@/lib/constants/app";
 import { ROUTES } from "@/lib/constants/routes";
 import { SidebarNav } from "@/components/layout/sidebar/sidebar-nav";
@@ -40,7 +39,7 @@ function SidebarLogo() {
 // ─── Bottom ───────────────────────────────────────────────────────────────────
 
 function SidebarBottom() {
-  const t        = useTranslations("common.nav");
+  const t = useTranslations("common.nav");
   const pathname = usePathname();
   const { user } = useCurrentUser();
 
@@ -48,7 +47,7 @@ function SidebarBottom() {
     pathname === ROUTES.SETTINGS || pathname.startsWith(ROUTES.SETTINGS + "/");
 
   const displayName = user?.full_name ?? "User";
-  const displayRole = user?.role      ?? "Staff";
+  const displayRole = user?.role ?? "Staff";
 
   return (
     <div className="shrink-0 border-t border-sidebar-border px-3 py-4">
@@ -83,15 +82,15 @@ export function Sidebar() {
   const t = useTranslations("common.nav");
 
   const NAV_ITEMS = [
-    { label: t("dashboard"),  icon: LayoutDashboard, href: ROUTES.DASHBOARD },
-    { label: t("orders"),     icon: ShoppingBag,    href: ROUTES.ORDERS },
-    { label: t("menu"),       icon: UtensilsCrossed, href: ROUTES.MENU },
-    { label: t("tables"),     icon: LayoutGrid,     href: ROUTES.TABLES },
-    { label: t("kitchen"),    icon: ChefHat,        href: ROUTES.KITCHEN },
-    { label: t("inventory"),  icon: Package,        href: ROUTES.INVENTORY },
-    { label: t("customers"),  icon: Users,          href: ROUTES.CUSTOMERS },
-    { label: t("employees"),  icon: UserCog,        href: ROUTES.EMPLOYEES },
-    { label: t("reports"),    icon: BarChart2,      href: ROUTES.REPORTS },
+    { label: t("dashboard"), icon: LayoutDashboard, href: ROUTES.DASHBOARD },
+    { label: t("orders"), icon: ShoppingBag, href: ROUTES.ORDERS },
+    { label: t("menu"), icon: UtensilsCrossed, href: ROUTES.MENU },
+    { label: t("tables"), icon: LayoutGrid, href: ROUTES.TABLES },
+    { label: t("kitchen"), icon: ChefHat, href: ROUTES.KITCHEN },
+    { label: t("inventory"), icon: Package, href: ROUTES.INVENTORY },
+    { label: t("customers"), icon: Users, href: ROUTES.CUSTOMERS },
+    { label: t("employees"), icon: UserCog, href: ROUTES.EMPLOYEES },
+    { label: t("reports"), icon: BarChart2, href: ROUTES.REPORTS },
   ];
 
   return (

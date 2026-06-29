@@ -2,6 +2,12 @@
   "title":       "Tables",
   "description": "Manage tables and reservations.",
 
+  "panel": {
+    "upcoming":   "Upcoming",
+    "noReservations": "No reservations for today.",
+    "bookTable":  "Book a Table"
+  },
+
   "floorPlan": {
     "title":   "Floor Plan",
     "squares": "Dining Tables",

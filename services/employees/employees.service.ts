@@ -118,6 +118,27 @@ export async function updateEmployee(
   if (error) throw new Error(error.message);
 }
 
+// ─── getWaitersFilterOptions ──────────────────────────────────────────────────
+// Returns all active employees that can be assigned as waiters on orders
+
+export interface WaiterFilterOption {
+  id:   string;
+  name: string;
+}
+
+export async function getWaitersFilterOptions(restaurantId: string): Promise<WaiterFilterOption[]> {
+  const supabase = getSupabaseBrowserClient();
+  const { data, error } = await supabase
+    .from("employees")
+    .select("id, full_name")
+    .eq("restaurant_id", restaurantId)
+    .eq("is_active", true)
+    .is("deleted_at", null)
+    .order("full_name");
+  if (error) throw new Error(error.message);
+  return (data ?? []).map((e) => ({ id: e.id, name: e.full_name }));
+}
+
 // ─── updateEmployeeStatus ─────────────────────────────────────────────────────
 
 export async function updateEmployeeStatus(

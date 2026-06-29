@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { AppShell }   from "@/components/layout/app-shell";
 import { Pagination } from "@/components/shared/pagination";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { InventoryHeader }  from "./components/inventory-header";
 import { InventorySummary } from "./components/inventory-summary";
 import { InventoryFilters } from "./components/inventory-filters";
@@ -28,9 +29,10 @@ const PAGE_SIZE = 10;
 export function InventoryFeature() {
   const t = useTranslations("inventory");
 
-  const [filters, setFilters]         = useState<InventoryFiltersValue>(DEFAULT_INVENTORY_FILTERS);
-  const [currentPage, setCurrentPage] = useState(1);
-  const queryClient                   = useQueryClient();
+  const [filters, setFilters]               = useState<InventoryFiltersValue>(DEFAULT_INVENTORY_FILTERS);
+  const [currentPage, setCurrentPage]       = useState(1);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const queryClient                         = useQueryClient();
 
   const { data: summary, isLoading: summaryLoading } = useInventorySummary();
   const { data: categories = [] }                    = useInventoryCategories();
@@ -53,6 +55,13 @@ export function InventoryFeature() {
 
   function handleRefresh() {
     queryClient.invalidateQueries({ queryKey: QUERY_KEYS.inventory.all });
+  }
+
+  function handleConfirmDelete() {
+    if (!pendingDeleteId) return;
+    deleteItem.mutate(pendingDeleteId, {
+      onSettled: () => setPendingDeleteId(null),
+    });
   }
 
   return (
@@ -88,7 +97,7 @@ export function InventoryFeature() {
           loading={itemsLoading}
           onView={() => undefined}
           onEdit={() => undefined}
-          onDelete={(id) => deleteItem.mutate(id)}
+          onDelete={(id) => setPendingDeleteId(id)}
           pagination={
             totalPages > 1 ? (
               <Pagination
@@ -101,6 +110,16 @@ export function InventoryFeature() {
               />
             ) : undefined
           }
+        />
+
+        <ConfirmDialog
+          open={!!pendingDeleteId}
+          onOpenChange={(open) => { if (!open) setPendingDeleteId(null); }}
+          title="Delete Item"
+          description="This will permanently remove the inventory item and cannot be undone."
+          confirmLabel="Delete"
+          loading={deleteItem.isPending}
+          onConfirm={handleConfirmDelete}
         />
       </div>
     </AppShell>

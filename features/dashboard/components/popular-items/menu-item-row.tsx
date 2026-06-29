@@ -1,5 +1,6 @@
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 export interface MenuItemRowData {
   name: string;
@@ -28,7 +29,9 @@ export function MenuItemRow({ item }: MenuItemRowProps) {
       {/* Thumbnail */}
       <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-muted">
         {item.imageSrc && (
-          <img
+          <Image
+            width={64}
+            height={64}
             src={item.imageSrc}
             alt={item.name}
             className="w-full h-full object-cover"
@@ -38,7 +41,9 @@ export function MenuItemRow({ item }: MenuItemRowProps) {
 
       {/* Name + Category / Price */}
       <div className="flex-1 min-w-0">
-        <p className="typography-small font-bold text-foreground truncate">{item.name}</p>
+        <p className="typography-small font-bold text-foreground truncate">
+          {item.name}
+        </p>
         <p className="typography-caption text-muted-foreground mt-0.5">
           {item.category} · {item.price}
         </p>
@@ -53,8 +58,8 @@ export function MenuItemRow({ item }: MenuItemRowProps) {
           className="flex items-center justify-end gap-0.5 mt-0.5"
           style={{
             color: item.trendUp
-              ? "oklch(0.508 0.118 165.612)"   /* emerald-700 */
-              : "oklch(0.577 0.245 27.325)",   /* red-600 */
+              ? "oklch(0.508 0.118 165.612)" /* emerald-700 */
+              : "oklch(0.577 0.245 27.325)" /* red-600 */,
           }}
         >
           <TrendIcon size={12} />

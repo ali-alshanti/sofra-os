@@ -21,6 +21,7 @@
 
   "table": {
     "customer":   "العميل",
+    "contact":    "التواصل",
     "loyalty":    "الولاء",
     "status":     "الحالة",
     "visits":     "الزيارات",
@@ -56,6 +57,7 @@
     "delete": "حذف"
   },
 
+  "joined": "انضم {date}",
   "visits": "{count} زيارات",
 
   "empty": {

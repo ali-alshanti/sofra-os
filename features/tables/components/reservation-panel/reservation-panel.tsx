@@ -1,39 +1,38 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { CalendarDays } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/format-date";
 import { ReservationCard } from "@/features/tables/components/reservation-card";
 import type { Reservation } from "@/features/tables/components/reservation-card";
 
-// ─── Placeholder data ─────────────────────────────────────────────────────────
-
-export const PLACEHOLDER_RESERVATIONS: Reservation[] = [
-  { id: "r1", customerName: "Elena Vance",   reservationTime: "19:00", guests: 4, tableNumber: "T4", status: "upcoming" },
-  { id: "r2", customerName: "Arthur Morgan", reservationTime: "19:15", guests: 2, tableNumber: "T12", status: "upcoming" },
-  { id: "r3", customerName: "Sarah Chen",    reservationTime: "19:30", guests: 6, tableNumber: "T3", status: "upcoming" },
-  { id: "r4", customerName: "Liam Wilson",   reservationTime: "20:00", guests: 2, tableNumber: "B4", status: "upcoming", dimmed: true },
-];
-
 // ─── Props ─────────────────────────────────────────────────────────────────────
 
 interface ReservationPanelProps {
-  reservations?: Reservation[];
-  onBookTable?: () => void;
+  reservations?:       Reservation[];
+  onBookTable?:        () => void;
   onReservationClick?: (id: string) => void;
-  onMoreActions?: (id: string) => void;
-  className?: string;
+  onMoreActions?:      (id: string) => void;
+  className?:          string;
 }
 
 // ─── Component ─────────────────────────────────────────────────────────────────
 
 export function ReservationPanel({
-  reservations = PLACEHOLDER_RESERVATIONS,
+  reservations = [],
   onBookTable,
   onReservationClick,
   onMoreActions,
   className,
 }: ReservationPanelProps) {
-  const today = formatDate(new Date());
+  const t = useTranslations("tables.panel");
+
+  // Deferred to client to avoid SSR/client date mismatch hydration errors
+  const [today, setToday] = useState<string>("");
+  useEffect(() => { setToday(formatDate(new Date())); }, []);
 
   return (
     <aside
@@ -46,7 +45,7 @@ export function ReservationPanel({
       {/* Header */}
       <div className="shrink-0 border-b border-border p-6">
         <h3 className="text-[24px] font-medium leading-[1.4] text-foreground tracking-tight">
-          Upcoming
+          {t("upcoming")}
         </h3>
         <p className="typography-small text-muted-foreground mt-1">{today}</p>
       </div>
@@ -55,7 +54,7 @@ export function ReservationPanel({
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {reservations.length === 0 ? (
           <p className="typography-small text-muted-foreground text-center py-8">
-            No reservations for today.
+            {t("noReservations")}
           </p>
         ) : (
           reservations.map((reservation) => (
@@ -72,7 +71,7 @@ export function ReservationPanel({
         )}
       </div>
 
-      {/* Sticky footer — Book a Table */}
+      {/* Sticky footer */}
       <div className="shrink-0 border-t border-border bg-card p-4">
         <Button
           variant="outline"
@@ -80,7 +79,7 @@ export function ReservationPanel({
           onClick={onBookTable}
         >
           <CalendarDays size={18} />
-          Book a Table
+          {t("bookTable")}
         </Button>
       </div>
     </aside>

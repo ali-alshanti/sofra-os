@@ -110,6 +110,8 @@ export interface ReportsFiltersValue {
   /** ISO date string or empty — active only when period === "custom" */
   dateFrom:   string;
   dateTo:     string;
+  /** Free-text search applied to generated reports title */
+  search:     string;
 }
 
 export const DEFAULT_REPORTS_FILTERS: ReportsFiltersValue = {
@@ -118,4 +120,5 @@ export const DEFAULT_REPORTS_FILTERS: ReportsFiltersValue = {
   category:   "all",
   dateFrom:   "",
   dateTo:     "",
+  search:     "",
 };

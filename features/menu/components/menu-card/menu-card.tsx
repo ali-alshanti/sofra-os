@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/lib/utils/format-currency";
 import type { MenuCardProps } from "./menu-card.types";
-
+import Image from "next/image";
 // ─── Action Overlay ────────────────────────────────────────────────────────────
 
 interface ActionOverlayProps {
@@ -16,8 +16,12 @@ interface ActionOverlayProps {
 
 function ActionOverlay({ onEdit, onDuplicate, onDelete }: ActionOverlayProps) {
   return (
-    <div className="action-overlay absolute inset-0 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-3 transition-opacity duration-300"
-      style={{ background: "oklch(0.262 0.051 172.552 / 0.20)", backdropFilter: "blur(4px)" }}
+    <div
+      className="action-overlay absolute inset-0 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-3 transition-opacity duration-300"
+      style={{
+        background: "oklch(0.262 0.051 172.552 / 0.20)",
+        backdropFilter: "blur(4px)",
+      }}
     >
       <button
         aria-label="Edit item"
@@ -73,14 +77,18 @@ export function MenuCard({
         )}
       >
         {item.imageSrc ? (
-          <img
+          <Image
+            width={256}
+            height={192}
             src={item.imageSrc}
             alt={item.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full bg-muted flex items-center justify-center">
-            <span className="typography-caption text-muted-foreground">No image</span>
+            <span className="typography-caption text-muted-foreground">
+              No image
+            </span>
           </div>
         )}
 
@@ -108,7 +116,10 @@ export function MenuCard({
           <div className="absolute inset-0 flex items-center justify-center z-10">
             <span
               className="font-bold text-xs px-3 py-1 rounded-full uppercase tracking-tight text-white"
-              style={{ background: "oklch(0.577 0.245 27.325 / 0.85)", backdropFilter: "blur(4px)" }}
+              style={{
+                background: "oklch(0.577 0.245 27.325 / 0.85)",
+                backdropFilter: "blur(4px)",
+              }}
             >
               Sold Out
             </span>
@@ -150,13 +161,15 @@ export function MenuCard({
         </p>
 
         {/* Availability toggle — pushed to bottom via mt-auto */}
-        <div
-          className="mt-auto flex items-center justify-between pt-4 border-t border-border/20"
-        >
-          <span className="typography-caption text-muted-foreground">Availability</span>
+        <div className="mt-auto flex items-center justify-between pt-4 border-t border-border/20">
+          <span className="typography-caption text-muted-foreground">
+            Availability
+          </span>
           <Switch
             checked={item.available}
-            onCheckedChange={(checked) => onAvailabilityChange?.(item.id, checked)}
+            onCheckedChange={(checked) =>
+              onAvailabilityChange?.(item.id, checked)
+            }
             aria-label={`Toggle availability for ${item.name}`}
           />
         </div>

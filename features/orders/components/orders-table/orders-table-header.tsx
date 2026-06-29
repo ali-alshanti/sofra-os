@@ -1,29 +1,38 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-export const ORDERS_COLUMNS = [
-  { key: "orderId",   label: "Order ID",   className: "w-[110px]" },
-  { key: "table",     label: "Table",      className: "w-[90px]"  },
-  { key: "customer",  label: "Customer",   className: ""          },
-  { key: "waiter",    label: "Waiter",     className: ""          },
-  { key: "items",     label: "Items",      className: "w-[70px] text-center" },
-  { key: "total",     label: "Total",      className: "w-[100px] text-right" },
-  { key: "status",    label: "Status",     className: "w-[120px]" },
-  { key: "createdAt", label: "Created At", className: "w-[130px]" },
-  { key: "actions",   label: "",           className: "w-[48px]"  },
+export const ORDERS_COLUMN_KEYS = [
+  "order", "table", "customer", "waiter", "items", "total", "status", "time", "actions",
 ] as const;
 
-export type OrderColumnKey = (typeof ORDERS_COLUMNS)[number]["key"];
+export type OrderColumnKey = (typeof ORDERS_COLUMN_KEYS)[number];
+
+const COLUMN_WIDTHS: Record<OrderColumnKey, string> = {
+  order:    "w-[110px]",
+  table:    "w-[90px]",
+  customer: "",
+  waiter:   "",
+  items:    "w-[70px] text-center",
+  total:    "w-[100px] text-right",
+  status:   "w-[120px]",
+  time:     "w-[130px]",
+  actions:  "w-[48px]",
+};
 
 export function OrdersTableHeader() {
+  const t = useTranslations("orders.table");
+
   return (
     <TableHeader>
       <TableRow className="hover:bg-transparent border-border">
-        {ORDERS_COLUMNS.map((col) => (
+        {ORDERS_COLUMN_KEYS.map((key) => (
           <TableHead
-            key={col.key}
-            className={`typography-caption uppercase tracking-widest text-muted-foreground font-medium ${col.className}`}
+            key={key}
+            className={`typography-caption uppercase tracking-widest text-muted-foreground font-medium ${COLUMN_WIDTHS[key]}`}
           >
-            {col.label}
+            {key === "actions" ? "" : t(key)}
           </TableHead>
         ))}
       </TableRow>

@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCurrentUser } from "./use-auth";
+import { useToast } from "@/lib/providers/toast-provider";
 import { QUERY_KEYS } from "@/lib/constants/query-keys";
 import {
   getCategories,
@@ -20,7 +21,7 @@ export function useMenuCategories() {
     queryKey: QUERY_KEYS.menu.categories(restaurantId),
     queryFn:  () => getCategories(restaurantId),
     enabled:  !!restaurantId,
-    staleTime: 5 * 60 * 1000,  // categories change rarely
+    staleTime: 5 * 60 * 1000,
   });
 }
 
@@ -42,13 +43,11 @@ export function useMenuItems(categoryId?: string, search?: string) {
 
 export function useUpdateMenuItemAvailability() {
   const queryClient = useQueryClient();
-  const { user }    = useCurrentUser();
-  const restaurantId = user?.restaurant_id ?? "";
+  const { toastSuccess, toastError } = useToast();
 
   return useMutation({
     mutationFn: ({ itemId, available }: { itemId: string; available: boolean }) =>
       updateMenuItemAvailability(itemId, available),
-    // Optimistic update — flip locally before server confirms
     onMutate: async ({ itemId, available }) => {
       await queryClient.cancelQueries({ queryKey: QUERY_KEYS.menu.all });
       const snap = queryClient.getQueriesData({ queryKey: QUERY_KEYS.menu.all });
@@ -64,11 +63,14 @@ export function useUpdateMenuItemAvailability() {
       );
       return { snap };
     },
-    onError: (_err, _vars, ctx) => {
-      // Rollback on error
+    onError: (err, _vars, ctx) => {
       for (const [key, data] of ctx?.snap ?? []) {
         queryClient.setQueryData(key, data);
       }
+      toastError(err instanceof Error ? err.message : "Failed to update availability.");
+    },
+    onSuccess: (_data, { available }) => {
+      toastSuccess(available ? "Item marked as available." : "Item marked as unavailable.");
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.menu.all });
@@ -80,11 +82,16 @@ export function useUpdateMenuItemAvailability() {
 
 export function useDeleteMenuItem() {
   const queryClient = useQueryClient();
+  const { toastSuccess, toastError } = useToast();
 
   return useMutation({
     mutationFn: (itemId: string) => deleteMenuItem(itemId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.menu.all });
+      toastSuccess("Menu item deleted successfully.");
+    },
+    onError: (err) => {
+      toastError(err instanceof Error ? err.message : "Failed to delete menu item.");
     },
   });
 }

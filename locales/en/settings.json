@@ -3,12 +3,18 @@
   "description": "Manage your restaurant's configuration, preferences, and integrations.",
 
   "sidebar": {
-    "general":       "General",
-    "businessHours": "Business Hours",
-    "currencyTax":   "Currency & Tax",
-    "system":        "System",
-    "notifications": "Notifications",
-    "integrations":  "Integrations"
+    "general":           "General",
+    "generalDesc":       "Restaurant name, address, contact",
+    "businessHours":     "Business Hours",
+    "businessHoursDesc": "Weekly schedule and open/close times",
+    "currencyTax":       "Currency & Tax",
+    "currencyTaxDesc":   "Currency, tax rate, and tax label",
+    "system":            "System",
+    "systemDesc":        "Theme, language, timezone, date format",
+    "notifications":     "Notifications",
+    "notificationsDesc": "Alert preferences and event subscriptions",
+    "integrations":      "Integrations",
+    "integrationsDesc":  "Third-party services and connections"
   },
 
   "general": {

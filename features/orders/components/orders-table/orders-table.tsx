@@ -1,13 +1,7 @@
 import type { ReactNode } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { OrdersTableHeader, ORDERS_COLUMNS } from "./orders-table-header";
-
+import { OrdersTableHeader, ORDERS_COLUMN_KEYS } from "./orders-table-header";
 // ─── Slots ─────────────────────────────────────────────────────────────────────
 
 function LoadingRows() {
@@ -15,10 +9,8 @@ function LoadingRows() {
     <>
       {Array.from({ length: 5 }).map((_, i) => (
         <TableRow key={i} className="animate-pulse border-border">
-          {ORDERS_COLUMNS.map((col) => (
-            <TableCell key={col.key} className={col.className}>
-              <div className="h-4 rounded bg-muted" />
-            </TableCell>
+          {ORDERS_COLUMN_KEYS.map((key) => (
+            <TableCell key={key} className="h-4 rounded bg-muted" />
           ))}
         </TableRow>
       ))}
@@ -30,7 +22,7 @@ function EmptyRow({ message }: { message: string }) {
   return (
     <TableRow className="border-0 hover:bg-transparent">
       <TableCell
-        colSpan={ORDERS_COLUMNS.length}
+        colSpan={ORDERS_COLUMN_KEYS.length}
         className="py-16 text-center"
       >
         <p className="typography-small text-muted-foreground">{message}</p>
@@ -68,14 +60,19 @@ export function OrdersTable({
       (Array.isArray(children) && children.length === 0));
 
   return (
-    <div className={cn("glass-card premium-shadow rounded-2xl overflow-hidden", className)}>
+    <div
+      className={cn(
+        "glass-card premium-shadow rounded-2xl overflow-hidden",
+        className,
+      )}
+    >
       <div className="overflow-x-auto">
         <Table>
           <OrdersTableHeader />
           <TableBody>
-            {loading  ? <LoadingRows />                     : null}
-            {isEmpty  ? <EmptyRow message={emptyMessage} /> : null}
-            {!loading && !isEmpty ? children               : null}
+            {loading ? <LoadingRows /> : null}
+            {isEmpty ? <EmptyRow message={emptyMessage} /> : null}
+            {!loading && !isEmpty ? children : null}
           </TableBody>
         </Table>
       </div>

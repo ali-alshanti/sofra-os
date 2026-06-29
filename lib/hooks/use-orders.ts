@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCurrentUser } from "./use-auth";
+import { useToast } from "@/lib/providers/toast-provider";
 import { QUERY_KEYS } from "@/lib/constants/query-keys";
 import {
   getOrders,
@@ -10,6 +11,8 @@ import {
   deleteOrder,
   type GetOrdersParams,
 } from "@/services/orders";
+import { getTablesFilterOptions } from "@/services/tables";
+import { getWaitersFilterOptions } from "@/services/employees";
 import type { OrderStatusValue } from "@/features/orders/types";
 
 // ─── useOrders ────────────────────────────────────────────────────────────────
@@ -26,8 +29,8 @@ export function useOrders(params: UseOrdersParams = {}) {
     queryKey: QUERY_KEYS.orders.list(fullParams as unknown as Record<string, unknown>),
     queryFn:  () => getOrders(fullParams),
     enabled:  !!restaurantId,
-    staleTime: 30 * 1000,         // 30 seconds — orders change frequently
-    placeholderData: (prev) => prev, // keep previous page visible during refetch
+    staleTime: 30 * 1000,
+    placeholderData: (prev) => prev,
   });
 }
 
@@ -46,18 +49,50 @@ export function useOrdersSummary() {
   });
 }
 
+// ─── useTablesForFilter ───────────────────────────────────────────────────────
+
+export function useTablesForFilter() {
+  const { user } = useCurrentUser();
+  const restaurantId = user?.restaurant_id ?? "";
+
+  return useQuery({
+    queryKey: QUERY_KEYS.orders.tableOptions(restaurantId),
+    queryFn:  () => getTablesFilterOptions(restaurantId),
+    enabled:  !!restaurantId,
+    staleTime: 10 * 60 * 1000,
+  });
+}
+
+// ─── useWaitersForFilter ──────────────────────────────────────────────────────
+
+export function useWaitersForFilter() {
+  const { user } = useCurrentUser();
+  const restaurantId = user?.restaurant_id ?? "";
+
+  return useQuery({
+    queryKey: QUERY_KEYS.orders.waiterOptions(restaurantId),
+    queryFn:  () => getWaitersFilterOptions(restaurantId),
+    enabled:  !!restaurantId,
+    staleTime: 10 * 60 * 1000,
+  });
+}
+
 // ─── useUpdateOrderStatus ─────────────────────────────────────────────────────
 
 export function useUpdateOrderStatus() {
   const queryClient = useQueryClient();
+  const { toastSuccess, toastError } = useToast();
 
   return useMutation({
     mutationFn: ({ orderId, status }: { orderId: string; status: OrderStatusValue }) =>
       updateOrderStatus(orderId, status),
     onSuccess: () => {
-      // Invalidate orders list and summary so both re-fetch
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.orders.all });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.all });
+      toastSuccess("Order status updated.");
+    },
+    onError: (err) => {
+      toastError(err instanceof Error ? err.message : "Failed to update order status.");
     },
   });
 }
@@ -66,12 +101,17 @@ export function useUpdateOrderStatus() {
 
 export function useDeleteOrder() {
   const queryClient = useQueryClient();
+  const { toastSuccess, toastError } = useToast();
 
   return useMutation({
     mutationFn: (orderId: string) => deleteOrder(orderId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.orders.all });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.all });
+      toastSuccess("Order deleted successfully.");
+    },
+    onError: (err) => {
+      toastError(err instanceof Error ? err.message : "Failed to delete order.");
     },
   });
 }

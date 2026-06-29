@@ -1,1 +1,1 @@
-export { ReservationPanel, PLACEHOLDER_RESERVATIONS } from "./reservation-panel";
+export { ReservationPanel } from "./reservation-panel";

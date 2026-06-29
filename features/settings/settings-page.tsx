@@ -22,6 +22,7 @@ import {
   useIntegrations,
   useUpdateIntegration,
 } from "@/lib/hooks/use-settings";
+import { useCurrentUser } from "@/lib/hooks/use-auth";
 import { useToast } from "@/lib/providers/toast-provider";
 
 import type {
@@ -49,9 +50,12 @@ const SECTION_ORDER: SettingsSection[] = [
 export function SettingsFeature() {
   const { toastSuccess, toastError } = useToast();
 
-  // ── Remote data ─────────────────────────────────────────────────────────────
-  const { data: remoteSettings, isLoading } = useRestaurantSettings();
+  // ── Auth + remote data ───────────────────────────────────────────────────────
+  const { user, isLoading: authLoading } = useCurrentUser();
+  const { data: remoteSettings, isLoading: settingsLoading, isError } = useRestaurantSettings();
   const { data: remoteIntegrations }        = useIntegrations();
+
+  const isLoading = authLoading || settingsLoading;
 
   const updateSettings    = useUpdateRestaurantSettings();
   const updateHours       = useUpdateBusinessHours();
@@ -70,14 +74,15 @@ export function SettingsFeature() {
   useEffect(() => {
     if (remoteSettings && !seededRef.current) {
       seededRef.current = true;
-      setSettings(remoteSettings);       // eslint-disable-line react-hooks/set-state-in-effect
-      setSavedSettings(remoteSettings);  // eslint-disable-line react-hooks/set-state-in-effect
+      setSettings(remoteSettings);
+      setSavedSettings(remoteSettings);
     }
   }, [remoteSettings]);
 
   useEffect(() => {
     if (remoteIntegrations) {
-      setIntegrations(remoteIntegrations); // eslint-disable-line react-hooks/set-state-in-effect
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIntegrations(remoteIntegrations);
     }
   }, [remoteIntegrations]);
 
@@ -167,6 +172,36 @@ export function SettingsFeature() {
     } catch {
       toastError("Failed to disconnect integration. Please try again.");
     }
+  }
+
+  // ── Render: not linked to a restaurant ──────────────────────────────────────
+
+  if (!authLoading && !user?.restaurant_id) {
+    return (
+      <AppShell>
+        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center">
+          <p className="text-lg font-semibold text-foreground">Account not linked to a restaurant</p>
+          <p className="text-sm text-muted-foreground max-w-sm">
+            Your account doesn&apos;t have a restaurant profile yet. Contact your administrator to complete the setup.
+          </p>
+        </div>
+      </AppShell>
+    );
+  }
+
+  // ── Render: settings query error ─────────────────────────────────────────────
+
+  if (isError) {
+    return (
+      <AppShell>
+        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center">
+          <p className="text-lg font-semibold text-foreground">Failed to load settings</p>
+          <p className="text-sm text-muted-foreground max-w-sm">
+            There was a problem fetching your restaurant settings. Please refresh the page or contact your administrator.
+          </p>
+        </div>
+      </AppShell>
+    );
   }
 
   // ── Render (loading state) ────────────────────────────────────────────────────

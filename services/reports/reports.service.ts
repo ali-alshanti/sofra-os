@@ -309,7 +309,7 @@ export async function getCustomerAnalytics(restaurantId: string): Promise<Custom
 
 export async function getGeneratedReports(
   restaurantId: string,
-  filters: Pick<ReportsFiltersValue, "reportType">,
+  filters: Pick<ReportsFiltersValue, "reportType" | "search">,
   page     = 1,
   pageSize = 10,
 ): Promise<GetGeneratedReportsResult> {
@@ -333,6 +333,11 @@ export async function getGeneratedReports(
     };
     const dbType = dbTypeMap[filters.reportType];
     if (dbType) query = query.eq("type", dbType);
+  }
+
+  // Server-side title search — applied before pagination so count is accurate
+  if (filters.search && filters.search.trim() !== "") {
+    query = query.ilike("title", `%${filters.search.trim()}%`);
   }
 
   const { data, count, error } = await query.range(from, to);

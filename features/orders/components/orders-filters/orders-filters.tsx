@@ -11,21 +11,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { useTablesForFilter, useWaitersForFilter } from "@/lib/hooks/use-orders";
 import type { OrderStatusFilter, OrderType } from "@/features/orders/types";
 
-// ─── Re-exports for consumers that import from this file ──────────────────────
+// ─── Re-exports for consumers ─────────────────────────────────────────────────
 export type { OrderStatusFilter as OrderStatus, OrderType };
 
 // ─── Filter value ─────────────────────────────────────────────────────────────
 
 export interface OrdersFiltersValue {
-  search: string;
-  status: OrderStatusFilter;
-  tableId: string;
-  waiterId: string;
+  search:    string;
+  status:    OrderStatusFilter;
+  tableId:   string;
+  waiterId:  string;
   orderType: OrderType;
-  dateFrom: string;
-  dateTo: string;
+  dateFrom:  string;
+  dateTo:    string;
 }
 
 export const DEFAULT_FILTERS: OrdersFiltersValue = {
@@ -38,64 +39,49 @@ export const DEFAULT_FILTERS: OrdersFiltersValue = {
   dateTo:    "",
 };
 
-// ─── Static Options ────────────────────────────────────────────────────────────
+// ─── Static options (status + type are static enums) ─────────────────────────
 
 const STATUS_OPTIONS: { value: OrderStatusFilter; label: string }[] = [
   { value: "all",       label: "All Statuses" },
-  { value: "pending",   label: "Pending" },
-  { value: "preparing", label: "Preparing" },
-  { value: "ready",     label: "Ready" },
-  { value: "served",    label: "Served" },
-  { value: "cancelled", label: "Cancelled" },
+  { value: "pending",   label: "Pending"      },
+  { value: "preparing", label: "Preparing"    },
+  { value: "ready",     label: "Ready"        },
+  { value: "served",    label: "Served"       },
+  { value: "cancelled", label: "Cancelled"    },
 ];
 
 const ORDER_TYPE_OPTIONS: { value: OrderType; label: string }[] = [
   { value: "all",      label: "All Types" },
-  { value: "dine-in",  label: "Dine In" },
-  { value: "takeaway", label: "Takeaway" },
-  { value: "delivery", label: "Delivery" },
+  { value: "dine-in",  label: "Dine In"   },
+  { value: "takeaway", label: "Takeaway"  },
+  { value: "delivery", label: "Delivery"  },
 ];
 
-// Placeholder options — replaced with real data when API is connected
-const TABLE_OPTIONS = [
-  { value: "all",  label: "All Tables" },
-  { value: "t1",   label: "Table 1" },
-  { value: "t2",   label: "Table 2" },
-  { value: "t3",   label: "Table 3" },
-];
-
-const WAITER_OPTIONS = [
-  { value: "all",  label: "All Waiters" },
-  { value: "w1",   label: "Alex M." },
-  { value: "w2",   label: "Sarah K." },
-  { value: "w3",   label: "Omar R." },
-];
-
-// ─── Props ─────────────────────────────────────────────────────────────────────
+// ─── Props ────────────────────────────────────────────────────────────────────
 
 export interface OrdersFiltersProps {
-  value: OrdersFiltersValue;
-  onChange: (patch: Partial<OrdersFiltersValue>) => void;
-  onReset?: () => void;
-  loading?: boolean;
+  value:     OrdersFiltersValue;
+  onChange:  (patch: Partial<OrdersFiltersValue>) => void;
+  onReset?:  () => void;
+  loading?:  boolean;
   className?: string;
 }
 
-// ─── Helpers ───────────────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function hasActiveFilters(value: OrdersFiltersValue): boolean {
   return (
-    value.search !== "" ||
-    value.status !== "all" ||
-    value.tableId !== "all" ||
-    value.waiterId !== "all" ||
+    value.search    !== "" ||
+    value.status    !== "all" ||
+    value.tableId   !== "all" ||
+    value.waiterId  !== "all" ||
     value.orderType !== "all" ||
-    value.dateFrom !== "" ||
-    value.dateTo !== ""
+    value.dateFrom  !== "" ||
+    value.dateTo    !== ""
   );
 }
 
-// ─── Component ─────────────────────────────────────────────────────────────────
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export function OrdersFilters({
   value,
@@ -106,6 +92,10 @@ export function OrdersFilters({
 }: OrdersFiltersProps) {
   const active = hasActiveFilters(value);
 
+  // Real DB data for table and waiter dropdowns
+  const { data: tables  = [] } = useTablesForFilter();
+  const { data: waiters = [] } = useWaitersForFilter();
+
   return (
     <div
       className={cn(
@@ -115,14 +105,14 @@ export function OrdersFilters({
       )}
     >
       {/* Search */}
-      <div className="relative min-w-[220px] flex-1">
+      <div className="relative min-w-55 flex-1">
         <Search
           size={16}
           className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
         />
         <Input
           type="search"
-          placeholder="Search orders, items, tables…"
+          placeholder="Search orders…"
           aria-label="Search orders"
           value={value.search}
           onChange={(e) => onChange({ search: e.target.value })}
@@ -147,35 +137,37 @@ export function OrdersFilters({
         </SelectContent>
       </Select>
 
-      {/* Table */}
+      {/* Table — real data from DB */}
       <Select
         value={value.tableId}
         onValueChange={(v) => onChange({ tableId: v })}
       >
         <SelectTrigger className="h-9 w-40 text-sm">
-          <SelectValue placeholder="Table" />
+          <SelectValue placeholder="All Tables" />
         </SelectTrigger>
         <SelectContent>
-          {TABLE_OPTIONS.map((opt) => (
-            <SelectItem key={opt.value} value={opt.value}>
-              {opt.label}
+          <SelectItem value="all">All Tables</SelectItem>
+          {tables.map((t) => (
+            <SelectItem key={t.id} value={t.id}>
+              Table {t.number}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
 
-      {/* Waiter */}
+      {/* Waiter — real data from DB */}
       <Select
         value={value.waiterId}
         onValueChange={(v) => onChange({ waiterId: v })}
       >
         <SelectTrigger className="h-9 w-40 text-sm">
-          <SelectValue placeholder="Waiter" />
+          <SelectValue placeholder="All Waiters" />
         </SelectTrigger>
         <SelectContent>
-          {WAITER_OPTIONS.map((opt) => (
-            <SelectItem key={opt.value} value={opt.value}>
-              {opt.label}
+          <SelectItem value="all">All Waiters</SelectItem>
+          {waiters.map((w) => (
+            <SelectItem key={w.id} value={w.id}>
+              {w.name}
             </SelectItem>
           ))}
         </SelectContent>
@@ -198,7 +190,7 @@ export function OrdersFilters({
         </SelectContent>
       </Select>
 
-      {/* Date Range — placeholder trigger, no picker yet */}
+      {/* Date Range display */}
       <Button
         variant="outline"
         size="sm"
@@ -210,7 +202,7 @@ export function OrdersFilters({
           : "Date range"}
       </Button>
 
-      {/* Clear all filters */}
+      {/* Clear all */}
       {active && (
         <Button
           variant="ghost"

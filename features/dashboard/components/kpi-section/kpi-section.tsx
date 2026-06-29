@@ -67,7 +67,7 @@ export function KpiSection() {
         iconColor="#80bea6"
         pulse={data?.kitchenStatus === "optimal"}
         pulseLabel={data?.kitchenStatus === "optimal" ? t("kitchenStatus.optimal") : undefined}
-        badge={data?.kitchenStatus !== "optimal" ? t(`kitchenStatus.${data!.kitchenStatus}`) : undefined}
+        badge={data && data.kitchenStatus !== "optimal" ? t(`kitchenStatus.${data.kitchenStatus}`) : undefined}
       />
     </div>
   );

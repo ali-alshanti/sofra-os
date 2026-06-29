@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCurrentUser } from "./use-auth";
+import { useToast } from "@/lib/providers/toast-provider";
 import { QUERY_KEYS } from "@/lib/constants/query-keys";
 import {
   getCustomers,
@@ -49,6 +50,7 @@ export function useCustomerSummary() {
 
 export function useUpdateCustomer() {
   const queryClient = useQueryClient();
+  const { toastSuccess, toastError } = useToast();
 
   return useMutation({
     mutationFn: ({ customerId, patch }: {
@@ -57,6 +59,10 @@ export function useUpdateCustomer() {
     }) => updateCustomer(customerId, patch),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.customers.all });
+      toastSuccess("Customer updated successfully.");
+    },
+    onError: (err) => {
+      toastError(err instanceof Error ? err.message : "Failed to update customer.");
     },
   });
 }
@@ -65,11 +71,16 @@ export function useUpdateCustomer() {
 
 export function useDeleteCustomer() {
   const queryClient = useQueryClient();
+  const { toastSuccess, toastError } = useToast();
 
   return useMutation({
     mutationFn: (customerId: string) => deleteCustomer(customerId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.customers.all });
+      toastSuccess("Customer deleted successfully.");
+    },
+    onError: (err) => {
+      toastError(err instanceof Error ? err.message : "Failed to delete customer.");
     },
   });
 }

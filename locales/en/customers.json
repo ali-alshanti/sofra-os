@@ -21,6 +21,7 @@
 
   "table": {
     "customer":   "Customer",
+    "contact":    "Contact",
     "loyalty":    "Loyalty",
     "status":     "Status",
     "visits":     "Visits",
@@ -56,6 +57,7 @@
     "delete": "Delete"
   },
 
+  "joined": "Joined {date}",
   "visits": "{count} visits",
 
   "empty": {

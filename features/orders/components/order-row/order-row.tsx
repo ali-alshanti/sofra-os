@@ -1,4 +1,7 @@
+"use client";
+
 import { MoreHorizontal, Eye, Printer, XCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { TableCell, TableRow } from "@/components/ui/table";
 import {
   Avatar,
@@ -22,50 +25,53 @@ export type { OrderData };
 
 // ─── Status Badge ──────────────────────────────────────────────────────────────
 
-const STATUS_CONFIG: Record<
-  OrderStatusValue,
-  { label: string; bg: string; color: string }
-> = {
-  pending:   { label: "Pending",   bg: "oklch(0.962 0.059 95.617 / 0.5)",  color: "oklch(0.414 0.112 45.904)" },
-  preparing: { label: "Preparing", bg: "oklch(0.968 0.007 247.896 / 0.8)", color: "oklch(0.446 0.043 257.281)" },
-  ready:     { label: "Ready",     bg: "oklch(0.950 0.052 163.051 / 0.6)", color: "oklch(0.362 0.072 165.670)" },
-  served:    { label: "Served",    bg: "oklch(0.968 0.007 247.896)",        color: "oklch(0.554 0.046 257.417)" },
-  cancelled: { label: "Cancelled", bg: "oklch(0.577 0.245 27.325 / 0.1)",  color: "oklch(0.577 0.245 27.325)" },
+const STATUS_COLORS: Record<OrderStatusValue, { bg: string; color: string }> = {
+  pending:   { bg: "oklch(0.962 0.059 95.617 / 0.5)",  color: "oklch(0.414 0.112 45.904)" },
+  preparing: { bg: "oklch(0.968 0.007 247.896 / 0.8)", color: "oklch(0.446 0.043 257.281)" },
+  ready:     { bg: "oklch(0.950 0.052 163.051 / 0.6)", color: "oklch(0.362 0.072 165.670)" },
+  served:    { bg: "oklch(0.968 0.007 247.896)",        color: "oklch(0.554 0.046 257.417)" },
+  cancelled: { bg: "oklch(0.577 0.245 27.325 / 0.1)",  color: "oklch(0.577 0.245 27.325)" },
 };
 
 function StatusBadge({ status }: { status: OrderStatusValue }) {
-  const { label, bg, color } = STATUS_CONFIG[status];
+  const t = useTranslations("orders.status");
+  const { bg, color } = STATUS_COLORS[status];
   return (
     <span
       className="inline-flex items-center px-2.5 py-0.5 rounded-full typography-caption font-medium"
       style={{ background: bg, color }}
     >
-      {label}
+      {t(status)}
     </span>
   );
 }
 
 // ─── Actions Menu ──────────────────────────────────────────────────────────────
 
-function OrderActionsMenu() {
+function OrderActionsMenu({ orderId, onDelete }: { orderId: string; onDelete?: (id: string) => void }) {
+  const t = useTranslations("orders.actions");
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
           <MoreHorizontal size={16} />
-          <span className="sr-only">Order actions</span>
+          <span className="sr-only">{t("view")}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-44">
         <DropdownMenuItem className="gap-2">
-          <Eye size={14} /> View Details
+          <Eye size={14} /> {t("view")}
         </DropdownMenuItem>
         <DropdownMenuItem className="gap-2">
-          <Printer size={14} /> Print Receipt
+          <Printer size={14} /> {t("printReceipt")}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="gap-2 text-destructive focus:text-destructive">
-          <XCircle size={14} /> Cancel Order
+        <DropdownMenuItem
+          className="gap-2 text-destructive focus:text-destructive"
+          onClick={() => onDelete?.(orderId)}
+        >
+          <XCircle size={14} /> {t("delete")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -75,26 +81,24 @@ function OrderActionsMenu() {
 // ─── OrderRow ─────────────────────────────────────────────────────────────────
 
 interface OrderRowProps {
-  order: OrderData;
+  order:    OrderData;
+  onDelete?: (id: string) => void;
 }
 
-export function OrderRow({ order }: OrderRowProps) {
+export function OrderRow({ order, onDelete }: OrderRowProps) {
   const createdDate =
     order.createdAt instanceof Date ? order.createdAt : new Date(order.createdAt);
 
   return (
     <TableRow className="border-border hover:bg-muted/30 transition-colors">
-      {/* Order ID */}
       <TableCell className="font-medium text-sm text-foreground">
         #{order.id}
       </TableCell>
 
-      {/* Table */}
       <TableCell className="typography-small text-muted-foreground">
         {order.tableNumber}
       </TableCell>
 
-      {/* Customer */}
       <TableCell>
         <div className="flex items-center gap-2">
           <Avatar className="h-7 w-7">
@@ -109,7 +113,6 @@ export function OrderRow({ order }: OrderRowProps) {
         </div>
       </TableCell>
 
-      {/* Waiter */}
       <TableCell>
         <div className="flex items-center gap-2">
           <Avatar className="h-7 w-7">
@@ -124,33 +127,28 @@ export function OrderRow({ order }: OrderRowProps) {
         </div>
       </TableCell>
 
-      {/* Items Count */}
       <TableCell className="text-center">
         <span className="typography-small font-medium text-foreground">
           {order.itemsCount}
         </span>
       </TableCell>
 
-      {/* Total */}
       <TableCell className="text-right">
         <span className="text-sm font-bold text-foreground">
           {formatCurrency(order.total)}
         </span>
       </TableCell>
 
-      {/* Status */}
       <TableCell>
         <StatusBadge status={order.status} />
       </TableCell>
 
-      {/* Created At */}
       <TableCell className="typography-caption text-muted-foreground whitespace-nowrap">
         {formatTime(createdDate)}
       </TableCell>
 
-      {/* Actions */}
       <TableCell>
-        <OrderActionsMenu />
+        <OrderActionsMenu orderId={order.id} onDelete={onDelete} />
       </TableCell>
     </TableRow>
   );

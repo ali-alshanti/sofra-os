@@ -35,9 +35,26 @@
   },
 
   "filters": {
-    "all":      "All Stations",
-    "station":  "Station"
+    "priority":          "Priority:",
+    "searchPlaceholder": "Search orders or items...",
+    "stations": {
+      "all":     "All Stations",
+      "grill":   "Grill",
+      "fryer":   "Fryer",
+      "pizza":   "Pizza",
+      "salad":   "Salad",
+      "drinks":  "Drinks",
+      "dessert": "Dessert"
+    },
+    "priorities": {
+      "all":    "All",
+      "normal": "Normal",
+      "high":   "High",
+      "urgent": "Urgent"
+    }
   },
+
+  "note": "NOTE:",
 
   "empty": {
     "pending":   "No pending orders",

@@ -6,8 +6,9 @@ export interface KitchenStats {
 }
 
 export interface KitchenHeaderProps {
-  stats?: KitchenStats;
-  onRefresh?: () => void;
-  onFilter?: () => void;
-  onFullscreen?: () => void;
+  stats?:       KitchenStats;
+  isLoading?:   boolean;
+  onRefresh?:   () => void;
+  onFilter?:    () => void;
+  onFullscreen?:() => void;
 }

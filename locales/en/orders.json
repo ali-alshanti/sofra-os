@@ -52,7 +52,8 @@
   "actions": {
     "view":      "View Order",
     "updateStatus": "Update Status",
-    "delete":    "Delete Order"
+    "delete":       "Delete Order",
+    "printReceipt": "Print Receipt"
   },
 
   "empty": {

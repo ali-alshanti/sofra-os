@@ -29,6 +29,7 @@ function hasActiveFilters(f: ReportsFiltersValue): boolean {
     f.reportType !== DEFAULT_REPORTS_FILTERS.reportType ||
     f.period     !== DEFAULT_REPORTS_FILTERS.period     ||
     f.category   !== DEFAULT_REPORTS_FILTERS.category   ||
+    f.search     !== ""                                  ||
     f.dateFrom   !== ""                                  ||
     f.dateTo     !== ""
   );
@@ -66,7 +67,7 @@ export function ReportsFilters({
         className,
       )}
     >
-      {/* Search — visual only; wire to a search field when the domain model gains one */}
+      {/* Search — filters generated reports by title */}
       <div className="relative flex-1 min-w-65">
         <Search
           size={16}
@@ -76,6 +77,8 @@ export function ReportsFilters({
           type="search"
           placeholder="Search reports..."
           aria-label="Search reports"
+          value={filters.search}
+          onChange={(e) => onFiltersChange?.({ search: e.target.value })}
           className="pl-9 h-10 bg-background text-sm"
           disabled={disabled}
         />

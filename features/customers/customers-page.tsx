@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { AppShell }   from "@/components/layout/app-shell";
 import { Pagination } from "@/components/shared/pagination";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { CustomerHeader }  from "./components/customer-header";
 import { CustomerSummary } from "./components/customer-summary";
 import { CustomerFilters } from "./components/customer-filters";
@@ -24,9 +25,10 @@ const PAGE_SIZE = 10;
 export function CustomersFeature() {
   const t = useTranslations("customers");
 
-  const [filters, setFilters]         = useState<CustomerFiltersValue>(DEFAULT_CUSTOMER_FILTERS);
-  const [currentPage, setCurrentPage] = useState(1);
-  const queryClient                   = useQueryClient();
+  const [filters, setFilters]             = useState<CustomerFiltersValue>(DEFAULT_CUSTOMER_FILTERS);
+  const [currentPage, setCurrentPage]     = useState(1);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const queryClient                       = useQueryClient();
 
   const { data: summary, isLoading: summaryLoading } = useCustomerSummary();
 
@@ -47,6 +49,13 @@ export function CustomersFeature() {
 
   function handleRefresh() {
     queryClient.invalidateQueries({ queryKey: QUERY_KEYS.customers.all });
+  }
+
+  function handleConfirmDelete() {
+    if (!pendingDeleteId) return;
+    deleteCustomer.mutate(pendingDeleteId, {
+      onSettled: () => setPendingDeleteId(null),
+    });
   }
 
   return (
@@ -80,7 +89,7 @@ export function CustomersFeature() {
           loading={customersLoading}
           onView={() => undefined}
           onEdit={() => undefined}
-          onDelete={(id) => deleteCustomer.mutate(id)}
+          onDelete={(id) => setPendingDeleteId(id)}
           pagination={
             totalPages > 1 ? (
               <Pagination
@@ -93,6 +102,16 @@ export function CustomersFeature() {
               />
             ) : undefined
           }
+        />
+
+        <ConfirmDialog
+          open={!!pendingDeleteId}
+          onOpenChange={(open) => { if (!open) setPendingDeleteId(null); }}
+          title="Delete Customer"
+          description="This action cannot be undone. The customer profile will be permanently removed."
+          confirmLabel="Delete"
+          loading={deleteCustomer.isPending}
+          onConfirm={handleConfirmDelete}
         />
       </div>
     </AppShell>

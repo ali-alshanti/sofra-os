@@ -16,7 +16,7 @@ export function KitchenFeature() {
 
   // ─── Data ──────────────────────────────────────────────────────────────────
   const { data: allOrders = [], isLoading: ordersLoading } = useKitchenOrders();
-  const { data: stats }                                    = useKitchenStats();
+  const { data: stats, isLoading: statsLoading }           = useKitchenStats();
   const advanceStatus                                      = useAdvanceKitchenOrderStatus();
 
   // ─── Client-side filter (station, priority, search) ────────────────────────
@@ -48,6 +48,7 @@ export function KitchenFeature() {
       <div className="space-y-6">
         <KitchenHeader
           stats={stats}
+          isLoading={statsLoading}
           onRefresh={handleRefresh}
           onFilter={() => undefined}
           onFullscreen={() => undefined}

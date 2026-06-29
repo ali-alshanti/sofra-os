@@ -24,10 +24,11 @@ export function useDashboardReports(filters: DateFilters) {
   const restaurantId = user?.restaurant_id ?? "";
 
   return useQuery({
-    queryKey: QUERY_KEYS.reports.dashboard(restaurantId),
+    queryKey: QUERY_KEYS.reports.dashboard(restaurantId, filters as Record<string, unknown>),
     queryFn:  () => getDashboardReports(restaurantId, filters),
     enabled:  !!restaurantId,
     staleTime: STALE_5MIN,
+    placeholderData: (prev) => prev,
   });
 }
 
@@ -78,7 +79,7 @@ export function useCustomerAnalytics() {
 // ─── useGeneratedReports ──────────────────────────────────────────────────────
 
 export function useGeneratedReports(
-  filters: Pick<ReportsFiltersValue, "reportType">,
+  filters: Pick<ReportsFiltersValue, "reportType" | "search">,
   page     = 1,
   pageSize = 10,
 ) {

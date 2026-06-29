@@ -96,11 +96,23 @@ export async function getOrders({
   if (dateFrom) query = query.gte("created_at", dateFrom);
   if (dateTo)   query = query.lte("created_at", dateTo);
 
-  // Server-side search on order_number and customer name
+  // Server-side search: order_number directly, customer name via two-phase lookup.
+  // PostgREST does not support embedded-resource columns inside .or(), so we first
+  // fetch matching customer IDs, then OR them with the order_number filter.
   if (search) {
-    query = query.or(
-      `order_number.ilike.%${search}%,customers.full_name.ilike.%${search}%`,
-    );
+    const { data: matchedCustomers } = await supabase
+      .from("customers")
+      .select("id")
+      .eq("restaurant_id", restaurantId)
+      .ilike("full_name", `%${search}%`);
+
+    const customerIds = (matchedCustomers ?? []).map((c) => c.id);
+
+    const orParts: string[] = [`order_number.ilike.%${search}%`];
+    if (customerIds.length > 0) {
+      orParts.push(`customer_id.in.(${customerIds.join(",")})`);
+    }
+    query = query.or(orParts.join(","));
   }
 
   const { data, count, error } = await query.range(from, to);

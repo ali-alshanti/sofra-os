@@ -98,6 +98,25 @@ export async function getTables(restaurantId: string): Promise<TablesData> {
   return { squareTables: squares, barSeats: bar };
 }
 
+// ─── getTablesFilterOptions ───────────────────────────────────────────────────
+
+export interface TableFilterOption {
+  id:     string;
+  number: string;
+}
+
+export async function getTablesFilterOptions(restaurantId: string): Promise<TableFilterOption[]> {
+  const supabase = getSupabaseBrowserClient();
+  const { data, error } = await supabase
+    .from("dining_tables")
+    .select("id, number")
+    .eq("restaurant_id", restaurantId)
+    .eq("is_active", true)
+    .order("number");
+  if (error) throw new Error(error.message);
+  return (data ?? []).map((t) => ({ id: t.id, number: t.number }));
+}
+
 // ─── updateTableStatus ────────────────────────────────────────────────────────
 
 export async function updateTableStatus(tableId: string, status: TableStatus): Promise<void> {

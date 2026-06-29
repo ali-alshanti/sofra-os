@@ -52,7 +52,8 @@
   "actions": {
     "view":         "عرض الطلب",
     "updateStatus": "تحديث الحالة",
-    "delete":       "حذف الطلب"
+    "delete":       "حذف الطلب",
+    "printReceipt": "طباعة الإيصال"
   },
 
   "empty": {

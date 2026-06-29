@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { KitchenTicket } from "@/features/kitchen/components/kitchen-ticket";
 import type { KitchenOrder, TicketStatus } from "@/features/kitchen/components/kitchen-ticket";
@@ -8,9 +11,9 @@ const COLUMN_CONFIG: Record<
   TicketStatus,
   { borderColor: string; badgeBg: string; badgeColor: string }
 > = {
-  pending:   { borderColor: "#d5e3fc", badgeBg: "#d5e3fc",  badgeColor: "#57657a" },
-  preparing: { borderColor: "#ffb95f", badgeBg: "#ffddb8",  badgeColor: "#2a1700" },
-  ready:     { borderColor: "#b0f0d6", badgeBg: "#b0f0d6",  badgeColor: "#002117" },
+  pending:   { borderColor: "#d5e3fc", badgeBg: "#d5e3fc",                             badgeColor: "#57657a"                           },
+  preparing: { borderColor: "#ffb95f", badgeBg: "#ffddb8",                             badgeColor: "#2a1700"                           },
+  ready:     { borderColor: "#b0f0d6", badgeBg: "#b0f0d6",                             badgeColor: "#002117"                           },
   completed: { borderColor: "oklch(0.929 0.013 255.508)", badgeBg: "oklch(0.929 0.013 255.508)", badgeColor: "oklch(0.554 0.046 257.417)" },
 };
 
@@ -44,9 +47,9 @@ function TicketSkeleton() {
 // ─── Props ─────────────────────────────────────────────────────────────────────
 
 interface KitchenColumnProps {
-  title: string;
-  status: TicketStatus;
-  orders: KitchenOrder[];
+  title:    string;
+  status:   TicketStatus;
+  orders:   KitchenOrder[];
   loading?: boolean;
   onAction?: (id: string, status: TicketStatus) => void;
   className?: string;
@@ -62,19 +65,16 @@ export function KitchenColumn({
   onAction,
   className,
 }: KitchenColumnProps) {
+  const t   = useTranslations("kitchen.empty");
   const cfg = COLUMN_CONFIG[status];
 
   return (
     <div className={cn("flex min-w-0 flex-col gap-4", className)}>
 
-      {/* Column header — sticky, glass effect */}
+      {/* Column header — theme-aware glass effect */}
       <div
-        className="sticky top-0 z-10 flex items-center justify-between rounded-t-xl px-6 py-4 border-b-2"
-        style={{
-          background: "rgba(247, 249, 251, 0.95)",
-          backdropFilter: "blur(8px)",
-          borderBottomColor: cfg.borderColor,
-        }}
+        className="sticky top-0 z-10 flex items-center justify-between rounded-t-xl px-6 py-4 border-b-2 bg-card/95 backdrop-blur-sm"
+        style={{ borderBottomColor: cfg.borderColor }}
       >
         <h4 className="flex items-center gap-2 font-bold text-foreground text-sm">
           {title}
@@ -96,7 +96,9 @@ export function KitchenColumn({
           </>
         ) : orders.length === 0 ? (
           <div className="flex items-center justify-center py-12">
-            <p className="typography-small text-muted-foreground">No {title.toLowerCase()} orders</p>
+            <p className="typography-small text-muted-foreground">
+              {t(status)}
+            </p>
           </div>
         ) : (
           orders.map((order) => (

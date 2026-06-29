@@ -6,18 +6,22 @@ import { useTranslations } from "next-intl";
 import { AppShell }   from "@/components/layout/app-shell";
 import { PageHeader } from "@/components/shared/page-header";
 import { Button }     from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { FloorPlan }        from "./components/floor-plan";
 import { ReservationPanel } from "./components/reservation-panel";
 import { StatusLegend }     from "./components/status-legend";
-import { useTables, useReservations } from "@/lib/hooks/use-tables";
+import { useTables, useReservations, useCancelReservation } from "@/lib/hooks/use-tables";
 
 export function TablesFeature() {
   const t  = useTranslations("tables");
   const ta = useTranslations("common.actions");
-  const [selectedTableId, setSelectedTableId] = useState<string | undefined>();
+
+  const [selectedTableId, setSelectedTableId]         = useState<string | undefined>();
+  const [pendingCancelId, setPendingCancelId]          = useState<string | null>(null);
 
   const { data: tablesData, isLoading: tablesLoading } = useTables();
   const { data: reservations = [] }                    = useReservations();
+  const cancelReservation                              = useCancelReservation();
 
   return (
     <AppShell>
@@ -49,7 +53,23 @@ export function TablesFeature() {
 
         <ReservationPanel
           reservations={reservations}
+          onMoreActions={(id) => setPendingCancelId(id)}
           className="hidden md:flex shrink-0"
+        />
+
+        <ConfirmDialog
+          open={!!pendingCancelId}
+          onOpenChange={(open) => { if (!open) setPendingCancelId(null); }}
+          title="Cancel Reservation"
+          description="Are you sure you want to cancel this reservation? This action cannot be undone."
+          confirmLabel="Cancel Reservation"
+          loading={cancelReservation.isPending}
+          onConfirm={() => {
+            if (!pendingCancelId) return;
+            cancelReservation.mutate(pendingCancelId, {
+              onSettled: () => setPendingCancelId(null),
+            });
+          }}
         />
       </div>
     </AppShell>

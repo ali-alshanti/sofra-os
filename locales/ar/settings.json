@@ -3,12 +3,18 @@
   "description": "إدارة إعدادات مطعمك وتفضيلاته وتكاملاته.",
 
   "sidebar": {
-    "general":       "معلومات عامة",
-    "businessHours": "ساعات العمل",
-    "currencyTax":   "العملة والضريبة",
-    "system":        "النظام",
-    "notifications": "الإشعارات",
-    "integrations":  "التكاملات"
+    "general":           "معلومات عامة",
+    "generalDesc":       "اسم المطعم والعنوان والتواصل",
+    "businessHours":     "ساعات العمل",
+    "businessHoursDesc": "الجدول الأسبوعي وأوقات الفتح والإغلاق",
+    "currencyTax":       "العملة والضريبة",
+    "currencyTaxDesc":   "العملة ومعدل الضريبة والتسمية",
+    "system":            "النظام",
+    "systemDesc":        "المظهر واللغة والمنطقة الزمنية",
+    "notifications":     "الإشعارات",
+    "notificationsDesc": "تفضيلات التنبيهات وإشتراكات الأحداث",
+    "integrations":      "التكاملات",
+    "integrationsDesc":  "خدمات الطرف الثالث والاتصالات"
   },
 
   "general": {

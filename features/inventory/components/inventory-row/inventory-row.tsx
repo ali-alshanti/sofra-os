@@ -11,13 +11,17 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatRelativeDate } from "@/lib/utils/format-date";
 import { InventoryStatusBadge } from "@/features/inventory/components/inventory-status-badge";
-import type { InventoryItem, InventoryStatus } from "@/features/inventory/types";
+import type {
+  InventoryItem,
+  InventoryStatus,
+} from "@/features/inventory/types";
+import Image from "next/image";
 
 // ─── Quantity color per status ────────────────────────────────────────────────
 
 const QUANTITY_COLOR: Record<InventoryStatus, string> = {
-  in_stock:     "text-foreground",
-  low_stock:    "text-[#f69f0d]",
+  in_stock: "text-foreground",
+  low_stock: "text-[#f69f0d]",
   out_of_stock: "text-destructive",
 };
 
@@ -47,7 +51,11 @@ function InventoryActionsMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-muted-foreground"
+        >
           <MoreVertical size={16} />
           <span className="sr-only">Item actions</span>
         </Button>
@@ -80,9 +88,16 @@ interface InventoryRowProps {
   onDelete?: (id: string) => void;
 }
 
-export function InventoryRow({ item, onView, onEdit, onDelete }: InventoryRowProps) {
+export function InventoryRow({
+  item,
+  onView,
+  onEdit,
+  onDelete,
+}: InventoryRowProps) {
   const updatedDate =
-    item.lastUpdated instanceof Date ? item.lastUpdated : new Date(item.lastUpdated);
+    item.lastUpdated instanceof Date
+      ? item.lastUpdated
+      : new Date(item.lastUpdated);
 
   return (
     <TableRow className="group border-border hover:bg-primary/[0.02] transition-colors">
@@ -91,7 +106,9 @@ export function InventoryRow({ item, onView, onEdit, onDelete }: InventoryRowPro
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-muted">
             {item.imageSrc && (
-              <img
+              <Image
+                width={40}
+                height={40}
                 src={item.imageSrc}
                 alt={item.name}
                 className="w-full h-full object-cover"
@@ -122,7 +139,9 @@ export function InventoryRow({ item, onView, onEdit, onDelete }: InventoryRowPro
         <span className={cn("font-bold text-sm", QUANTITY_COLOR[item.status])}>
           {item.quantity}
         </span>{" "}
-        <span className="text-xs text-muted-foreground font-normal">{item.unit}</span>
+        <span className="text-xs text-muted-foreground font-normal">
+          {item.unit}
+        </span>
       </TableCell>
 
       {/* Reorder point */}

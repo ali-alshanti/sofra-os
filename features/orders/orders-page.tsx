@@ -14,6 +14,7 @@ import { PageHeader }  from "@/components/shared/page-header";
 import { StatCard }    from "@/components/shared/stat-card";
 import { Button }      from "@/components/ui/button";
 import { Pagination }  from "@/components/shared/pagination";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import {
   OrdersFilters,
   DEFAULT_FILTERS,
@@ -21,7 +22,7 @@ import {
 } from "./components/orders-filters";
 import { OrdersTable } from "./components/orders-table";
 import { OrderRow }    from "./components/order-row";
-import { useOrders, useOrdersSummary } from "@/lib/hooks/use-orders";
+import { useOrders, useOrdersSummary, useDeleteOrder } from "@/lib/hooks/use-orders";
 import { formatCurrency } from "@/lib/utils/format-currency";
 
 const PAGE_SIZE = 10;
@@ -30,8 +31,11 @@ export function OrdersFeature() {
   const t = useTranslations("orders");
   const ta = useTranslations("common.actions");
 
-  const [filters, setFilters]         = useState<OrdersFiltersValue>(DEFAULT_FILTERS);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [filters, setFilters]               = useState<OrdersFiltersValue>(DEFAULT_FILTERS);
+  const [currentPage, setCurrentPage]       = useState(1);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+
+  const deleteOrder = useDeleteOrder();
 
   const { data: summary, isLoading: summaryLoading } = useOrdersSummary();
 
@@ -135,9 +139,28 @@ export function OrdersFeature() {
           }
         >
           {orders.map((order) => (
-            <OrderRow key={order.id} order={order} />
+            <OrderRow
+              key={order.id}
+              order={order}
+              onDelete={(id) => setPendingDeleteId(id)}
+            />
           ))}
         </OrdersTable>
+
+        <ConfirmDialog
+          open={!!pendingDeleteId}
+          onOpenChange={(open) => { if (!open) setPendingDeleteId(null); }}
+          title="Delete Order"
+          description="This action cannot be undone. The order will be permanently removed."
+          confirmLabel="Delete"
+          loading={deleteOrder.isPending}
+          onConfirm={() => {
+            if (!pendingDeleteId) return;
+            deleteOrder.mutate(pendingDeleteId, {
+              onSettled: () => setPendingDeleteId(null),
+            });
+          }}
+        />
 
       </div>
     </AppShell>

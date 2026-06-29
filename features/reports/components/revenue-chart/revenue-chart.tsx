@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { ChartCard } from "@/components/shared/chart-card";
 import type { RevenuePoint } from "@/features/reports/types";
 import { RevenueChartPlaceholder } from "./revenue-chart-placeholder";
@@ -5,27 +8,26 @@ import { RevenueChartPlaceholder } from "./revenue-chart-placeholder";
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 interface RevenueChartProps {
-  data:      RevenuePoint[];
-  loading?:  boolean;
-  empty?:    boolean;
+  /** Chart data — consumed once a chart library is introduced */
+  data:     RevenuePoint[];
+  loading?: boolean;
+  empty?:   boolean;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function RevenueChart({ data: _data, loading, empty }: RevenueChartProps) {
+export function RevenueChart({ loading, empty }: RevenueChartProps) {
+  const t = useTranslations("reports.revenue");
+
   return (
     <ChartCard
-      title="Revenue Overview"
-      description="Actual vs. forecast revenue over the selected period"
+      title={t("title")}
+      description={t("description")}
       loading={loading}
       empty={empty}
-      emptyMessage="No revenue data for the selected period."
+      emptyMessage={t("empty")}
     >
-      {/*
-        Replace <RevenueChartPlaceholder /> with a real chart that consumes
-        the `data` prop when a chart library is introduced. The public API
-        of this component — data, loading, empty — stays unchanged.
-      */}
+      {/* Replace with a real chart consuming the `data` prop when a chart library is added */}
       <RevenueChartPlaceholder />
     </ChartCard>
   );
