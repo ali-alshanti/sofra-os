@@ -74,6 +74,25 @@
     "delete":       "Remove Employee"
   },
 
+  "add": {
+    "title":         "Add Employee",
+    "description":   "Fill in the details to add a new team member.",
+    "namePlaceholder":    "Full name",
+    "emailPlaceholder":   "Email address",
+    "phonePlaceholder":   "Phone number",
+    "shiftStart":         "Shift Start",
+    "shiftEnd":           "Shift End",
+    "selectDepartment":   "Select department",
+    "selectRole":         "Select role",
+    "selectStatus":       "Select status"
+  },
+
+  "confirm": {
+    "deleteTitle":       "Remove Employee",
+    "deleteDescription": "This action cannot be undone. The employee record will be permanently removed.",
+    "deleteConfirm":     "Remove"
+  },
+
   "empty": {
     "title":       "No employees found",
     "description": "Employee records will appear here. Try adjusting your filters."

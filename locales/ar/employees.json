@@ -74,6 +74,25 @@
     "delete":       "إزالة الموظف"
   },
 
+  "add": {
+    "title":         "إضافة موظف",
+    "description":   "أدخل التفاصيل لإضافة عضو جديد في الفريق.",
+    "namePlaceholder":    "الاسم الكامل",
+    "emailPlaceholder":   "البريد الإلكتروني",
+    "phonePlaceholder":   "رقم الهاتف",
+    "shiftStart":         "بداية الوردية",
+    "shiftEnd":           "نهاية الوردية",
+    "selectDepartment":   "اختر القسم",
+    "selectRole":         "اختر الدور",
+    "selectStatus":       "اختر الحالة"
+  },
+
+  "confirm": {
+    "deleteTitle":       "إزالة الموظف",
+    "deleteDescription": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف سجل الموظف بشكل دائم.",
+    "deleteConfirm":     "إزالة"
+  },
+
   "empty": {
     "title":       "لا يوجد موظفون",
     "description": "ستظهر سجلات الموظفين هنا. حاول تعديل الفلاتر."

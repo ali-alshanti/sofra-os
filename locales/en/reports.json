@@ -18,6 +18,7 @@
   },
 
   "filters": {
+    "searchPlaceholder": "Search reports…",
     "type":       "Report Type",
     "period":     "Period",
     "category":   "Category",

@@ -1,4 +1,5 @@
 import { DollarSign, Tag, ShoppingBag, FileBarChart2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { StatCard } from "@/components/shared/stat-card";
 
 // ─── Stats shape ──────────────────────────────────────────────────────────────
@@ -22,10 +23,12 @@ interface ReportSummaryProps {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function ReportSummary({ stats }: ReportSummaryProps) {
+  const t = useTranslations("reports.summary");
+
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       <StatCard
-        title="Total Revenue"
+        title={t("revenue")}
         value={stats.totalRevenue}
         icon={DollarSign}
         iconBg="oklch(0.845 0.143 164.978 / 0.2)"
@@ -33,25 +36,25 @@ export function ReportSummary({ stats }: ReportSummaryProps) {
         trend={{ value: "+12%", direction: "up" }}
       />
       <StatCard
-        title="Top Category"
+        title={t("category")}
         value={stats.topCategory}
         icon={Tag}
         iconBg="oklch(0.879 0.169 91.605 / 0.2)"
         iconColor="#f69f0d"
-        badge="Best"
+        badge={t("best")}
         badgeStyle={{ bg: "#ffddb8", color: "#653e00" }}
       />
       <StatCard
-        title="Avg. Order Value"
+        title={t("avgOrder")}
         value={stats.avgOrderValue}
         icon={ShoppingBag}
         iconBg="#d5e3fc80"
         iconColor="#515f74"
-        badge="Avg."
+        badge={t("avg")}
         badgeStyle={{ bg: "#d5e3fc80", color: "#515f74" }}
       />
       <StatCard
-        title="Reports Generated"
+        title={t("generated")}
         value={String(stats.reportsGenerated)}
         icon={FileBarChart2}
         iconBg="oklch(0.596 0.145 163.225 / 0.08)"

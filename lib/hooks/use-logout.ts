@@ -1,22 +1,27 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "@/lib/navigation";   // locale-aware router
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/lib/navigation";
 import { authService } from "@/services/auth";
+import { useAppToast } from "./use-app-toast";
 
 export function useLogout() {
   const router      = useRouter();
   const queryClient = useQueryClient();
+  const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.auth");
 
   return useMutation({
     mutationFn: authService.signOut,
     onSuccess: () => {
-      // Clear all cached data — the next user must start fresh
       queryClient.clear();
-      // next-intl's router.push preserves the current locale prefix,
-      // so Arabic users land on /ar/login, English users on /login.
+      toastSuccess(t("loggedOut"));
       router.push("/login");
       router.refresh();
+    },
+    onError: (err) => {
+      toastMutationError(err);
     },
   });
 }

@@ -3,6 +3,7 @@
 import { Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -98,13 +99,13 @@ export function KitchenFilters({
             size={15}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
           />
-          <input
+          <Input
             type="search"
             placeholder={t("searchPlaceholder")}
             aria-label={t("searchPlaceholder")}
             value={value.search}
             onChange={(e) => onSearchChange?.(e.target.value)}
-            className="w-full rounded-lg border border-border/30 bg-card pl-9 pr-3 py-1.5 text-[13px] placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+            className="h-9 w-full pl-9 text-[13px]"
           />
         </div>
       </div>

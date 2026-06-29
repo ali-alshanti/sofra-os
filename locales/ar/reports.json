@@ -18,6 +18,7 @@
   },
 
   "filters": {
+    "searchPlaceholder": "البحث في التقارير…",
     "type":          "نوع التقرير",
     "period":        "الفترة",
     "category":      "الفئة",

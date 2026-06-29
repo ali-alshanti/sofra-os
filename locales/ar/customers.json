@@ -60,6 +60,22 @@
   "joined": "انضم {date}",
   "visits": "{count} زيارات",
 
+  "add": {
+    "title":              "إضافة عميل",
+    "description":        "أدخل التفاصيل لإضافة ملف عميل جديد.",
+    "namePlaceholder":    "الاسم الكامل",
+    "emailPlaceholder":   "البريد الإلكتروني",
+    "phonePlaceholder":   "رقم الهاتف",
+    "selectLoyalty":      "اختر مستوى الولاء",
+    "selectStatus":       "اختر الحالة"
+  },
+
+  "confirm": {
+    "deleteTitle":       "حذف العميل",
+    "deleteDescription": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف ملف العميل بشكل دائم.",
+    "deleteConfirm":     "حذف"
+  },
+
   "empty": {
     "title":       "لا يوجد عملاء",
     "description": "ستظهر ملفات العملاء هنا. حاول تعديل الفلاتر."

@@ -42,7 +42,7 @@ export function InventoryAlertsCard() {
     <ChartCard
       title={t("title")}
       loading={isLoading}
-      actions={<CriticalBadge count={criticalCount} label="CRITICAL" />}
+      actions={<CriticalBadge count={criticalCount} label={t("critical")} />}
     >
       {error ? (
         <p className="typography-small text-muted-foreground py-4 text-center">

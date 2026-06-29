@@ -149,6 +149,43 @@ export async function getOrdersSummary(restaurantId: string): Promise<OrdersSumm
   };
 }
 
+// ─── createOrder ─────────────────────────────────────────────────────────────
+
+export interface CreateOrderPayload {
+  restaurantId: string;
+  type:         "dine-in" | "takeaway" | "delivery";
+  tableId?:     string;
+  waiterId?:    string;
+  customerId?:  string;
+  notes?:       string;
+}
+
+export async function createOrder(payload: CreateOrderPayload): Promise<string> {
+  const supabase = getSupabaseBrowserClient();
+
+  const dbType = uiTypeToDb(payload.type);
+  const orderNumber = `ORD-${Date.now().toString(36).toUpperCase()}`;
+
+  const { data, error } = await supabase
+    .from("orders")
+    .insert({
+      restaurant_id: payload.restaurantId,
+      order_number:  orderNumber,
+      type:          dbType,
+      status:        "pending",
+      total:         0,
+      table_id:      payload.tableId   || null,
+      employee_id:   payload.waiterId  || null,
+      customer_id:   payload.customerId || null,
+      notes:         payload.notes     || null,
+    })
+    .select("id")
+    .single();
+
+  if (error) throw new Error(error.message);
+  return (data as { id: string }).id;
+}
+
 // ─── updateOrderStatus ────────────────────────────────────────────────────────
 
 export async function updateOrderStatus(

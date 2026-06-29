@@ -1,8 +1,9 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useCurrentUser } from "./use-auth";
-import { useToast } from "@/lib/providers/toast-provider";
+import { useAppToast } from "./use-app-toast";
 import { QUERY_KEYS } from "@/lib/constants/query-keys";
 import {
   getCategories,
@@ -43,7 +44,8 @@ export function useMenuItems(categoryId?: string, search?: string) {
 
 export function useUpdateMenuItemAvailability() {
   const queryClient = useQueryClient();
-  const { toastSuccess, toastError } = useToast();
+  const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.menu");
 
   return useMutation({
     mutationFn: ({ itemId, available }: { itemId: string; available: boolean }) =>
@@ -67,10 +69,10 @@ export function useUpdateMenuItemAvailability() {
       for (const [key, data] of ctx?.snap ?? []) {
         queryClient.setQueryData(key, data);
       }
-      toastError(err instanceof Error ? err.message : "Failed to update availability.");
+      toastMutationError(err);
     },
     onSuccess: (_data, { available }) => {
-      toastSuccess(available ? "Item marked as available." : "Item marked as unavailable.");
+      toastSuccess(available ? t("markedAvailable") : t("markedUnavailable"));
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.menu.all });
@@ -82,16 +84,17 @@ export function useUpdateMenuItemAvailability() {
 
 export function useDeleteMenuItem() {
   const queryClient = useQueryClient();
-  const { toastSuccess, toastError } = useToast();
+  const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.menu");
 
   return useMutation({
     mutationFn: (itemId: string) => deleteMenuItem(itemId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.menu.all });
-      toastSuccess("Menu item deleted successfully.");
+      toastSuccess(t("deleted"));
     },
     onError: (err) => {
-      toastError(err instanceof Error ? err.message : "Failed to delete menu item.");
+      toastMutationError(err);
     },
   });
 }

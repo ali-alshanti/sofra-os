@@ -1,15 +1,18 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useCurrentUser } from "./use-auth";
-import { useToast } from "@/lib/providers/toast-provider";
+import { useAppToast } from "./use-app-toast";
 import { QUERY_KEYS } from "@/lib/constants/query-keys";
 import {
   getOrders,
   getOrdersSummary,
+  createOrder,
   updateOrderStatus,
   deleteOrder,
   type GetOrdersParams,
+  type CreateOrderPayload,
 } from "@/services/orders";
 import { getTablesFilterOptions } from "@/services/tables";
 import { getWaitersFilterOptions } from "@/services/employees";
@@ -77,11 +80,35 @@ export function useWaitersForFilter() {
   });
 }
 
+// ─── useCreateOrder ───────────────────────────────────────────────────────────
+
+export function useCreateOrder() {
+  const queryClient = useQueryClient();
+  const { user } = useCurrentUser();
+  const { toastSuccess, toastMutationError } = useAppToast();
+
+  return useMutation({
+    mutationFn: (payload: Omit<CreateOrderPayload, "restaurantId">) => {
+      const restaurantId = user?.restaurant_id ?? "";
+      return createOrder({ restaurantId, ...payload });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.orders.all });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.all });
+      toastSuccess("Order created successfully.");
+    },
+    onError: (err) => {
+      toastMutationError(err);
+    },
+  });
+}
+
 // ─── useUpdateOrderStatus ─────────────────────────────────────────────────────
 
 export function useUpdateOrderStatus() {
   const queryClient = useQueryClient();
-  const { toastSuccess, toastError } = useToast();
+  const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.orders");
 
   return useMutation({
     mutationFn: ({ orderId, status }: { orderId: string; status: OrderStatusValue }) =>
@@ -89,10 +116,10 @@ export function useUpdateOrderStatus() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.orders.all });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.all });
-      toastSuccess("Order status updated.");
+      toastSuccess(t("statusUpdated"));
     },
     onError: (err) => {
-      toastError(err instanceof Error ? err.message : "Failed to update order status.");
+      toastMutationError(err);
     },
   });
 }
@@ -101,17 +128,18 @@ export function useUpdateOrderStatus() {
 
 export function useDeleteOrder() {
   const queryClient = useQueryClient();
-  const { toastSuccess, toastError } = useToast();
+  const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.orders");
 
   return useMutation({
     mutationFn: (orderId: string) => deleteOrder(orderId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.orders.all });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.all });
-      toastSuccess("Order deleted successfully.");
+      toastSuccess(t("deleted"));
     },
     onError: (err) => {
-      toastError(err instanceof Error ? err.message : "Failed to delete order.");
+      toastMutationError(err);
     },
   });
 }

@@ -1,27 +1,55 @@
 "use client";
 
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Eye, EyeOff, Loader2, UtensilsCrossed } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/lib/hooks/use-login";
+import { getErrorKey } from "@/lib/utils/error-map";
+
+// ─── Schema ───────────────────────────────────────────────────────────────────
+
+function useLoginSchema() {
+  const t = useTranslations("auth.login.validation");
+  return z.object({
+    email:    z.string().min(1, t("emailRequired")).email(t("emailInvalid")),
+    password: z.string().min(1, t("passwordRequired")).min(6, t("passwordMinLength")),
+  });
+}
+
+type LoginFormValues = { email: string; password: string };
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export function LoginForm() {
   const t  = useTranslations("auth.login");
   const tc = useTranslations("common");
 
-  const [email, setEmail]               = useState("");
-  const [password, setPassword]         = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const schema = useLoginSchema();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: { email: "", password: "" },
+  });
 
+  const [showPassword, setShowPassword] = useState(false);
   const login = useLogin();
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    login.mutate({ email, password });
+  function onSubmit(values: LoginFormValues) {
+    login.mutate(values);
   }
+
+  const errorMessage = login.isError
+    ? tc(getErrorKey(login.error))
+    : null;
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -41,14 +69,12 @@ export function LoginForm() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
 
-          {/* Error banner */}
-          {login.isError && (
+          {/* Server error banner */}
+          {errorMessage && (
             <div className="rounded-lg border border-destructive/30 bg-destructive/8 px-4 py-3">
-              <p className="text-sm text-destructive">
-                {login.error?.message ?? t("error")}
-              </p>
+              <p className="text-sm text-destructive">{errorMessage}</p>
             </div>
           )}
 
@@ -62,12 +88,14 @@ export function LoginForm() {
               type="email"
               placeholder={t("emailPlaceholder")}
               autoComplete="email"
-              required
-              disabled={login.isPending}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              disabled={login.isPending || isSubmitting}
+              aria-invalid={!!errors.email}
               className="h-10"
+              {...register("email")}
             />
+            {errors.email && (
+              <p className="text-xs text-destructive">{errors.email.message}</p>
+            )}
           </div>
 
           {/* Password */}
@@ -89,11 +117,10 @@ export function LoginForm() {
                 type={showPassword ? "text" : "password"}
                 placeholder={t("passwordPlaceholder")}
                 autoComplete="current-password"
-                required
-                disabled={login.isPending}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                disabled={login.isPending || isSubmitting}
+                aria-invalid={!!errors.password}
                 className="h-10 pr-10"
+                {...register("password")}
               />
               <button
                 type="button"
@@ -105,15 +132,18 @@ export function LoginForm() {
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
+            {errors.password && (
+              <p className="text-xs text-destructive">{errors.password.message}</p>
+            )}
           </div>
 
           {/* Submit */}
           <Button
             type="submit"
             className="w-full"
-            disabled={login.isPending || !email || !password}
+            disabled={login.isPending || isSubmitting}
           >
-            {login.isPending ? (
+            {(login.isPending || isSubmitting) ? (
               <>
                 <Loader2 className="me-2 h-4 w-4 animate-spin" />
                 {t("signingIn")}

@@ -60,9 +60,9 @@ export function TablesFeature() {
         <ConfirmDialog
           open={!!pendingCancelId}
           onOpenChange={(open) => { if (!open) setPendingCancelId(null); }}
-          title="Cancel Reservation"
-          description="Are you sure you want to cancel this reservation? This action cannot be undone."
-          confirmLabel="Cancel Reservation"
+          title={t("confirm.cancelTitle")}
+          description={t("confirm.cancelDescription")}
+          confirmLabel={t("confirm.cancelConfirm")}
           loading={cancelReservation.isPending}
           onConfirm={() => {
             if (!pendingCancelId) return;

@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -29,6 +30,8 @@ export function Pagination({
   itemLabel = "items",
   className,
 }: PaginationProps) {
+  const t = useTranslations("common.pagination");
+
   const firstItem = (currentPage - 1) * pageSize + 1;
   const lastItem  = Math.min(currentPage * pageSize, totalItems);
   const pages     = getPageRange(currentPage, totalPages);
@@ -36,11 +39,7 @@ export function Pagination({
   return (
     <div className={cn("flex items-center justify-between gap-4", className)}>
       <p className="typography-small text-muted-foreground whitespace-nowrap">
-        Showing{" "}
-        <span className="font-medium text-foreground">{firstItem}–{lastItem}</span>
-        {" "}of{" "}
-        <span className="font-medium text-foreground">{totalItems}</span>{" "}
-        {itemLabel}
+        {t("showing", { from: firstItem, to: lastItem, total: totalItems, label: itemLabel })}
       </p>
 
       <div className="flex items-center gap-1">
@@ -48,7 +47,7 @@ export function Pagination({
           variant="ghost" size="icon" className="h-8 w-8"
           disabled={currentPage <= 1}
           onClick={() => onPageChange(currentPage - 1)}
-          aria-label="Previous page"
+          aria-label={t("previous")}
         >
           <ChevronLeft size={16} />
         </Button>
@@ -65,7 +64,6 @@ export function Pagination({
               size="icon"
               className={cn("h-8 w-8 text-sm", page === currentPage && "pointer-events-none")}
               onClick={() => onPageChange(page)}
-              aria-label={`Page ${page}`}
               aria-current={page === currentPage ? "page" : undefined}
             >
               {page}
@@ -77,7 +75,7 @@ export function Pagination({
           variant="ghost" size="icon" className="h-8 w-8"
           disabled={currentPage >= totalPages}
           onClick={() => onPageChange(currentPage + 1)}
-          aria-label="Next page"
+          aria-label={t("next")}
         >
           <ChevronRight size={16} />
         </Button>

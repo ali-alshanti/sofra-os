@@ -1,17 +1,21 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useCurrentUser } from "./use-auth";
-import { useToast } from "@/lib/providers/toast-provider";
+import { useAppToast } from "./use-app-toast";
 import { QUERY_KEYS } from "@/lib/constants/query-keys";
 import {
   getEmployees,
   getEmployeeSummary,
+  createEmployee,
   updateEmployee,
   updateEmployeeStatus,
   deleteEmployee,
   type GetEmployeesParams,
+  type CreateEmployeePayload,
 } from "@/services/employees";
+import { createNotification } from "@/services/notifications";
 import type { EmployeeStatus } from "@/features/employees/types";
 
 // ─── useEmployees ─────────────────────────────────────────────────────────────
@@ -49,11 +53,46 @@ export function useEmployeeSummary() {
   });
 }
 
+// ─── useCreateEmployee ────────────────────────────────────────────────────────
+
+export function useCreateEmployee() {
+  const queryClient = useQueryClient();
+  const { user } = useCurrentUser();
+  const { toastSuccess, toastMutationError } = useAppToast();
+
+  return useMutation({
+    mutationFn: (payload: Omit<CreateEmployeePayload, "restaurantId">) => {
+      const restaurantId = user?.restaurant_id ?? "";
+      return createEmployee({ restaurantId, ...payload });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.employees.all });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.notifications.all });
+      toastSuccess("Employee added successfully.");
+
+      if (!user?.restaurant_id || !user?.id) return;
+      createNotification({
+        restaurantId: user.restaurant_id,
+        userId: user.id,
+        type: "system",
+        title: "Employee Added",
+        message: "A new employee has been added.",
+        data: { key: "employee.added", params: {} },
+      }).catch(console.error);
+    },
+    onError: (err) => {
+      toastMutationError(err);
+    },
+  });
+}
+
 // ─── useUpdateEmployee ────────────────────────────────────────────────────────
 
 export function useUpdateEmployee() {
   const queryClient = useQueryClient();
-  const { toastSuccess, toastError } = useToast();
+  const { user } = useCurrentUser();
+  const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.employees");
 
   return useMutation({
     mutationFn: ({ employeeId, patch }: {
@@ -62,10 +101,21 @@ export function useUpdateEmployee() {
     }) => updateEmployee(employeeId, patch),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.employees.all });
-      toastSuccess("Employee updated successfully.");
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.notifications.all });
+      toastSuccess(t("updated"));
+
+      if (!user?.restaurant_id || !user?.id) return;
+      createNotification({
+        restaurantId: user.restaurant_id,
+        userId: user.id,
+        type: "system",
+        title: "Employee Updated",
+        message: "An employee profile has been updated.",
+        data: { key: "employee.updated", params: {} },
+      }).catch(console.error);
     },
     onError: (err) => {
-      toastError(err instanceof Error ? err.message : "Failed to update employee.");
+      toastMutationError(err);
     },
   });
 }
@@ -74,17 +124,18 @@ export function useUpdateEmployee() {
 
 export function useUpdateEmployeeStatus() {
   const queryClient = useQueryClient();
-  const { toastSuccess, toastError } = useToast();
+  const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.employees");
 
   return useMutation({
     mutationFn: ({ employeeId, status }: { employeeId: string; status: EmployeeStatus }) =>
       updateEmployeeStatus(employeeId, status),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.employees.all });
-      toastSuccess("Status updated.");
+      toastSuccess(t("statusUpdated"));
     },
     onError: (err) => {
-      toastError(err instanceof Error ? err.message : "Failed to update status.");
+      toastMutationError(err);
     },
   });
 }
@@ -93,16 +144,29 @@ export function useUpdateEmployeeStatus() {
 
 export function useDeleteEmployee() {
   const queryClient = useQueryClient();
-  const { toastSuccess, toastError } = useToast();
+  const { user } = useCurrentUser();
+  const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.employees");
 
   return useMutation({
     mutationFn: (employeeId: string) => deleteEmployee(employeeId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.employees.all });
-      toastSuccess("Employee removed successfully.");
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.notifications.all });
+      toastSuccess(t("deleted"));
+
+      if (!user?.restaurant_id || !user?.id) return;
+      createNotification({
+        restaurantId: user.restaurant_id,
+        userId: user.id,
+        type: "system",
+        title: "Employee Removed",
+        message: "An employee has been removed.",
+        data: { key: "employee.removed", params: {} },
+      }).catch(console.error);
     },
     onError: (err) => {
-      toastError(err instanceof Error ? err.message : "Failed to remove employee.");
+      toastMutationError(err);
     },
   });
 }

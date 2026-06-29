@@ -29,8 +29,8 @@ export function DashboardFeature() {
           }
         />
 
-        <KpiSection />
-        <RevenueTrendCard />
+        <KpiSection preset={activePreset ?? "Today"} />
+        <RevenueTrendCard preset={activePreset ?? "Today"} />
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <PopularItemsCard />

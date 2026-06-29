@@ -20,6 +20,13 @@ export function yesterdayEnd(): string {
   return d.toISOString();
 }
 
+export function presetToDateRange(preset: "Today" | "Last 7d" | "Last 30d"): { from: string; to: string } {
+  const to = new Date().toISOString();
+  if (preset === "Last 7d")  return { from: daysAgoStart(7),  to };
+  if (preset === "Last 30d") return { from: daysAgoStart(30), to };
+  return { from: todayStart(), to };
+}
+
 export function daysAgoStart(days: number): string {
   const d = new Date();
   d.setDate(d.getDate() - days);

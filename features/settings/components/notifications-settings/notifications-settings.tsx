@@ -1,46 +1,17 @@
+import { useTranslations } from "next-intl";
 import { Switch } from "@/components/ui/switch";
 import { SettingsSectionCard } from "@/features/settings/components/settings-section-card";
 import type { NotificationSettings, NotificationType } from "@/features/settings/types";
 
-// ─── Notification config ───────────────────────────────────────────────────────
-// Maps every NotificationType to display metadata.
-// Adding a new NotificationType: extend this array — no component code changes.
+// ─── Notification type keys ───────────────────────────────────────────────────
 
-const NOTIFICATION_CONFIG: {
-  type:        NotificationType;
-  label:       string;
-  description: string;
-}[] = [
-  {
-    type:        "newOrder",
-    label:       "New Order",
-    description: "Alert when a new order is placed from any table or channel.",
-  },
-  {
-    type:        "orderReady",
-    label:       "Order Ready",
-    description: "Alert when the kitchen marks an order as ready for service.",
-  },
-  {
-    type:        "lowStock",
-    label:       "Low Stock",
-    description: "Alert when an inventory item falls below its reorder point.",
-  },
-  {
-    type:        "newReservation",
-    label:       "New Reservation",
-    description: "Alert when a table reservation is created or modified.",
-  },
-  {
-    type:        "staffAlert",
-    label:       "Staff Alert",
-    description: "Alert on shift changes, absences, or staff-related events.",
-  },
-  {
-    type:        "dailySummary",
-    label:       "Daily Summary",
-    description: "Receive an end-of-day summary report of all operations.",
-  },
+const NOTIFICATION_TYPES: NotificationType[] = [
+  "newOrder",
+  "orderReady",
+  "lowStock",
+  "newReservation",
+  "staffAlert",
+  "dailySummary",
 ];
 
 // ─── Props ────────────────────────────────────────────────────────────────────
@@ -58,19 +29,21 @@ export function NotificationsSettings({
   onChange,
   disabled = false,
 }: NotificationsSettingsProps) {
+  const t = useTranslations("settings.notifications");
+
   return (
     <SettingsSectionCard
-      title="Notifications"
-      description="Choose which events trigger alerts in the application."
+      title={t("title")}
+      description={t("description")}
     >
       <div className="space-y-0">
-        {NOTIFICATION_CONFIG.map(({ type, label, description }, i) => (
+        {NOTIFICATION_TYPES.map((type, i) => (
           <div key={type}>
             <div className="flex items-center justify-between gap-4 py-3.5">
               {/* Text */}
               <div className="space-y-0.5 min-w-0">
-                <p className="text-sm font-medium text-foreground">{label}</p>
-                <p className="typography-small text-muted-foreground">{description}</p>
+                <p className="text-sm font-medium text-foreground">{t(type)}</p>
+                <p className="typography-small text-muted-foreground">{t(`${type}Desc`)}</p>
               </div>
 
               {/* Toggle */}
@@ -79,12 +52,12 @@ export function NotificationsSettings({
                 checked={values[type]}
                 onCheckedChange={(checked) => onChange(type, checked)}
                 disabled={disabled}
-                aria-label={`Enable ${label} notifications`}
+                aria-label={t(type)}
               />
             </div>
 
             {/* Divider — skip after last row */}
-            {i < NOTIFICATION_CONFIG.length - 1 && (
+            {i < NOTIFICATION_TYPES.length - 1 && (
               <div className="h-px bg-border/40" />
             )}
           </div>

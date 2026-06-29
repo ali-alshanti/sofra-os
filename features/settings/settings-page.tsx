@@ -23,7 +23,8 @@ import {
   useUpdateIntegration,
 } from "@/lib/hooks/use-settings";
 import { useCurrentUser } from "@/lib/hooks/use-auth";
-import { useToast } from "@/lib/providers/toast-provider";
+import { useAppToast } from "@/lib/hooks/use-app-toast";
+import { useTranslations } from "next-intl";
 
 import type {
   RestaurantSettings,
@@ -48,7 +49,10 @@ const SECTION_ORDER: SettingsSection[] = [
 // ─── Settings Feature ─────────────────────────────────────────────────────────
 
 export function SettingsFeature() {
-  const { toastSuccess, toastError } = useToast();
+  const { toastSuccess, toastError, toastMutationError } = useAppToast();
+  const t  = useTranslations("common.toast.success.settings");
+  const ts = useTranslations("settings");
+  const ta = useTranslations("common.actions");
 
   // ── Auth + remote data ───────────────────────────────────────────────────────
   const { user, isLoading: authLoading } = useCurrentUser();
@@ -139,10 +143,9 @@ export function SettingsFeature() {
         updateHours.mutateAsync(settings.businessHours),
       ]);
       setSavedSettings(settings);
-      toastSuccess("Settings saved successfully.");
+      toastSuccess(t("saved"));
     } catch (err) {
-      const message = err instanceof Error ? err.message : "An unexpected error occurred.";
-      toastError(`Failed to save settings: ${message}`);
+      toastMutationError(err);
     } finally {
       setIsSaving(false);
     }
@@ -158,9 +161,9 @@ export function SettingsFeature() {
     try {
       const updated = await updateIntegration.mutateAsync({ id, status: "connected" });
       setIntegrations(updated);
-      toastSuccess("Integration connected.");
-    } catch {
-      toastError("Failed to connect integration. Please try again.");
+      toastSuccess(t("integrationConnected"));
+    } catch (err) {
+      toastMutationError(err);
     }
   }
 
@@ -168,9 +171,9 @@ export function SettingsFeature() {
     try {
       const updated = await updateIntegration.mutateAsync({ id, status: "disconnected" });
       setIntegrations(updated);
-      toastSuccess("Integration disconnected.");
-    } catch {
-      toastError("Failed to disconnect integration. Please try again.");
+      toastSuccess(t("integrationDisconnected"));
+    } catch (err) {
+      toastMutationError(err);
     }
   }
 
@@ -180,9 +183,9 @@ export function SettingsFeature() {
     return (
       <AppShell>
         <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center">
-          <p className="text-lg font-semibold text-foreground">Account not linked to a restaurant</p>
+          <p className="text-lg font-semibold text-foreground">{ts("errors.noRestaurant")}</p>
           <p className="text-sm text-muted-foreground max-w-sm">
-            Your account doesn&apos;t have a restaurant profile yet. Contact your administrator to complete the setup.
+            {ts("errors.noRestaurantDesc")}
           </p>
         </div>
       </AppShell>
@@ -195,9 +198,9 @@ export function SettingsFeature() {
     return (
       <AppShell>
         <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center">
-          <p className="text-lg font-semibold text-foreground">Failed to load settings</p>
+          <p className="text-lg font-semibold text-foreground">{ts("errors.loadFailed")}</p>
           <p className="text-sm text-muted-foreground max-w-sm">
-            There was a problem fetching your restaurant settings. Please refresh the page or contact your administrator.
+            {ts("errors.loadFailedDesc")}
           </p>
         </div>
       </AppShell>
@@ -232,8 +235,8 @@ export function SettingsFeature() {
 
         {/* Page Header */}
         <PageHeader
-          title="Settings"
-          description="Manage your restaurant's configuration, preferences, and integrations."
+          title={ts("title")}
+          description={ts("description")}
           className="mb-6"
           actions={
             <div className="flex items-center gap-3">
@@ -246,7 +249,7 @@ export function SettingsFeature() {
                   disabled={isSaving}
                 >
                   <RotateCcw size={14} />
-                  Reset
+                  {ta("reset")}
                 </Button>
               )}
               <Button
@@ -256,7 +259,7 @@ export function SettingsFeature() {
                 onClick={handleSave}
               >
                 <Save size={14} />
-                {isSaving ? "Saving…" : "Save Changes"}
+                {isSaving ? ts("actionBar.saving") : ts("actionBar.save")}
               </Button>
             </div>
           }

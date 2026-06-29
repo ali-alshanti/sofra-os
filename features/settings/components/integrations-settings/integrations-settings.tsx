@@ -1,4 +1,5 @@
 import { Plug } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { SettingsSectionCard } from "@/features/settings/components/settings-section-card";
@@ -7,24 +8,25 @@ import { cn } from "@/lib/utils";
 
 // ─── Status Badge ─────────────────────────────────────────────────────────────
 
-const STATUS_CONFIG: Record<
-  IntegrationStatus,
-  { label: string; bg: string; color: string }
-> = {
+const STATUS_COLORS: Record<IntegrationStatus, { bg: string; color: string }> = {
   connected: {
-    label: "Connected",
     bg:    "oklch(0.845 0.143 164.978 / 0.25)",
     color: "oklch(0.362 0.072 165.670)",
   },
   disconnected: {
-    label: "Not Connected",
     bg:    "oklch(0.929 0.013 255.508 / 0.6)",
     color: "oklch(0.554 0.046 257.417)",
   },
 };
 
-function IntegrationStatusBadge({ status }: { status: IntegrationStatus }) {
-  const { label, bg, color } = STATUS_CONFIG[status];
+function IntegrationStatusBadge({
+  status,
+  label,
+}: {
+  status: IntegrationStatus;
+  label:  string;
+}) {
+  const { bg, color } = STATUS_COLORS[status];
   return (
     <span
       className="inline-flex items-center px-2.5 py-0.5 rounded-full typography-caption font-medium"
@@ -44,7 +46,11 @@ function IntegrationStatusBadge({ status }: { status: IntegrationStatus }) {
 // ─── Integration Card ─────────────────────────────────────────────────────────
 
 interface IntegrationCardProps {
-  integration: Integration;
+  integration:   Integration;
+  connectLabel:  string;
+  disconnectLabel: string;
+  connectedLabel:  string;
+  disconnectedLabel: string;
   onConnect?:    (id: string) => void;
   onDisconnect?: (id: string) => void;
   disabled?:     boolean;
@@ -52,11 +58,16 @@ interface IntegrationCardProps {
 
 function IntegrationCard({
   integration,
+  connectLabel,
+  disconnectLabel,
+  connectedLabel,
+  disconnectedLabel,
   onConnect,
   onDisconnect,
   disabled,
 }: IntegrationCardProps) {
   const isConnected = integration.status === "connected";
+  const statusLabel = isConnected ? connectedLabel : disconnectedLabel;
 
   return (
     <div
@@ -82,7 +93,7 @@ function IntegrationCard({
 
       {/* Status + action */}
       <div className="flex shrink-0 items-center gap-3">
-        <IntegrationStatusBadge status={integration.status} />
+        <IntegrationStatusBadge status={integration.status} label={statusLabel} />
 
         <Button
           variant={isConnected ? "outline" : "default"}
@@ -94,7 +105,7 @@ function IntegrationCard({
               : onConnect?.(integration.id)
           }
         >
-          {isConnected ? "Disconnect" : "Connect"}
+          {isConnected ? disconnectLabel : connectLabel}
         </Button>
       </div>
     </div>
@@ -118,16 +129,18 @@ export function IntegrationsSettings({
   onDisconnect,
   disabled = false,
 }: IntegrationsSettingsProps) {
+  const t = useTranslations("settings.integrations");
+
   return (
     <SettingsSectionCard
-      title="Integrations"
-      description="Connect third-party services to extend your restaurant's capabilities."
+      title={t("title")}
+      description={t("description")}
     >
       {integrations.length === 0 ? (
         <EmptyState
           icon={Plug}
-          title="No integrations available"
-          description="Integrations will appear here once they are added to your plan."
+          title={t("empty.title")}
+          description={t("empty.description")}
         />
       ) : (
         <div className="space-y-3">
@@ -135,6 +148,10 @@ export function IntegrationsSettings({
             <IntegrationCard
               key={integration.id}
               integration={integration}
+              connectLabel={t("connect")}
+              disconnectLabel={t("disconnect")}
+              connectedLabel={t("connected")}
+              disconnectedLabel={t("disconnected")}
               onConnect={onConnect}
               onDisconnect={onDisconnect}
               disabled={disabled}

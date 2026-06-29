@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Package } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   Table,
   TableBody,
@@ -13,31 +14,35 @@ import { cn } from "@/lib/utils";
 import { InventoryRow } from "@/features/inventory/components/inventory-row";
 import type { InventoryItem } from "@/features/inventory/types";
 
-// ─── Column definitions ────────────────────────────────────────────────────────
+// ─── Column key order (widths preserved) ─────────────────────────────────────
 
-const COLUMNS = [
-  { key: "item",        label: "Item",          className: ""         },
-  { key: "sku",         label: "SKU",           className: "w-24"     },
-  { key: "category",    label: "Category",      className: "w-28"     },
-  { key: "supplier",    label: "Supplier",      className: ""         },
-  { key: "quantity",    label: "Quantity",      className: "w-24"     },
-  { key: "reorder",     label: "Reorder Level", className: "w-24"     },
-  { key: "status",      label: "Status",        className: "w-32"     },
-  { key: "lastUpdated", label: "Last Updated",  className: "w-28"     },
-  { key: "actions",     label: "",              className: "w-10"     },
+const COLUMN_KEYS = [
+  { key: "item",        className: ""     },
+  { key: "sku",         className: "w-24" },
+  { key: "category",    className: "w-28" },
+  { key: "supplier",    className: ""     },
+  { key: "quantity",    className: "w-24" },
+  { key: "reorder",     className: "w-24" },
+  { key: "status",      className: "w-32" },
+  { key: "lastUpdated", className: "w-28" },
+  { key: "actions",     className: "w-10" },
 ] as const;
 
 // ─── Loading skeleton ─────────────────────────────────────────────────────────
 
-function SkeletonRow() {
+function SkeletonRow({ count }: { count: number }) {
   return (
-    <TableRow className="border-border animate-pulse">
-      {COLUMNS.map((col) => (
-        <TableCell key={col.key} className={cn("py-4 px-3", col.className)}>
-          <div className="h-4 rounded bg-muted" />
-        </TableCell>
+    <>
+      {Array.from({ length: count }).map((_, i) => (
+        <TableRow key={i} className="border-border animate-pulse">
+          {COLUMN_KEYS.map((col) => (
+            <TableCell key={col.key} className={cn("py-4 px-3", col.className)}>
+              <div className="h-4 rounded bg-muted" />
+            </TableCell>
+          ))}
+        </TableRow>
       ))}
-    </TableRow>
+    </>
   );
 }
 
@@ -49,7 +54,6 @@ interface InventoryTableProps {
   onView?: (id: string) => void;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
-  /** Inject a shared Pagination component */
   pagination?: ReactNode;
   className?: string;
 }
@@ -65,7 +69,22 @@ export function InventoryTable({
   pagination,
   className,
 }: InventoryTableProps) {
+  const t      = useTranslations("inventory.table");
+  const tempty = useTranslations("inventory.empty");
+
   const isEmpty = !loading && items.length === 0;
+
+  const COLUMNS = [
+    { key: "item",        label: t("item"),     className: ""     },
+    { key: "sku",         label: t("sku"),      className: "w-24" },
+    { key: "category",    label: t("category"), className: "w-28" },
+    { key: "supplier",    label: t("supplier"), className: ""     },
+    { key: "quantity",    label: t("quantity"), className: "w-24" },
+    { key: "reorder",     label: t("reorder"),  className: "w-24" },
+    { key: "status",      label: t("status"),   className: "w-32" },
+    { key: "lastUpdated", label: t("updated"),  className: "w-28" },
+    { key: "actions",     label: "",            className: "w-10" },
+  ] as const;
 
   return (
     <div
@@ -95,18 +114,14 @@ export function InventoryTable({
           {/* Body */}
           <TableBody className="divide-y divide-border">
             {loading ? (
-              <>
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <SkeletonRow key={i} />
-                ))}
-              </>
+              <SkeletonRow count={5} />
             ) : isEmpty ? (
               <TableRow className="border-0 hover:bg-transparent">
                 <TableCell colSpan={COLUMNS.length} className="py-0">
                   <EmptyState
                     icon={Package}
-                    title="No inventory items found"
-                    description="Try adjusting your filters or add a new item."
+                    title={tempty("title")}
+                    description={tempty("description")}
                     className="border-0 bg-transparent"
                   />
                 </TableCell>

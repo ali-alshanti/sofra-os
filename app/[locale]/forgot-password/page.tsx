@@ -1,32 +1,51 @@
 "use client";
 
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { ArrowLeft, Loader2, UtensilsCrossed } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authService } from "@/services/auth";
+import { getErrorKey } from "@/lib/utils/error-map";
+
+// ─── Schema ───────────────────────────────────────────────────────────────────
+
+type ForgotPasswordValues = { email: string };
 
 export default function ForgotPasswordPage() {
-  const t = useTranslations("auth.forgotPassword");
+  const t  = useTranslations("auth.forgotPassword");
+  const tv = useTranslations("auth.login.validation");
+  const tc = useTranslations("common");
 
-  const [email, setEmail]     = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState<string | null>(null);
-  const [sent, setSent]       = useState(false);
+  const schema = z.object({
+    email: z.string().min(1, tv("emailRequired")).email(tv("emailInvalid")),
+  });
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<ForgotPasswordValues>({
+    resolver: zodResolver(schema),
+    defaultValues: { email: "" },
+  });
+
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [sent, setSent]               = useState(false);
+  const [sentEmail, setSentEmail]     = useState("");
+
+  async function onSubmit({ email }: ForgotPasswordValues) {
+    setServerError(null);
     try {
       await authService.sendPasswordResetEmail(email);
+      setSentEmail(email);
       setSent(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("submit"));
-    } finally {
-      setLoading(false);
+      setServerError(tc(getErrorKey(err)));
     }
   }
 
@@ -54,7 +73,7 @@ export default function ForgotPasswordPage() {
                 {t("successTitle")}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
-                {t("successMessage", { email })}
+                {t("successMessage", { email: sentEmail })}
               </p>
             </div>
             <Link
@@ -65,32 +84,36 @@ export default function ForgotPasswordPage() {
             </Link>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+
+            {/* Server error */}
+            {serverError && (
               <div className="rounded-lg border border-destructive/30 bg-destructive/8 px-4 py-3">
-                <p className="text-sm text-destructive">{error}</p>
+                <p className="text-sm text-destructive">{serverError}</p>
               </div>
             )}
 
             <div className="space-y-1.5">
-              <label htmlFor="email" className="text-sm font-medium text-foreground">
+              <label htmlFor="fp-email" className="text-sm font-medium text-foreground">
                 {t("email")}
               </label>
               <Input
-                id="email"
+                id="fp-email"
                 type="email"
                 placeholder={t("emailPlaceholder")}
                 autoComplete="email"
-                required
-                disabled={loading}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                disabled={isSubmitting}
+                aria-invalid={!!errors.email}
                 className="h-10"
+                {...register("email")}
               />
+              {errors.email && (
+                <p className="text-xs text-destructive">{errors.email.message}</p>
+              )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading || !email}>
-              {loading ? (
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? (
                 <>
                   <Loader2 className="me-2 h-4 w-4 animate-spin" />
                   {t("submitting")}

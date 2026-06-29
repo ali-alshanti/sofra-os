@@ -116,5 +116,12 @@
     "discard": "Discard",
     "save":    "Save Changes",
     "saving":  "Saving…"
+  },
+
+  "errors": {
+    "noRestaurant":     "Account not linked to a restaurant",
+    "noRestaurantDesc": "Your account doesn't have a restaurant profile yet. Contact your administrator to complete the setup.",
+    "loadFailed":       "Failed to load settings",
+    "loadFailedDesc":   "There was a problem fetching your restaurant settings. Please refresh the page or contact your administrator."
   }
 }

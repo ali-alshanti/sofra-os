@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { ImagePlus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import { SettingsSectionCard } from "@/features/settings/components/settings-section-card";
 import type { GeneralSettingsFormValues } from "@/features/settings/types";
@@ -43,10 +44,12 @@ export function GeneralSettingsForm({
   onChange,
   disabled = false,
 }: GeneralSettingsFormProps) {
+  const t = useTranslations("settings.general");
+
   return (
     <SettingsSectionCard
-      title="General Information"
-      description="Your restaurant's public identity. This information appears on receipts and customer-facing materials."
+      title={t("title")}
+      description={t("description")}
     >
       {/* Logo placeholder */}
       <div className="flex items-center gap-4">
@@ -54,20 +57,20 @@ export function GeneralSettingsForm({
           <ImagePlus size={22} />
         </div>
         <div className="space-y-1">
-          <p className="text-sm font-medium text-foreground">Restaurant Logo</p>
+          <p className="text-sm font-medium text-foreground">{t("logo")}</p>
           <p className="typography-small text-muted-foreground">
-            PNG or JPG — recommended 256×256px
+            {t("logoHint")}
           </p>
         </div>
       </div>
 
       <div className="h-px bg-border/60" />
 
-      <FieldRow label="Restaurant Name" htmlFor="restaurantName">
+      <FieldRow label={t("name")} htmlFor="restaurantName">
         <Input
           id="restaurantName"
           type="text"
-          placeholder="e.g. Sofra Kitchen"
+          placeholder={t("namePlaceholder")}
           value={values.restaurantName}
           onChange={(e) => onChange({ restaurantName: e.target.value })}
           disabled={disabled}
@@ -75,11 +78,11 @@ export function GeneralSettingsForm({
         />
       </FieldRow>
 
-      <FieldRow label="Email Address" htmlFor="email">
+      <FieldRow label={t("email")} htmlFor="email">
         <Input
           id="email"
           type="email"
-          placeholder="contact@restaurant.com"
+          placeholder={t("emailPlaceholder")}
           value={values.email}
           onChange={(e) => onChange({ email: e.target.value })}
           disabled={disabled}
@@ -87,11 +90,11 @@ export function GeneralSettingsForm({
         />
       </FieldRow>
 
-      <FieldRow label="Phone Number" htmlFor="phone">
+      <FieldRow label={t("phone")} htmlFor="phone">
         <Input
           id="phone"
           type="tel"
-          placeholder="+1 (555) 000-0000"
+          placeholder={t("phonePlaceholder")}
           value={values.phone}
           onChange={(e) => onChange({ phone: e.target.value })}
           disabled={disabled}
@@ -99,11 +102,11 @@ export function GeneralSettingsForm({
         />
       </FieldRow>
 
-      <FieldRow label="Address" htmlFor="address">
+      <FieldRow label={t("address")} htmlFor="address">
         <Input
           id="address"
           type="text"
-          placeholder="123 Main St, City, Country"
+          placeholder={t("addressPlaceholder")}
           value={values.address}
           onChange={(e) => onChange({ address: e.target.value })}
           disabled={disabled}

@@ -1,6 +1,7 @@
 "use client";
 
 import { Search, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -44,6 +45,8 @@ export function ReportsFilters({
   disabled = false,
   className,
 }: ReportsFiltersProps) {
+  const tc = useTranslations("common.actions");
+  const tr = useTranslations("reports.filters");
   const active = hasActiveFilters(filters);
 
   // Map ReportsFiltersValue.period → DateRangePreset (null when "custom")
@@ -75,8 +78,8 @@ export function ReportsFilters({
         />
         <Input
           type="search"
-          placeholder="Search reports..."
-          aria-label="Search reports"
+          placeholder={tr("searchPlaceholder")}
+          aria-label={tr("searchPlaceholder")}
           value={filters.search}
           onChange={(e) => onFiltersChange?.({ search: e.target.value })}
           className="pl-9 h-10 bg-background text-sm"
@@ -93,7 +96,7 @@ export function ReportsFilters({
         disabled={disabled}
       >
         <SelectTrigger className="h-10 w-44 bg-background text-sm">
-          <SelectValue placeholder="All Types" />
+          <SelectValue placeholder={tr("allTypes")} />
         </SelectTrigger>
         <SelectContent>
           {REPORT_TYPE_OPTIONS.map((opt) => (
@@ -111,7 +114,7 @@ export function ReportsFilters({
         disabled={disabled}
       >
         <SelectTrigger className="h-10 w-44 bg-background text-sm">
-          <SelectValue placeholder="All Categories" />
+          <SelectValue placeholder={tr("allCategories")} />
         </SelectTrigger>
         <SelectContent>
           {CATEGORY_OPTIONS.map((opt) => (
@@ -148,7 +151,7 @@ export function ReportsFilters({
           disabled={disabled}
         >
           <X size={14} />
-          Clear
+          {tc("clear")}
         </Button>
       )}
     </div>

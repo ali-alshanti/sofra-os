@@ -36,7 +36,9 @@
     "back":       "رجوع",
     "connect":    "اتصال",
     "disconnect": "قطع الاتصال",
-    "retry":      "إعادة المحاولة"
+    "retry":      "إعادة المحاولة",
+    "clear":      "مسح",
+    "addNew":     "إضافة جديد"
   },
 
   "status": {
@@ -74,7 +76,63 @@
   },
 
   "notifications": {
-    "button": "الإشعارات"
+    "button": "الإشعارات",
+    "markAllRead": "تحديد الكل كمقروء",
+    "noNotifications": "لا توجد إشعارات",
+    "noNotificationsDesc": "أنت على اطلاع كامل!",
+    "justNow": "الآن",
+    "minutesAgo": "منذ {minutes} د",
+    "hoursAgo": "منذ {hours} س",
+    "yesterday": "أمس",
+    "daysAgo": "منذ {days} أيام",
+    "dismiss": "رفض",
+    "order": {
+      "created":   { "title": "طلب جديد",        "message": "تم استلام طلب جديد." },
+      "updated":   { "title": "تم تحديث الطلب",  "message": "تم تحديث طلب." },
+      "cancelled": { "title": "تم إلغاء الطلب",  "message": "تم إلغاء طلب." },
+      "completed": { "title": "تم إكمال الطلب",  "message": "تم إكمال طلب." }
+    },
+    "kitchen": {
+      "preparing": { "title": "جارٍ تحضير الطلب",   "message": "بدأ تحضير طلب في المطبخ." },
+      "ready":     { "title": "الطلب جاهز",          "message": "طلب جاهز للتقديم." },
+      "delivered": { "title": "تم تسليم الطلب",      "message": "تم تسليم طلب." }
+    },
+    "inventory": {
+      "lowStock":              { "title": "تنبيه: مخزون منخفض",    "message": "كمية {itemName} منخفضة في المخزون." },
+      "outOfStock":            { "title": "نفاد المخزون",           "message": "نفد مخزون {itemName}." },
+      "purchaseOrderReceived": { "title": "تم استلام مخزون",        "message": "تم تجديد مخزون {itemName}." },
+      "itemUpdated":           { "title": "تم تحديث عنصر المخزون", "message": "تم تحديث عنصر في المخزون." },
+      "itemDeleted":           { "title": "تمت إزالة عنصر المخزون","message": "تمت إزالة عنصر من المخزون." }
+    },
+    "reservation": {
+      "created":   { "title": "حجز جديد",          "message": "تم إنشاء حجز جديد." },
+      "updated":   { "title": "تم تحديث الحجز",    "message": "تم تحديث الحجز." },
+      "cancelled": { "title": "تم إلغاء الحجز",    "message": "تم إلغاء الحجز." }
+    },
+    "employee": {
+      "added":   { "title": "تمت إضافة موظف",    "message": "تمت إضافة موظف جديد." },
+      "updated": { "title": "تم تحديث الموظف",   "message": "تم تحديث ملف الموظف." },
+      "removed": { "title": "تمت إزالة الموظف",  "message": "تمت إزالة الموظف." }
+    },
+    "customer": {
+      "registered": { "title": "عميل جديد",         "message": "سجّل عميل جديد." },
+      "updated":    { "title": "تم تحديث العميل",   "message": "تم تحديث ملف العميل." }
+    },
+    "menu": {
+      "itemAdded":   { "title": "تمت إضافة عنصر للقائمة",   "message": "تمت إضافة عنصر جديد إلى القائمة." },
+      "itemUpdated": { "title": "تم تحديث عنصر القائمة",    "message": "تم تحديث عنصر في القائمة." },
+      "itemDeleted": { "title": "تمت إزالة عنصر القائمة",   "message": "تمت إزالة عنصر من القائمة." }
+    },
+    "settings": {
+      "updated": { "title": "تم تحديث الإعدادات",  "message": "تم تحديث إعدادات المطعم بنجاح." }
+    }
+  },
+
+  "dateRange": {
+    "today":   "اليوم",
+    "last7d":  "آخر 7 أيام",
+    "last30d": "آخر 30 يوم",
+    "custom":  "مخصص"
   },
 
   "search": {
@@ -90,5 +148,65 @@
     "best":     "الأفضل",
     "new":      "جديد",
     "featured": "مميز"
+  },
+
+  "errors": {
+    "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+    "duplicate":          "هذا السجل موجود بالفعل.",
+    "network":            "تعذر الاتصال. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.",
+    "permission":         "ليس لديك صلاحية لتنفيذ هذه العملية.",
+    "generic":            "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى."
+  },
+
+  "toast": {
+    "success": {
+      "auth": {
+        "loggedOut": "تم تسجيل الخروج بنجاح."
+      },
+      "employees": {
+        "updated":       "تم تحديث بيانات الموظف بنجاح.",
+        "statusUpdated": "تم تحديث حالة الموظف.",
+        "deleted":       "تمت إزالة الموظف بنجاح."
+      },
+      "customers": {
+        "updated": "تم تحديث بيانات العميل بنجاح.",
+        "deleted": "تم حذف العميل بنجاح."
+      },
+      "orders": {
+        "statusUpdated": "تم تحديث حالة الطلب.",
+        "deleted":       "تم حذف الطلب بنجاح."
+      },
+      "menu": {
+        "markedAvailable":   "تم تحديد العنصر كمتاح.",
+        "markedUnavailable": "تم تحديد العنصر كغير متاح.",
+        "deleted":           "تم حذف عنصر القائمة بنجاح."
+      },
+      "inventory": {
+        "updated": "تم تحديث عنصر المخزون بنجاح.",
+        "deleted": "تم حذف عنصر المخزون بنجاح."
+      },
+      "tables": {
+        "statusUpdated":        "تم تحديث حالة الطاولة.",
+        "reservationCancelled": "تم إلغاء الحجز بنجاح."
+      },
+      "settings": {
+        "saved":                   "تم حفظ الإعدادات بنجاح.",
+        "integrationConnected":    "تم توصيل التكامل.",
+        "integrationDisconnected": "تم قطع اتصال التكامل."
+      }
+    }
+  },
+
+  "validation": {
+    "emailRequired":     "البريد الإلكتروني مطلوب.",
+    "emailInvalid":      "يرجى إدخال بريد إلكتروني صحيح.",
+    "passwordRequired":  "كلمة المرور مطلوبة.",
+    "passwordMinLength": "يجب أن تتكون كلمة المرور من {min} أحرف على الأقل.",
+    "nameRequired":      "الاسم مطلوب.",
+    "nameNoSpaces":      "لا يمكن أن يتكون الاسم من مسافات فقط.",
+    "phoneRequired":     "رقم الهاتف مطلوب.",
+    "pricePositive":     "يجب أن يكون السعر أكبر من صفر.",
+    "quantityPositive":  "يجب أن تكون الكمية أكبر من صفر.",
+    "fieldRequired":     "هذا الحقل مطلوب."
   }
 }

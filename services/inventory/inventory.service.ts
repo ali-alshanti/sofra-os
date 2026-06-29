@@ -154,6 +154,39 @@ export async function getLowStockItems(restaurantId: string, limit = 5): Promise
   return ((data ?? []) as unknown as InventoryRow[]).map(mapRowToItem);
 }
 
+// ─── createInventoryItem ──────────────────────────────────────────────────────
+
+export interface CreateInventoryItemPayload {
+  restaurantId:  string;
+  name:          string;
+  sku?:          string;
+  unit:          InventoryUnit;
+  quantity:      number;
+  reorder_point: number;
+  cost_per_unit: number;
+  category_id?:  string;
+  supplier_id?:  string;
+}
+
+export async function createInventoryItem(payload: CreateInventoryItemPayload): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+  const { restaurantId, ...fields } = payload;
+
+  const quantity      = Number(fields.quantity)      || 0;
+  const reorderPoint  = Number(fields.reorder_point) || 0;
+  const status: InventoryStatus =
+    quantity === 0           ? "out_of_stock"
+    : quantity <= reorderPoint ? "low_stock"
+    : "in_stock";
+
+  const { error } = await supabase.from("inventory_items").insert({
+    restaurant_id: restaurantId,
+    status,
+    ...fields,
+  });
+  if (error) throw new Error(error.message);
+}
+
 // ─── updateInventoryItem ──────────────────────────────────────────────────────
 
 export async function updateInventoryItem(

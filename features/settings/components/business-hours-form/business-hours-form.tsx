@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Switch } from "@/components/ui/switch";
 import {
   Select,
@@ -10,20 +11,13 @@ import { SettingsSectionCard } from "@/features/settings/components/settings-sec
 import type { BusinessHours, DayOfWeek, DaySchedule } from "@/features/settings/types";
 import { cn } from "@/lib/utils";
 
-// ─── Day order ────────────────────────────────────────────────────────────────
+// ─── Day keys (order preserved) ───────────────────────────────────────────────
 
-const DAYS: { key: DayOfWeek; label: string }[] = [
-  { key: "monday",    label: "Monday"    },
-  { key: "tuesday",   label: "Tuesday"   },
-  { key: "wednesday", label: "Wednesday" },
-  { key: "thursday",  label: "Thursday"  },
-  { key: "friday",    label: "Friday"    },
-  { key: "saturday",  label: "Saturday"  },
-  { key: "sunday",    label: "Sunday"    },
+const DAY_KEYS: DayOfWeek[] = [
+  "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
 ];
 
-// ─── Time options ─────────────────────────────────────────────────────────────
-// 30-minute intervals, 00:00 – 23:30
+// ─── Time options — 30-minute intervals, 00:00 – 23:30 ───────────────────────
 
 const TIME_OPTIONS: string[] = Array.from({ length: 48 }, (_, i) => {
   const h = String(Math.floor(i / 2)).padStart(2, "0");
@@ -46,14 +40,17 @@ export function BusinessHoursForm({
   onChange,
   disabled = false,
 }: BusinessHoursFormProps) {
+  const t = useTranslations("settings.businessHours");
+
   return (
     <SettingsSectionCard
-      title="Business Hours"
-      description="Set your restaurant's opening and closing times for each day of the week."
+      title={t("title")}
+      description={t("description")}
     >
       <div className="space-y-3">
-        {DAYS.map(({ key, label }, i) => {
+        {DAY_KEYS.map((key, i) => {
           const schedule = businessHours[key];
+          const label    = t(`days.${key}`);
 
           return (
             <div key={key}>
@@ -66,7 +63,7 @@ export function BusinessHoursForm({
                     checked={schedule.open}
                     onCheckedChange={(checked) => onChange(key, { open: checked })}
                     disabled={disabled}
-                    aria-label={`${label} open`}
+                    aria-label={`${label} ${t("open")}`}
                   />
                   <label
                     htmlFor={`switch-${key}`}
@@ -88,16 +85,16 @@ export function BusinessHoursForm({
                       disabled={disabled}
                     >
                       <SelectTrigger className="h-9 w-32 text-sm">
-                        <SelectValue placeholder="Open" />
+                        <SelectValue placeholder={t("openTime")} />
                       </SelectTrigger>
                       <SelectContent className="max-h-56">
-                        {TIME_OPTIONS.map((t) => (
-                          <SelectItem key={t} value={t}>{t}</SelectItem>
+                        {TIME_OPTIONS.map((time) => (
+                          <SelectItem key={time} value={time}>{time}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
 
-                    <span className="typography-small text-muted-foreground">to</span>
+                    <span className="typography-small text-muted-foreground">{t("to")}</span>
 
                     <Select
                       value={schedule.closeTime}
@@ -105,24 +102,24 @@ export function BusinessHoursForm({
                       disabled={disabled}
                     >
                       <SelectTrigger className="h-9 w-32 text-sm">
-                        <SelectValue placeholder="Close" />
+                        <SelectValue placeholder={t("closeTime")} />
                       </SelectTrigger>
                       <SelectContent className="max-h-56">
-                        {TIME_OPTIONS.map((t) => (
-                          <SelectItem key={t} value={t}>{t}</SelectItem>
+                        {TIME_OPTIONS.map((time) => (
+                          <SelectItem key={time} value={time}>{time}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                 ) : (
                   <span className="typography-small text-muted-foreground italic">
-                    Closed
+                    {t("closed")}
                   </span>
                 )}
               </div>
 
               {/* Divider — skip after last row */}
-              {i < DAYS.length - 1 && (
+              {i < DAY_KEYS.length - 1 && (
                 <div className="mt-3 h-px bg-border/40" />
               )}
             </div>

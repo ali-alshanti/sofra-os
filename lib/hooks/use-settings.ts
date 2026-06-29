@@ -1,7 +1,9 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useCurrentUser } from "./use-auth";
+import { useAppToast } from "./use-app-toast";
 import { QUERY_KEYS } from "@/lib/constants/query-keys";
 import {
   getRestaurantSettings,
@@ -13,6 +15,7 @@ import {
   getIntegrations,
   updateIntegrationStatus,
 } from "@/services/settings";
+import { createNotification } from "@/services/notifications";
 import type {
   RestaurantSettings,
   BusinessHours,
@@ -49,6 +52,17 @@ export function useUpdateRestaurantSettings() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.settings.restaurant(restaurantId) });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.settings.notifications(restaurantId) });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.notifications.all });
+
+      if (!user?.id) return;
+      createNotification({
+        restaurantId,
+        userId: user.id,
+        type: "system",
+        title: "Settings Updated",
+        message: "Restaurant settings have been updated successfully.",
+        data: { key: "settings.updated", params: {} },
+      }).catch(console.error);
     },
   });
 }
@@ -134,16 +148,22 @@ export function useUpdateIntegration() {
   const queryClient  = useQueryClient();
   const { user }     = useCurrentUser();
   const restaurantId = user?.restaurant_id ?? "";
+  const { toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.settings");
 
   return useMutation({
     mutationFn: ({ id, status }: { id: string; status: IntegrationStatus }) =>
       updateIntegrationStatus(id, status),
-    onSuccess: (updatedList) => {
-      // Optimistically update the cache with the returned list
+    onSuccess: (updatedList, { status }) => {
       queryClient.setQueryData(
         QUERY_KEYS.settings.integrations(restaurantId),
         updatedList,
       );
+      // Toast is shown by settings-page.tsx for integration changes
+      void status; void t;
+    },
+    onError: (err) => {
+      toastMutationError(err);
     },
   });
 }

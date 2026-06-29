@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { FileBarChart2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   Table,
   TableBody,
@@ -30,22 +31,6 @@ function LoadingRows() {
   );
 }
 
-// ─── Empty row ────────────────────────────────────────────────────────────────
-
-function EmptyRow() {
-  return (
-    <TableRow className="border-0 hover:bg-transparent">
-      <TableCell colSpan={REPORTS_COLUMNS.length} className="py-8">
-        <EmptyState
-          icon={FileBarChart2}
-          title="No reports found"
-          description="Try adjusting your filters or generate a new report."
-        />
-      </TableCell>
-    </TableRow>
-  );
-}
-
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 interface ReportsTableProps {
@@ -54,7 +39,6 @@ interface ReportsTableProps {
   onView?:       (id: string) => void;
   onDownload?:   (id: string) => void;
   onDelete?:     (id: string) => void;
-  /** Footer slot — use for Pagination */
   pagination?:   ReactNode;
   className?:    string;
 }
@@ -70,6 +54,8 @@ export function ReportsTable({
   pagination,
   className,
 }: ReportsTableProps) {
+  const t = useTranslations("reports.empty");
+
   const isEmpty = !loading && reports.length === 0;
 
   return (
@@ -79,7 +65,17 @@ export function ReportsTable({
           <ReportsTableHeader />
           <TableBody>
             {loading  && <LoadingRows />}
-            {isEmpty  && <EmptyRow />}
+            {isEmpty  && (
+              <TableRow className="border-0 hover:bg-transparent">
+                <TableCell colSpan={REPORTS_COLUMNS.length} className="py-8">
+                  <EmptyState
+                    icon={FileBarChart2}
+                    title={t("title")}
+                    description={t("description")}
+                  />
+                </TableCell>
+              </TableRow>
+            )}
             {!loading && !isEmpty && reports.map((report) => (
               <ReportRow
                 key={report.id}

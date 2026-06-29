@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { StatCard } from "@/components/shared/stat-card";
 
 export interface EmployeeStats {
@@ -12,17 +13,18 @@ interface EmployeeSummaryProps {
 }
 
 export function EmployeeSummary({ stats }: EmployeeSummaryProps) {
+  const t = useTranslations("employees.summary");
+
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           variant="compact"
-          title="Total Employees"
+          title={t("total")}
           value={String(stats.totalEmployees)}
-          description="Headcount"
         />
         <StatCard
           variant="compact"
-          title="On Shift"
+          title={t("onShift")}
           value={String(stats.onShift)}
           valueColor="oklch(0.596 0.145 163.225)"
           pulse
@@ -30,13 +32,13 @@ export function EmployeeSummary({ stats }: EmployeeSummaryProps) {
         />
         <StatCard
           variant="compact"
-          title="Off Shift"
+          title={t("offShift")}
           value={String(stats.offShift)}
           valueColor="oklch(0.554 0.046 257.417)"
         />
         <StatCard
           variant="compact"
-          title="Avg. Attendance"
+          title={t("attendance")}
           value={stats.avgAttendance}
           trend={{ value: "+2.4%", direction: "up" }}
         />

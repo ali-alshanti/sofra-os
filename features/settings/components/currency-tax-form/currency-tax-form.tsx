@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -68,19 +69,21 @@ export function CurrencyTaxForm({
   onChange,
   disabled = false,
 }: CurrencyTaxFormProps) {
+  const t = useTranslations("settings.currency");
+
   return (
     <SettingsSectionCard
-      title="Currency & Tax"
-      description="Configure the currency and tax settings applied to all orders and receipts."
+      title={t("title")}
+      description={t("description")}
     >
-      <FieldRow label="Currency" htmlFor="currency">
+      <FieldRow label={t("currency")} htmlFor="currency">
         <Select
           value={values.currency}
           onValueChange={(v) => onChange({ currency: v })}
           disabled={disabled}
         >
           <SelectTrigger id="currency" className="h-10">
-            <SelectValue placeholder="Select currency" />
+            <SelectValue placeholder={t("currencySelect")} />
           </SelectTrigger>
           <SelectContent>
             {CURRENCY_OPTIONS.map((opt) => (
@@ -93,9 +96,9 @@ export function CurrencyTaxForm({
       </FieldRow>
 
       <FieldRow
-        label="Tax Rate"
+        label={t("taxRate")}
         htmlFor="taxRate"
-        hint="Percentage applied to all taxable items"
+        hint={t("taxRateHint")}
       >
         <div className="relative">
           <Input
@@ -117,14 +120,14 @@ export function CurrencyTaxForm({
       </FieldRow>
 
       <FieldRow
-        label="Tax Label"
+        label={t("taxLabel")}
         htmlFor="taxLabel"
-        hint="Shown on receipts — e.g. VAT, GST, Sales Tax"
+        hint={t("taxLabelHint")}
       >
         <Input
           id="taxLabel"
           type="text"
-          placeholder="VAT"
+          placeholder={t("taxLabelPlaceholder")}
           value={values.taxLabel}
           onChange={(e) => onChange({ taxLabel: e.target.value })}
           disabled={disabled}

@@ -9,6 +9,7 @@ import { InventoryHeader }  from "./components/inventory-header";
 import { InventorySummary } from "./components/inventory-summary";
 import { InventoryFilters } from "./components/inventory-filters";
 import { InventoryTable }   from "./components/inventory-table";
+import { AddInventoryItemDialog } from "./components/add-inventory-item-dialog";
 import {
   DEFAULT_INVENTORY_FILTERS,
   type InventoryFiltersValue,
@@ -32,6 +33,7 @@ export function InventoryFeature() {
   const [filters, setFilters]               = useState<InventoryFiltersValue>(DEFAULT_INVENTORY_FILTERS);
   const [currentPage, setCurrentPage]       = useState(1);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [addOpen, setAddOpen]               = useState(false);
   const queryClient                         = useQueryClient();
 
   const { data: summary, isLoading: summaryLoading } = useInventorySummary();
@@ -70,7 +72,7 @@ export function InventoryFeature() {
         <InventoryHeader
           onRefresh={handleRefresh}
           onExport={() => undefined}
-          onAddItem={() => undefined}
+          onAddItem={() => setAddOpen(true)}
         />
 
         <InventorySummary
@@ -112,12 +114,14 @@ export function InventoryFeature() {
           }
         />
 
+        <AddInventoryItemDialog open={addOpen} onOpenChange={setAddOpen} />
+
         <ConfirmDialog
           open={!!pendingDeleteId}
           onOpenChange={(open) => { if (!open) setPendingDeleteId(null); }}
-          title="Delete Item"
-          description="This will permanently remove the inventory item and cannot be undone."
-          confirmLabel="Delete"
+          title={t("confirm.deleteTitle")}
+          description={t("confirm.deleteDescription")}
+          confirmLabel={t("confirm.deleteConfirm")}
           loading={deleteItem.isPending}
           onConfirm={handleConfirmDelete}
         />

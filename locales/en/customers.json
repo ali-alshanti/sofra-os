@@ -60,6 +60,22 @@
   "joined": "Joined {date}",
   "visits": "{count} visits",
 
+  "add": {
+    "title":              "Add Customer",
+    "description":        "Fill in the details to add a new customer profile.",
+    "namePlaceholder":    "Full name",
+    "emailPlaceholder":   "Email address",
+    "phonePlaceholder":   "Phone number",
+    "selectLoyalty":      "Select loyalty tier",
+    "selectStatus":       "Select status"
+  },
+
+  "confirm": {
+    "deleteTitle":       "Delete Customer",
+    "deleteDescription": "This action cannot be undone. The customer profile will be permanently removed.",
+    "deleteConfirm":     "Delete"
+  },
+
   "empty": {
     "title":       "No customers found",
     "description": "Customer profiles will appear here. Try adjusting your filters."

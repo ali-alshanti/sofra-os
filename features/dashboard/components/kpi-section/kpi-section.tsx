@@ -6,9 +6,9 @@ import { StatCard } from "@/components/shared/stat-card";
 import { useDashboardSummary } from "@/lib/hooks/use-dashboard";
 import { formatCurrency } from "@/lib/utils/format-currency";
 
-export function KpiSection() {
+export function KpiSection({ preset = "Today" }: { preset?: "Today" | "Last 7d" | "Last 30d" }) {
   const t   = useTranslations("dashboard.kpi");
-  const { data, isLoading } = useDashboardSummary();
+  const { data, isLoading } = useDashboardSummary(preset);
 
   const revenueChange = data?.revenueChangePercent != null
     ? {
@@ -56,7 +56,7 @@ export function KpiSection() {
         icon={Table2}
         iconBg="#ffddb8"
         iconColor="#442800"
-        badge={data ? `${data.occupancyPercent}% Occ.` : undefined}
+        badge={data ? `${data.occupancyPercent}% ${t("occ")}` : undefined}
       />
       <StatCard
         loading={isLoading}

@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { ThemeProvider } from "@/lib/providers/theme-provider";
 import { ReactQueryProvider } from "@/lib/providers/react-query-provider";
-import { ToastProvider } from "@/lib/providers/toast-provider";
+import { Toaster } from "@/components/ui/toaster";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -18,9 +18,8 @@ export function Providers({ children }: ProvidersProps) {
         enableSystem
         disableTransitionOnChange
       >
-        <ToastProvider>
-          {children}
-        </ToastProvider>
+        {children}
+        <Toaster />
       </ThemeProvider>
     </ReactQueryProvider>
   );

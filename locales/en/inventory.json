@@ -43,6 +43,41 @@
     "restock":"Restock"
   },
 
+  "add": {
+    "title":                "Add Inventory Item",
+    "description":          "Fill in the details to add a new inventory item.",
+    "namePlaceholder":      "Item name",
+    "skuPlaceholder":       "SKU / barcode",
+    "quantityPlaceholder":  "0",
+    "reorderPlaceholder":   "0",
+    "costPlaceholder":      "0.00",
+    "selectUnit":           "Select unit",
+    "selectCategory":       "Select category",
+    "selectSupplier":       "Select supplier",
+    "selectStatus":         "Select status"
+  },
+
+  "confirm": {
+    "deleteTitle":       "Delete Item",
+    "deleteDescription": "This will permanently remove the inventory item and cannot be undone.",
+    "deleteConfirm":     "Delete"
+  },
+
+  "header": {
+    "title":       "Inventory Management",
+    "description": "Track stock levels, suppliers, and inventory status."
+  },
+
+  "unit": {
+    "kg":      "Kilograms (kg)",
+    "g":       "Grams (g)",
+    "liters":  "Liters (L)",
+    "ml":      "Milliliters (ml)",
+    "units":   "Units",
+    "pieces":  "Pieces",
+    "bottles": "Bottles"
+  },
+
   "empty": {
     "title":       "No inventory items",
     "description": "Add your first inventory item to start tracking stock levels."

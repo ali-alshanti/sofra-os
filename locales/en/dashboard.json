@@ -9,6 +9,7 @@
     "kitchen":      "Kitchen Status",
     "vs":           "vs yesterday",
     "occupied":     "{active} of {total} tables occupied",
+    "occ":          "Occ.",
     "kitchenStatus": {
       "optimal":  "Optimal",
       "moderate": "Moderate",
@@ -17,9 +18,13 @@
   },
 
   "revenue": {
-    "title":       "Revenue Overview",
+    "title":       "Revenue Trends",
     "description": "Hourly revenue for today",
-    "empty":       "No revenue data yet today."
+    "descLast7d":  "Daily revenue – last 7 days",
+    "descLast30d": "Daily revenue – last 30 days",
+    "empty":       "No revenue data yet today.",
+    "actual":      "Actual",
+    "forecast":    "Forecast"
   },
 
   "topItems": {
@@ -33,6 +38,7 @@
     "title":       "Inventory Alerts",
     "description": "Items requiring attention",
     "empty":       "All stock levels are healthy.",
+    "critical":    "Critical",
     "unit":        "{quantity} {unit} remaining",
     "reorder":     "Reorder at {point} {unit}",
     "status": {

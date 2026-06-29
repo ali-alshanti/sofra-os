@@ -9,6 +9,7 @@ import { CustomerHeader }  from "./components/customer-header";
 import { CustomerSummary } from "./components/customer-summary";
 import { CustomerFilters } from "./components/customer-filters";
 import { CustomerTable }   from "./components/customer-table";
+import { AddCustomerDialog } from "./components/add-customer-dialog";
 import {
   DEFAULT_CUSTOMER_FILTERS,
   type CustomerFiltersValue,
@@ -28,6 +29,7 @@ export function CustomersFeature() {
   const [filters, setFilters]             = useState<CustomerFiltersValue>(DEFAULT_CUSTOMER_FILTERS);
   const [currentPage, setCurrentPage]     = useState(1);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [addOpen, setAddOpen]             = useState(false);
   const queryClient                       = useQueryClient();
 
   const { data: summary, isLoading: summaryLoading } = useCustomerSummary();
@@ -64,7 +66,7 @@ export function CustomersFeature() {
         <CustomerHeader
           onRefresh={handleRefresh}
           onExport={() => undefined}
-          onAddCustomer={() => undefined}
+          onAddCustomer={() => setAddOpen(true)}
         />
 
         <CustomerSummary
@@ -104,12 +106,14 @@ export function CustomersFeature() {
           }
         />
 
+        <AddCustomerDialog open={addOpen} onOpenChange={setAddOpen} />
+
         <ConfirmDialog
           open={!!pendingDeleteId}
           onOpenChange={(open) => { if (!open) setPendingDeleteId(null); }}
-          title="Delete Customer"
-          description="This action cannot be undone. The customer profile will be permanently removed."
-          confirmLabel="Delete"
+          title={t("confirm.deleteTitle")}
+          description={t("confirm.deleteDescription")}
+          confirmLabel={t("confirm.deleteConfirm")}
           loading={deleteCustomer.isPending}
           onConfirm={handleConfirmDelete}
         />

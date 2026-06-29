@@ -96,6 +96,32 @@ export async function getCustomerSummary(restaurantId: string): Promise<Customer
   };
 }
 
+// ─── createCustomer ───────────────────────────────────────────────────────────
+
+export interface CreateCustomerPayload {
+  restaurantId: string;
+  full_name:    string;
+  email?:       string;
+  phone?:       string;
+  loyalty?:     CustomerLoyalty;
+  status?:      CustomerStatus;
+}
+
+export async function createCustomer(payload: CreateCustomerPayload): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+  const { restaurantId, ...fields } = payload;
+  const { error } = await supabase.from("customers").insert({
+    restaurant_id: restaurantId,
+    is_active:     true,
+    loyalty:       fields.loyalty ?? "none",
+    status:        fields.status  ?? "active",
+    total_spent:   0,
+    total_visits:  0,
+    ...fields,
+  });
+  if (error) throw new Error(error.message);
+}
+
 // ─── updateCustomer ───────────────────────────────────────────────────────────
 
 export async function updateCustomer(

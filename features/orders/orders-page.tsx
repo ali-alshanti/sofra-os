@@ -22,6 +22,7 @@ import {
 } from "./components/orders-filters";
 import { OrdersTable } from "./components/orders-table";
 import { OrderRow }    from "./components/order-row";
+import { CreateOrderDialog } from "./components/create-order-dialog";
 import { useOrders, useOrdersSummary, useDeleteOrder } from "@/lib/hooks/use-orders";
 import { formatCurrency } from "@/lib/utils/format-currency";
 
@@ -34,6 +35,7 @@ export function OrdersFeature() {
   const [filters, setFilters]               = useState<OrdersFiltersValue>(DEFAULT_FILTERS);
   const [currentPage, setCurrentPage]       = useState(1);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [createOpen, setCreateOpen]         = useState(false);
 
   const deleteOrder = useDeleteOrder();
 
@@ -73,7 +75,7 @@ export function OrdersFeature() {
           title={t("title")}
           description={t("description")}
           actions={
-            <Button size="sm" className="gap-2">
+            <Button size="sm" className="gap-2" onClick={() => setCreateOpen(true)}>
               <Plus size={16} />
               {ta("create")}
             </Button>
@@ -150,9 +152,9 @@ export function OrdersFeature() {
         <ConfirmDialog
           open={!!pendingDeleteId}
           onOpenChange={(open) => { if (!open) setPendingDeleteId(null); }}
-          title="Delete Order"
-          description="This action cannot be undone. The order will be permanently removed."
-          confirmLabel="Delete"
+          title={t("confirm.deleteTitle")}
+          description={t("confirm.deleteDescription")}
+          confirmLabel={t("confirm.deleteConfirm")}
           loading={deleteOrder.isPending}
           onConfirm={() => {
             if (!pendingDeleteId) return;
@@ -161,6 +163,8 @@ export function OrdersFeature() {
             });
           }}
         />
+
+        <CreateOrderDialog open={createOpen} onOpenChange={setCreateOpen} />
 
       </div>
     </AppShell>

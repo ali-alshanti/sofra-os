@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Users } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   Table,
   TableBody,
@@ -13,45 +14,49 @@ import { cn } from "@/lib/utils";
 import { EmployeeRow } from "@/features/employees/components/employee-row";
 import type { Employee } from "@/features/employees/types";
 
-// ─── Columns ──────────────────────────────────────────────────────────────────
+// ─── Column key order ─────────────────────────────────────────────────────────
 
-const COLUMNS = [
-  { key: "employee",   label: "Employee",   className: ""          },
-  { key: "department", label: "Department", className: "w-32"      },
-  { key: "role",       label: "Role",       className: "w-36"      },
-  { key: "shift",      label: "Shift",      className: "w-32"      },
-  { key: "status",     label: "Status",     className: "w-28"      },
-  { key: "attendance", label: "Attendance", className: "w-28"      },
-  { key: "hireDate",   label: "Hire Date",  className: "w-28"      },
-  { key: "actions",    label: "",           className: "w-12"      },
+const COLUMN_KEYS = [
+  { key: "employee",   className: ""     },
+  { key: "department", className: "w-32" },
+  { key: "role",       className: "w-36" },
+  { key: "shift",      className: "w-32" },
+  { key: "status",     className: "w-28" },
+  { key: "attendance", className: "w-28" },
+  { key: "hireDate",   className: "w-28" },
+  { key: "actions",    className: "w-12" },
 ] as const;
 
 // ─── Loading skeleton ─────────────────────────────────────────────────────────
 
-function SkeletonRow() {
+function SkeletonRow({ count }: { count: number }) {
   return (
-    <TableRow className="border-border animate-pulse">
-      {COLUMNS.map((col) => (
-        <TableCell key={col.key} className={cn("px-6 py-4", col.className)}>
-          {col.key === "employee" ? (
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-muted shrink-0" />
-              <div className="space-y-1.5">
-                <div className="h-3.5 w-28 rounded bg-muted" />
-                <div className="h-2.5 w-16 rounded bg-muted/60" />
-              </div>
-            </div>
-          ) : col.key === "attendance" ? (
-            <div className="space-y-1.5 w-24">
-              <div className="h-2.5 w-8 rounded bg-muted/60" />
-              <div className="h-1 w-full rounded-full bg-muted" />
-            </div>
-          ) : (
-            <div className="h-4 rounded bg-muted" />
-          )}
-        </TableCell>
+    <>
+      {Array.from({ length: count }).map((_, i) => (
+        <TableRow key={i} className="border-border animate-pulse">
+          {COLUMN_KEYS.map((col) => (
+            <TableCell key={col.key} className={cn("px-6 py-4", col.className)}>
+              {col.key === "employee" ? (
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-muted shrink-0" />
+                  <div className="space-y-1.5">
+                    <div className="h-3.5 w-28 rounded bg-muted" />
+                    <div className="h-2.5 w-16 rounded bg-muted/60" />
+                  </div>
+                </div>
+              ) : col.key === "attendance" ? (
+                <div className="space-y-1.5 w-24">
+                  <div className="h-2.5 w-8 rounded bg-muted/60" />
+                  <div className="h-1 w-full rounded-full bg-muted" />
+                </div>
+              ) : (
+                <div className="h-4 rounded bg-muted" />
+              )}
+            </TableCell>
+          ))}
+        </TableRow>
       ))}
-    </TableRow>
+    </>
   );
 }
 
@@ -78,7 +83,21 @@ export function EmployeeTable({
   pagination,
   className,
 }: EmployeeTableProps) {
+  const t     = useTranslations("employees.table");
+  const tempty = useTranslations("employees.empty");
+
   const isEmpty = !loading && employees.length === 0;
+
+  const COLUMNS = [
+    { key: "employee",   label: t("employee"),   className: ""     },
+    { key: "department", label: t("department"), className: "w-32" },
+    { key: "role",       label: t("role"),       className: "w-36" },
+    { key: "shift",      label: t("shift"),      className: "w-32" },
+    { key: "status",     label: t("status"),     className: "w-28" },
+    { key: "attendance", label: t("attendance"), className: "w-28" },
+    { key: "hireDate",   label: t("hireDate"),   className: "w-28" },
+    { key: "actions",    label: "",              className: "w-12" },
+  ] as const;
 
   return (
     <div
@@ -108,18 +127,14 @@ export function EmployeeTable({
         {/* Body */}
         <TableBody className="divide-y divide-border/20">
           {loading ? (
-            <>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <SkeletonRow key={i} />
-              ))}
-            </>
+            <SkeletonRow count={5} />
           ) : isEmpty ? (
             <TableRow className="border-0 hover:bg-transparent">
               <TableCell colSpan={COLUMNS.length} className="py-0">
                 <EmptyState
                   icon={Users}
-                  title="No employees found"
-                  description="Try adjusting your filters or add a new employee."
+                  title={tempty("title")}
+                  description={tempty("description")}
                   className="border-0 bg-transparent"
                 />
               </TableCell>

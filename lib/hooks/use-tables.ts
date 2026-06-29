@@ -1,8 +1,9 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useCurrentUser } from "./use-auth";
-import { useToast } from "@/lib/providers/toast-provider";
+import { useAppToast } from "./use-app-toast";
 import { QUERY_KEYS } from "@/lib/constants/query-keys";
 import {
   getTables,
@@ -31,7 +32,8 @@ export function useTables() {
 
 export function useUpdateTableStatus() {
   const queryClient = useQueryClient();
-  const { toastSuccess, toastError } = useToast();
+  const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.tables");
 
   return useMutation({
     mutationFn: ({ tableId, status }: { tableId: string; status: TableStatus }) =>
@@ -39,10 +41,10 @@ export function useUpdateTableStatus() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.tables.all });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.all });
-      toastSuccess("Table status updated.");
+      toastSuccess(t("statusUpdated"));
     },
     onError: (err) => {
-      toastError(err instanceof Error ? err.message : "Failed to update table status.");
+      toastMutationError(err);
     },
   });
 }
@@ -66,16 +68,17 @@ export function useReservations() {
 
 export function useCancelReservation() {
   const queryClient = useQueryClient();
-  const { toastSuccess, toastError } = useToast();
+  const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.tables");
 
   return useMutation({
     mutationFn: (reservationId: string) => cancelReservation(reservationId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.tables.all });
-      toastSuccess("Reservation cancelled.");
+      toastSuccess(t("reservationCancelled"));
     },
     onError: (err) => {
-      toastError(err instanceof Error ? err.message : "Failed to cancel reservation.");
+      toastMutationError(err);
     },
   });
 }

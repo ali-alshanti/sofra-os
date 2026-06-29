@@ -43,6 +43,41 @@
     "restock":"إعادة التخزين"
   },
 
+  "add": {
+    "title":                "إضافة صنف مخزون",
+    "description":          "أدخل التفاصيل لإضافة صنف جديد إلى المخزون.",
+    "namePlaceholder":      "اسم الصنف",
+    "skuPlaceholder":       "رمز المنتج / الباركود",
+    "quantityPlaceholder":  "0",
+    "reorderPlaceholder":   "0",
+    "costPlaceholder":      "0.00",
+    "selectUnit":           "اختر الوحدة",
+    "selectCategory":       "اختر الفئة",
+    "selectSupplier":       "اختر المورد",
+    "selectStatus":         "اختر الحالة"
+  },
+
+  "confirm": {
+    "deleteTitle":       "حذف الصنف",
+    "deleteDescription": "سيتم حذف صنف المخزون بشكل دائم ولا يمكن التراجع عن ذلك.",
+    "deleteConfirm":     "حذف"
+  },
+
+  "header": {
+    "title":       "إدارة المخزون",
+    "description": "تتبع مستويات المخزون والموردين وحالة المخزون."
+  },
+
+  "unit": {
+    "kg":      "كيلوغرام (kg)",
+    "g":       "غرام (g)",
+    "liters":  "لتر (L)",
+    "ml":      "مليلتر (ml)",
+    "units":   "وحدات",
+    "pieces":  "قطع",
+    "bottles": "زجاجات"
+  },
+
   "empty": {
     "title":       "لا توجد أصناف في المخزون",
     "description": "أضف أول صنف لبدء تتبع مستويات المخزون."

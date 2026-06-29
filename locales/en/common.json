@@ -36,7 +36,9 @@
     "back":       "Back",
     "connect":    "Connect",
     "disconnect": "Disconnect",
-    "retry":      "Retry"
+    "retry":      "Retry",
+    "clear":      "Clear",
+    "addNew":     "Add New"
   },
 
   "status": {
@@ -74,7 +76,63 @@
   },
 
   "notifications": {
-    "button": "Notifications"
+    "button": "Notifications",
+    "markAllRead": "Mark all as read",
+    "noNotifications": "No notifications",
+    "noNotificationsDesc": "You're all caught up!",
+    "justNow": "Just now",
+    "minutesAgo": "{minutes}m ago",
+    "hoursAgo": "{hours}h ago",
+    "yesterday": "Yesterday",
+    "daysAgo": "{days}d ago",
+    "dismiss": "Dismiss",
+    "order": {
+      "created":   { "title": "New Order",         "message": "A new order has been placed." },
+      "updated":   { "title": "Order Updated",     "message": "An order has been updated." },
+      "cancelled": { "title": "Order Cancelled",   "message": "An order has been cancelled." },
+      "completed": { "title": "Order Completed",   "message": "An order has been completed." }
+    },
+    "kitchen": {
+      "preparing": { "title": "Order Preparing",  "message": "An order is now being prepared." },
+      "ready":     { "title": "Order Ready",      "message": "An order is ready for service." },
+      "delivered": { "title": "Order Delivered",  "message": "An order has been delivered." }
+    },
+    "inventory": {
+      "lowStock":              { "title": "Low Stock Alert",          "message": "{itemName} is running low on stock." },
+      "outOfStock":            { "title": "Out of Stock",             "message": "{itemName} is out of stock." },
+      "purchaseOrderReceived": { "title": "Stock Restocked",          "message": "{itemName} has been restocked." },
+      "itemUpdated":           { "title": "Inventory Item Updated",   "message": "An inventory item has been updated." },
+      "itemDeleted":           { "title": "Inventory Item Removed",   "message": "An inventory item has been removed." }
+    },
+    "reservation": {
+      "created":   { "title": "New Reservation",         "message": "A new reservation has been created." },
+      "updated":   { "title": "Reservation Updated",     "message": "A reservation has been updated." },
+      "cancelled": { "title": "Reservation Cancelled",   "message": "A reservation has been cancelled." }
+    },
+    "employee": {
+      "added":   { "title": "Employee Added",    "message": "A new employee has been added." },
+      "updated": { "title": "Employee Updated",  "message": "An employee profile has been updated." },
+      "removed": { "title": "Employee Removed",  "message": "An employee has been removed." }
+    },
+    "customer": {
+      "registered": { "title": "New Customer",  "message": "A new customer has registered." },
+      "updated":    { "title": "Customer Updated", "message": "A customer profile has been updated." }
+    },
+    "menu": {
+      "itemAdded":   { "title": "Menu Item Added",    "message": "A new item has been added to the menu." },
+      "itemUpdated": { "title": "Menu Item Updated",  "message": "A menu item has been updated." },
+      "itemDeleted": { "title": "Menu Item Deleted",  "message": "A menu item has been removed." }
+    },
+    "settings": {
+      "updated": { "title": "Settings Updated",  "message": "Restaurant settings have been updated successfully." }
+    }
+  },
+
+  "dateRange": {
+    "today":   "Today",
+    "last7d":  "Last 7d",
+    "last30d": "Last 30d",
+    "custom":  "Custom"
   },
 
   "search": {
@@ -90,5 +148,65 @@
     "best":       "Best",
     "new":        "New",
     "featured":   "Featured"
+  },
+
+  "errors": {
+    "invalidCredentials": "The email or password is incorrect.",
+    "duplicate":          "This record already exists.",
+    "network":            "Unable to connect. Please check your internet connection and try again.",
+    "permission":         "You don't have permission to perform this action.",
+    "generic":            "Something went wrong. Please try again."
+  },
+
+  "toast": {
+    "success": {
+      "auth": {
+        "loggedOut": "Logged out successfully."
+      },
+      "employees": {
+        "updated":       "Employee updated successfully.",
+        "statusUpdated": "Employee status updated.",
+        "deleted":       "Employee removed successfully."
+      },
+      "customers": {
+        "updated": "Customer updated successfully.",
+        "deleted": "Customer deleted successfully."
+      },
+      "orders": {
+        "statusUpdated": "Order status updated.",
+        "deleted":       "Order deleted successfully."
+      },
+      "menu": {
+        "markedAvailable":   "Item marked as available.",
+        "markedUnavailable": "Item marked as unavailable.",
+        "deleted":           "Menu item deleted successfully."
+      },
+      "inventory": {
+        "updated": "Inventory item updated successfully.",
+        "deleted": "Inventory item deleted successfully."
+      },
+      "tables": {
+        "statusUpdated":        "Table status updated.",
+        "reservationCancelled": "Reservation cancelled successfully."
+      },
+      "settings": {
+        "saved":                   "Settings saved successfully.",
+        "integrationConnected":    "Integration connected.",
+        "integrationDisconnected": "Integration disconnected."
+      }
+    }
+  },
+
+  "validation": {
+    "emailRequired":     "Email address is required.",
+    "emailInvalid":      "Please enter a valid email address.",
+    "passwordRequired":  "Password is required.",
+    "passwordMinLength": "Password must contain at least {min} characters.",
+    "nameRequired":      "Name is required.",
+    "nameNoSpaces":      "Name cannot be only spaces.",
+    "phoneRequired":     "Phone number is required.",
+    "pricePositive":     "Price must be greater than zero.",
+    "quantityPositive":  "Quantity must be greater than zero.",
+    "fieldRequired":     "This field is required."
   }
 }

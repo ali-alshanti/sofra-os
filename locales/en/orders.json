@@ -19,7 +19,22 @@
     "all":               "All",
     "allStatuses":       "All Statuses",
     "allTables":         "All Tables",
-    "allTypes":          "All Types"
+    "allWaiters":        "All Waiters",
+    "allTypes":          "All Types",
+    "dateRange":         "Date range",
+    "clear":             "Clear",
+    "tableLabel":        "Table {number}"
+  },
+
+  "create": {
+    "title":       "Create Order",
+    "description": "Fill in the details to create a new order."
+  },
+
+  "confirm": {
+    "deleteTitle":       "Delete Order",
+    "deleteDescription": "This action cannot be undone. The order will be permanently removed.",
+    "deleteConfirm":     "Delete"
   },
 
   "table": {

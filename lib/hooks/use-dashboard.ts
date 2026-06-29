@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCurrentUser } from "./use-auth";
 import { QUERY_KEYS } from "@/lib/constants/query-keys";
+import { presetToDateRange } from "@/lib/utils/date";
 import {
   getDashboardSummary,
   getRevenueAnalytics,
@@ -10,32 +11,36 @@ import {
   getInventoryAlerts,
 } from "@/services/dashboard";
 
+type Preset = "Today" | "Last 7d" | "Last 30d";
+
 // ─── useDashboardSummary ──────────────────────────────────────────────────────
 
-export function useDashboardSummary() {
+export function useDashboardSummary(preset: Preset = "Today") {
   const { user } = useCurrentUser();
   const restaurantId = user?.restaurant_id ?? "";
+  const dateRange = presetToDateRange(preset);
 
   return useQuery({
-    queryKey: QUERY_KEYS.dashboard.summary(restaurantId),
-    queryFn:  () => getDashboardSummary(restaurantId),
+    queryKey: [...QUERY_KEYS.dashboard.summary(restaurantId), preset],
+    queryFn:  () => getDashboardSummary(restaurantId, dateRange),
     enabled:  !!restaurantId,
-    staleTime: 60 * 1000,          // 1 minute — near real-time KPIs
-    refetchInterval: 60 * 1000,    // auto-refresh every minute
+    staleTime: 60 * 1000,
+    refetchInterval: 60 * 1000,
   });
 }
 
 // ─── useRevenueAnalytics ──────────────────────────────────────────────────────
 
-export function useRevenueAnalytics() {
+export function useRevenueAnalytics(preset: Preset = "Today") {
   const { user } = useCurrentUser();
   const restaurantId = user?.restaurant_id ?? "";
+  const dateRange = presetToDateRange(preset);
 
   return useQuery({
-    queryKey: QUERY_KEYS.dashboard.revenue(restaurantId),
-    queryFn:  () => getRevenueAnalytics(restaurantId),
+    queryKey: [...QUERY_KEYS.dashboard.revenue(restaurantId), preset],
+    queryFn:  () => getRevenueAnalytics(restaurantId, dateRange),
     enabled:  !!restaurantId,
-    staleTime: 5 * 60 * 1000,     // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 }
 

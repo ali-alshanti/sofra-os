@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -9,13 +10,7 @@ import {
 import { SettingsSectionCard } from "@/features/settings/components/settings-section-card";
 import type { SystemSettings, ThemeMode } from "@/features/settings/types";
 
-// ─── Static options ────────────────────────────────────────────────────────────
-
-const THEME_OPTIONS: { value: ThemeMode; label: string }[] = [
-  { value: "light",  label: "Light"  },
-  { value: "dark",   label: "Dark"   },
-  { value: "system", label: "System" },
-];
+// ─── Static options (labels are intentionally locale-neutral) ─────────────────
 
 const LANGUAGE_OPTIONS: { value: string; label: string }[] = [
   { value: "en", label: "English"    },
@@ -83,19 +78,27 @@ export function SystemSettingsForm({
   onChange,
   disabled = false,
 }: SystemSettingsFormProps) {
+  const t = useTranslations("settings.system");
+
+  const THEME_OPTIONS: { value: ThemeMode; label: string }[] = [
+    { value: "light",  label: t("themes.light")  },
+    { value: "dark",   label: t("themes.dark")   },
+    { value: "system", label: t("themes.system") },
+  ];
+
   return (
     <SettingsSectionCard
-      title="System"
-      description="Appearance and localisation preferences applied across the entire application."
+      title={t("title")}
+      description={t("description")}
     >
-      <FieldRow label="Theme" htmlFor="theme">
+      <FieldRow label={t("theme")} htmlFor="theme">
         <Select
           value={values.theme}
           onValueChange={(v) => onChange({ theme: v as ThemeMode })}
           disabled={disabled}
         >
           <SelectTrigger id="theme" className="h-10">
-            <SelectValue placeholder="Select theme" />
+            <SelectValue placeholder={t("themeSelect")} />
           </SelectTrigger>
           <SelectContent>
             {THEME_OPTIONS.map((opt) => (
@@ -107,14 +110,14 @@ export function SystemSettingsForm({
         </Select>
       </FieldRow>
 
-      <FieldRow label="Language" htmlFor="language">
+      <FieldRow label={t("language")} htmlFor="language">
         <Select
           value={values.language}
           onValueChange={(v) => onChange({ language: v })}
           disabled={disabled}
         >
           <SelectTrigger id="language" className="h-10">
-            <SelectValue placeholder="Select language" />
+            <SelectValue placeholder={t("languageSelect")} />
           </SelectTrigger>
           <SelectContent>
             {LANGUAGE_OPTIONS.map((opt) => (
@@ -126,14 +129,14 @@ export function SystemSettingsForm({
         </Select>
       </FieldRow>
 
-      <FieldRow label="Timezone" htmlFor="timezone">
+      <FieldRow label={t("timezone")} htmlFor="timezone">
         <Select
           value={values.timezone}
           onValueChange={(v) => onChange({ timezone: v })}
           disabled={disabled}
         >
           <SelectTrigger id="timezone" className="h-10">
-            <SelectValue placeholder="Select timezone" />
+            <SelectValue placeholder={t("timezoneSelect")} />
           </SelectTrigger>
           <SelectContent>
             {TIMEZONE_OPTIONS.map((opt) => (
@@ -145,14 +148,14 @@ export function SystemSettingsForm({
         </Select>
       </FieldRow>
 
-      <FieldRow label="Date Format" htmlFor="dateFormat">
+      <FieldRow label={t("dateFormat")} htmlFor="dateFormat">
         <Select
           value={values.dateFormat}
           onValueChange={(v) => onChange({ dateFormat: v })}
           disabled={disabled}
         >
           <SelectTrigger id="dateFormat" className="h-10">
-            <SelectValue placeholder="Select date format" />
+            <SelectValue placeholder={t("dateFormatSelect")} />
           </SelectTrigger>
           <SelectContent>
             {DATE_FORMAT_OPTIONS.map((opt) => (

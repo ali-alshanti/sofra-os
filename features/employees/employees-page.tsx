@@ -9,6 +9,7 @@ import { EmployeeHeader }  from "./components/employee-header";
 import { EmployeeSummary } from "./components/employee-summary";
 import { EmployeeFilters } from "./components/employee-filters";
 import { EmployeeTable }   from "./components/employee-table";
+import { AddEmployeeDialog } from "./components/add-employee-dialog";
 import {
   DEFAULT_EMPLOYEE_FILTERS,
   type EmployeeFiltersValue,
@@ -28,6 +29,7 @@ export function EmployeesFeature() {
   const [filters, setFilters]               = useState<EmployeeFiltersValue>(DEFAULT_EMPLOYEE_FILTERS);
   const [currentPage, setCurrentPage]       = useState(1);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [addOpen, setAddOpen]               = useState(false);
   const queryClient                         = useQueryClient();
 
   const { data: summary, isLoading: summaryLoading } = useEmployeeSummary();
@@ -64,7 +66,7 @@ export function EmployeesFeature() {
         <EmployeeHeader
           onExport={() => undefined}
           onRefresh={handleRefresh}
-          onAddEmployee={() => undefined}
+          onAddEmployee={() => setAddOpen(true)}
         />
 
         <EmployeeSummary
@@ -104,12 +106,14 @@ export function EmployeesFeature() {
           }
         />
 
+        <AddEmployeeDialog open={addOpen} onOpenChange={setAddOpen} />
+
         <ConfirmDialog
           open={!!pendingDeleteId}
           onOpenChange={(open) => { if (!open) setPendingDeleteId(null); }}
-          title="Remove Employee"
-          description="This action cannot be undone. The employee record will be permanently removed."
-          confirmLabel="Remove"
+          title={t("confirm.deleteTitle")}
+          description={t("confirm.deleteDescription")}
+          confirmLabel={t("confirm.deleteConfirm")}
           loading={deleteEmployee.isPending}
           onConfirm={handleConfirmDelete}
         />

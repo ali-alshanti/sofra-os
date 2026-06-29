@@ -22,16 +22,20 @@ function hourLabel(h: number): string {
 
 // ─── getDashboardSummary ──────────────────────────────────────────────────────
 
-export async function getDashboardSummary(restaurantId: string): Promise<DashboardSummary> {
+export async function getDashboardSummary(
+  restaurantId: string,
+  dateRange?: { from: string; to: string },
+): Promise<DashboardSummary> {
   const supabase = getSupabaseBrowserClient();
+  const rangeFrom = dateRange?.from ?? todayStart();
 
-  const [todayOrders, yesterdayOrders, tables] = await Promise.all([
+  const [periodOrders, yesterdayOrders, tables] = await Promise.all([
     supabase
       .from("orders")
       .select("total, status")
       .eq("restaurant_id", restaurantId)
       .neq("status", "cancelled")
-      .gte("created_at", todayStart()),
+      .gte("created_at", rangeFrom),
 
     supabase
       .from("orders")
@@ -48,13 +52,13 @@ export async function getDashboardSummary(restaurantId: string): Promise<Dashboa
       .eq("is_active", true),
   ]);
 
-  if (todayOrders.error)     throw new Error(todayOrders.error.message);
+  if (periodOrders.error)    throw new Error(periodOrders.error.message);
   if (yesterdayOrders.error) throw new Error(yesterdayOrders.error.message);
   if (tables.error)          throw new Error(tables.error.message);
 
-  const todayRevenue = (todayOrders.data ?? []).reduce((s, o) => s + Number(o.total), 0);
+  const todayRevenue = (periodOrders.data ?? []).reduce((s, o) => s + Number(o.total), 0);
   const yRevenue     = (yesterdayOrders.data ?? []).reduce((s, o) => s + Number(o.total), 0);
-  const todayCount   = (todayOrders.data ?? []).length;
+  const todayCount   = (periodOrders.data ?? []).length;
   const yCount       = (yesterdayOrders.data ?? []).length;
 
   const allTables   = tables.data ?? [];
@@ -80,36 +84,51 @@ export async function getDashboardSummary(restaurantId: string): Promise<Dashboa
 
 // ─── getRevenueAnalytics ──────────────────────────────────────────────────────
 
-export async function getRevenueAnalytics(restaurantId: string): Promise<RevenueDataPoint[]> {
+export async function getRevenueAnalytics(
+  restaurantId: string,
+  dateRange?: { from: string; to: string },
+): Promise<RevenueDataPoint[]> {
   const supabase  = getSupabaseBrowserClient();
-  const currentHr = new Date().getHours();
+  const rangeFrom = dateRange?.from ?? todayStart();
+  const isToday   = !dateRange || dateRange.from === todayStart();
 
   const { data, error } = await supabase
     .from("orders")
     .select("created_at, total")
     .eq("restaurant_id", restaurantId)
     .neq("status", "cancelled")
-    .gte("created_at", todayStart());
+    .gte("created_at", rangeFrom);
 
   if (error) throw new Error(error.message);
 
-  const byHour: Record<number, number> = {};
-  for (const order of data ?? []) {
-    const hr = new Date(order.created_at).getHours();
-    byHour[hr] = (byHour[hr] ?? 0) + Number(order.total);
+  if (isToday) {
+    const currentHr = new Date().getHours();
+    const byHour: Record<number, number> = {};
+    for (const order of data ?? []) {
+      const hr = new Date(order.created_at).getHours();
+      byHour[hr] = (byHour[hr] ?? 0) + Number(order.total);
+    }
+    const START = 8;
+    const END   = Math.min(currentHr + 1, 24);
+    return Array.from({ length: END - START }, (_, i) => {
+      const h = START + i;
+      return { hour: h, label: hourLabel(h), revenue: byHour[h] ?? 0, isPrimary: (byHour[h] ?? 0) > 0 };
+    });
   }
 
-  const START = 8;
-  const END   = Math.min(currentHr + 1, 24);
-  return Array.from({ length: END - START }, (_, i) => {
-    const h = START + i;
-    return {
-      hour:      h,
-      label:     hourLabel(h),
-      revenue:   byHour[h] ?? 0,
-      isPrimary: (byHour[h] ?? 0) > 0,
-    };
-  });
+  // Multi-day view: group by date
+  const byDay: Record<string, number> = {};
+  for (const order of data ?? []) {
+    const day = order.created_at.slice(0, 10);
+    byDay[day] = (byDay[day] ?? 0) + Number(order.total);
+  }
+  const days = Object.keys(byDay).sort();
+  return days.map((day, i) => ({
+    hour:      i,
+    label:     day.slice(5),   // "MM-DD"
+    revenue:   byDay[day],
+    isPrimary: byDay[day] > 0,
+  }));
 }
 
 // ─── getTopSellingItems ───────────────────────────────────────────────────────

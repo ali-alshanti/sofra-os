@@ -98,6 +98,33 @@ export async function getEmployeeSummary(restaurantId: string): Promise<Employee
   };
 }
 
+// ─── createEmployee ───────────────────────────────────────────────────────────
+
+export interface CreateEmployeePayload {
+  restaurantId: string;
+  full_name:    string;
+  email?:       string;
+  phone?:       string;
+  department:   EmployeeDepartment;
+  role:         EmployeeRole;
+  shift_start:  string;
+  shift_end:    string;
+  status:       EmployeeStatus;
+  hire_date?:   string;
+}
+
+export async function createEmployee(payload: CreateEmployeePayload): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+  const { restaurantId, ...fields } = payload;
+  const { error } = await supabase.from("employees").insert({
+    restaurant_id: restaurantId,
+    is_active:     true,
+    attendance_rate: 100,
+    ...fields,
+  });
+  if (error) throw new Error(error.message);
+}
+
 // ─── updateEmployee ───────────────────────────────────────────────────────────
 
 export async function updateEmployee(

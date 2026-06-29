@@ -19,7 +19,22 @@
     "all":               "الكل",
     "allStatuses":       "جميع الحالات",
     "allTables":         "جميع الطاولات",
-    "allTypes":          "جميع الأنواع"
+    "allWaiters":        "جميع النادلين",
+    "allTypes":          "جميع الأنواع",
+    "dateRange":         "نطاق التاريخ",
+    "clear":             "مسح",
+    "tableLabel":        "طاولة {number}"
+  },
+
+  "create": {
+    "title":       "إنشاء طلب",
+    "description": "أدخل التفاصيل لإنشاء طلب جديد."
+  },
+
+  "confirm": {
+    "deleteTitle":       "حذف الطلب",
+    "deleteDescription": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف الطلب بشكل دائم.",
+    "deleteConfirm":     "حذف"
   },
 
   "table": {

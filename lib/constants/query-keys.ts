@@ -79,6 +79,12 @@ export const QUERY_KEYS = {
     integrations:  (restaurantId: string) => [...QUERY_KEYS.settings.all, "integrations",   restaurantId] as const,
   },
 
+  notifications: {
+    all:      ["notifications"] as const,
+    list:     (restaurantId: string, userId: string) => [...["notifications"], "list", restaurantId, userId] as const,
+    unread:   (restaurantId: string, userId: string) => [...["notifications"], "unread", restaurantId, userId] as const,
+  },
+
   reports: {
     all:              ["reports"] as const,
     dashboard:        (restaurantId: string, filters?: Record<string, unknown>) => [...QUERY_KEYS.reports.all, "dashboard", restaurantId, filters] as const,

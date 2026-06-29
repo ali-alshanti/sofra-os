@@ -1,20 +1,23 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ChartCard } from "@/components/shared/chart-card";
 import { useRevenueAnalytics } from "@/lib/hooks/use-dashboard";
 import { RevenueChartPlaceholder } from "./revenue-chart-placeholder";
 import type { RevenueDataPoint } from "@/types/dashboard";
 
 function RevenueLegend() {
+  const t = useTranslations("dashboard.revenue");
+
   return (
     <div className="flex items-center gap-4">
       <div className="flex items-center gap-2">
         <span className="w-3 h-3 rounded-full" style={{ background: "oklch(0.596 0.145 163.225)" }} />
-        <span className="typography-small text-muted-foreground">Actual</span>
+        <span className="typography-small text-muted-foreground">{t("actual")}</span>
       </div>
       <div className="flex items-center gap-2">
         <span className="w-3 h-3 rounded-full opacity-30" style={{ background: "oklch(0.554 0.046 257.417)" }} />
-        <span className="typography-small text-muted-foreground">Forecast</span>
+        <span className="typography-small text-muted-foreground">{t("forecast")}</span>
       </div>
     </div>
   );
@@ -58,13 +61,19 @@ function LiveRevenueChart({ data }: { data: RevenueDataPoint[] }) {
   );
 }
 
-export function RevenueTrendCard() {
-  const { data, isLoading } = useRevenueAnalytics();
+export function RevenueTrendCard({ preset = "Today" }: { preset?: "Today" | "Last 7d" | "Last 30d" }) {
+  const t = useTranslations("dashboard.revenue");
+  const { data, isLoading } = useRevenueAnalytics(preset);
+
+  const description =
+    preset === "Last 7d"  ? t("descLast7d")  :
+    preset === "Last 30d" ? t("descLast30d") :
+    t("description");
 
   return (
     <ChartCard
-      title="Revenue Trends"
-      description="Hourly revenue for today"
+      title={t("title")}
+      description={description}
       loading={isLoading}
       actions={<RevenueLegend />}
     >

@@ -54,6 +54,12 @@
     }
   },
 
+  "confirm": {
+    "cancelTitle":       "Cancel Reservation",
+    "cancelDescription": "Are you sure you want to cancel this reservation? This action cannot be undone.",
+    "cancelConfirm":     "Cancel Reservation"
+  },
+
   "empty": {
     "title":       "No tables configured",
     "description": "Contact your administrator to set up the floor plan."

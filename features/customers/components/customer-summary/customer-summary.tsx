@@ -1,4 +1,5 @@
 import { Users, Star, Zap, DollarSign } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { StatCard } from "@/components/shared/stat-card";
 
 export interface CustomerStats {
@@ -13,10 +14,12 @@ interface CustomerSummaryProps {
 }
 
 export function CustomerSummary({ stats }: CustomerSummaryProps) {
+  const t = useTranslations("customers.summary");
+
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          title="Total Customers"
+          title={t("total")}
           value={stats.totalCustomers.toLocaleString()}
           icon={Users}
           iconBg="oklch(0.596 0.145 163.225 / 0.08)"
@@ -24,7 +27,7 @@ export function CustomerSummary({ stats }: CustomerSummaryProps) {
           trend={{ value: "+12%", direction: "up" }}
         />
         <StatCard
-          title="VIP Customers"
+          title={t("vip")}
           value={String(stats.vipCustomers)}
           icon={Star}
           iconBg="oklch(0.879 0.169 91.605 / 0.2)"
@@ -33,7 +36,7 @@ export function CustomerSummary({ stats }: CustomerSummaryProps) {
           badgeStyle={{ bg: "#d5e3fc80", color: "#515f74" }}
         />
         <StatCard
-          title="Active Today"
+          title={t("today")}
           value={String(stats.activeToday)}
           icon={Zap}
           iconBg="oklch(0.845 0.143 164.978 / 0.2)"
@@ -42,7 +45,7 @@ export function CustomerSummary({ stats }: CustomerSummaryProps) {
           badgeStyle={{ bg: "#b0f0d6", color: "#0b513d" }}
         />
         <StatCard
-          title="Avg Customer Spend"
+          title={t("avgSpend")}
           value={stats.avgSpend}
           icon={DollarSign}
           iconBg="#d5e3fc80"

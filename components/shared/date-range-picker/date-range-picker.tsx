@@ -1,6 +1,7 @@
 "use client";
 
 import { CalendarDays } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -31,6 +32,14 @@ export function DateRangePicker({
   customLabel,
   className,
 }: DateRangePickerProps) {
+  const t = useTranslations("common.dateRange");
+
+  const presetLabel: Record<DateRangePreset, string> = {
+    "Today":    t("today"),
+    "Last 7d":  t("last7d"),
+    "Last 30d": t("last30d"),
+  };
+
   return (
     <div
       className={cn(
@@ -50,7 +59,7 @@ export function DateRangePicker({
               : "text-muted-foreground hover:bg-muted",
           )}
         >
-          {preset}
+          {presetLabel[preset]}
         </button>
       ))}
 
@@ -67,7 +76,7 @@ export function DateRangePicker({
         )}
       >
         <CalendarDays size={16} />
-        {customLabel ?? "Custom"}
+        {customLabel ?? t("custom")}
       </button>
     </div>
   );
