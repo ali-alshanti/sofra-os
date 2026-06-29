@@ -68,4 +68,16 @@ export const QUERY_KEYS = {
     floor:        (restaurantId: string) => [...QUERY_KEYS.tables.all, "floor",        restaurantId] as const,
     reservations: (restaurantId: string) => [...QUERY_KEYS.tables.all, "reservations", restaurantId] as const,
   },
+
+  reports: {
+    all:              ["reports"] as const,
+    dashboard:        (restaurantId: string) => [...QUERY_KEYS.reports.all, "dashboard",         restaurantId] as const,
+    revenue:          (restaurantId: string, filters?: Record<string, unknown>) => [...QUERY_KEYS.reports.all, "revenue",          restaurantId, filters] as const,
+    categorySales:    (restaurantId: string, filters?: Record<string, unknown>) => [...QUERY_KEYS.reports.all, "category-sales",   restaurantId, filters] as const,
+    topItems:         (restaurantId: string, filters?: Record<string, unknown>) => [...QUERY_KEYS.reports.all, "top-items",        restaurantId, filters] as const,
+    customerAnalytics:(restaurantId: string) => [...QUERY_KEYS.reports.all, "customer-analytics", restaurantId] as const,
+    employeeAnalytics:(restaurantId: string) => [...QUERY_KEYS.reports.all, "employee-analytics", restaurantId] as const,
+    inventoryAnalytics:(restaurantId: string) => [...QUERY_KEYS.reports.all, "inventory-analytics", restaurantId] as const,
+    generated:        (restaurantId: string, filters?: Record<string, unknown>) => [...QUERY_KEYS.reports.all, "generated",        restaurantId, filters] as const,
+  },
 } as const;
