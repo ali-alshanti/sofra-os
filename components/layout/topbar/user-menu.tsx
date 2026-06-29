@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronDown, LogOut, Settings, User } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,8 +15,9 @@ import { useLogout } from "@/lib/hooks/use-logout";
 import { useCurrentUser } from "@/lib/hooks/use-auth";
 
 export function UserMenu() {
-  const { user }  = useCurrentUser();
-  const logout    = useLogout();
+  const t          = useTranslations("common.user");
+  const { user }   = useCurrentUser();
+  const logout     = useLogout();
 
   const displayName = user?.full_name ?? "User";
   const displayRole = user?.role      ?? "Staff";
@@ -44,10 +46,10 @@ export function UserMenu() {
 
       <DropdownMenuContent align="end" className="w-48">
         <DropdownMenuItem className="gap-2">
-          <User size={14} /> Profile
+          <User size={14} /> {t("profile")}
         </DropdownMenuItem>
         <DropdownMenuItem className="gap-2">
-          <Settings size={14} /> Settings
+          <Settings size={14} /> {t("settings")}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -56,7 +58,7 @@ export function UserMenu() {
           disabled={logout.isPending}
         >
           <LogOut size={14} />
-          {logout.isPending ? "Signing out…" : "Sign Out"}
+          {logout.isPending ? t("signingOut") : t("signOut")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

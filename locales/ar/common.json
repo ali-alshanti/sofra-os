@@ -1,0 +1,94 @@
+{
+  "appName": "صفرة OS",
+  "appTagline": "منصة إدارة عمليات المطعم",
+
+  "nav": {
+    "dashboard":  "لوحة التحكم",
+    "orders":     "الطلبات",
+    "menu":       "القائمة",
+    "tables":     "الطاولات",
+    "kitchen":    "المطبخ",
+    "inventory":  "المخزون",
+    "customers":  "العملاء",
+    "employees":  "الموظفون",
+    "reports":    "التقارير",
+    "settings":   "الإعدادات"
+  },
+
+  "actions": {
+    "save":       "حفظ التغييرات",
+    "saving":     "جارٍ الحفظ…",
+    "cancel":     "إلغاء",
+    "discard":    "تجاهل",
+    "delete":     "حذف",
+    "edit":       "تعديل",
+    "view":       "عرض",
+    "add":        "إضافة",
+    "create":     "إنشاء",
+    "search":     "بحث",
+    "filter":     "تصفية",
+    "reset":      "إعادة ضبط",
+    "refresh":    "تحديث",
+    "export":     "تصدير",
+    "download":   "تنزيل",
+    "close":      "إغلاق",
+    "confirm":    "تأكيد",
+    "back":       "رجوع",
+    "connect":    "اتصال",
+    "disconnect": "قطع الاتصال",
+    "retry":      "إعادة المحاولة"
+  },
+
+  "status": {
+    "loading":    "جارٍ التحميل…",
+    "error":      "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "empty":      "لا توجد بيانات",
+    "saved":      "تم حفظ التغييرات بنجاح.",
+    "saveFailed": "فشل حفظ التغييرات."
+  },
+
+  "pagination": {
+    "showing":    "عرض {from}–{to} من {total} {label}",
+    "previous":   "السابق",
+    "next":       "التالي"
+  },
+
+  "user": {
+    "profile":    "الملف الشخصي",
+    "settings":   "الإعدادات",
+    "signOut":    "تسجيل الخروج",
+    "signingOut": "جارٍ تسجيل الخروج…"
+  },
+
+  "theme": {
+    "toggle": "تبديل المظهر",
+    "light":  "فاتح",
+    "dark":   "داكن",
+    "system": "النظام"
+  },
+
+  "language": {
+    "switch": "تغيير اللغة",
+    "en":     "English",
+    "ar":     "العربية"
+  },
+
+  "notifications": {
+    "button": "الإشعارات"
+  },
+
+  "search": {
+    "placeholder": "بحث…"
+  },
+
+  "table": {
+    "noResults": "لا توجد نتائج.",
+    "actions":   "الإجراءات"
+  },
+
+  "badge": {
+    "best":     "الأفضل",
+    "new":      "جديد",
+    "featured": "مميز"
+  }
+}

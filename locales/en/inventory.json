@@ -1,0 +1,50 @@
+{
+  "title":       "Inventory",
+  "description": "Track stock levels, suppliers, and purchase orders.",
+
+  "summary": {
+    "totalItems":    "Total Items",
+    "lowStock":      "Low Stock",
+    "outOfStock":    "Out of Stock",
+    "totalValue":    "Total Value"
+  },
+
+  "filters": {
+    "searchPlaceholder": "Search items…",
+    "category":          "Category",
+    "supplier":          "Supplier",
+    "status":            "Status",
+    "allCategories":     "All Categories",
+    "allSuppliers":      "All Suppliers",
+    "allStatuses":       "All Statuses"
+  },
+
+  "table": {
+    "item":       "Item",
+    "sku":        "SKU",
+    "category":   "Category",
+    "supplier":   "Supplier",
+    "quantity":   "Quantity",
+    "reorder":    "Reorder At",
+    "status":     "Status",
+    "updated":    "Last Updated",
+    "actions":    "Actions"
+  },
+
+  "status": {
+    "in_stock":    "In Stock",
+    "low_stock":   "Low Stock",
+    "out_of_stock":"Out of Stock"
+  },
+
+  "actions": {
+    "edit":   "Edit Item",
+    "delete": "Delete Item",
+    "restock":"Restock"
+  },
+
+  "empty": {
+    "title":       "No inventory items",
+    "description": "Add your first inventory item to start tracking stock levels."
+  }
+}

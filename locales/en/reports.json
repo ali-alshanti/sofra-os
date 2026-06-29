@@ -1,0 +1,83 @@
+{
+  "title":       "Reports",
+  "description": "Analytics and performance reports.",
+
+  "header": {
+    "export":   "Export",
+    "refresh":  "Refresh",
+    "schedule": "Schedule"
+  },
+
+  "summary": {
+    "revenue":    "Total Revenue",
+    "category":   "Top Category",
+    "avgOrder":   "Avg. Order Value",
+    "generated":  "Reports Generated",
+    "best":       "Best",
+    "avg":        "Avg."
+  },
+
+  "filters": {
+    "type":       "Report Type",
+    "period":     "Period",
+    "category":   "Category",
+    "allTypes":   "All Types",
+    "allCategories": "All Categories",
+    "today":      "Today",
+    "last7":      "Last 7 Days",
+    "last30":     "Last 30 Days",
+    "custom":     "Custom Range",
+    "dateFrom":   "From",
+    "dateTo":     "To"
+  },
+
+  "type": {
+    "revenue":   "Revenue",
+    "category":  "Category",
+    "customers": "Customers",
+    "employees": "Employees",
+    "inventory": "Inventory"
+  },
+
+  "revenue": {
+    "title":       "Revenue Overview",
+    "description": "Revenue over the selected period",
+    "empty":       "No revenue data for the selected period."
+  },
+
+  "categoryChart": {
+    "title":       "Revenue by Category",
+    "description": "Category contribution to total revenue",
+    "empty":       "No category data for the selected period."
+  },
+
+  "insights": {
+    "title": "Key Insights"
+  },
+
+  "table": {
+    "name":      "Report Name",
+    "type":      "Type",
+    "status":    "Status",
+    "period":    "Period",
+    "generated": "Generated",
+    "actions":   "Actions"
+  },
+
+  "reportStatus": {
+    "ready":      "Ready",
+    "generating": "Generating",
+    "failed":     "Failed"
+  },
+
+  "actions": {
+    "view":     "View",
+    "download": "Download",
+    "delete":   "Delete"
+  },
+
+  "empty": {
+    "title":       "No reports found",
+    "description": "Try adjusting your filters or generate a new report."
+  }
+}

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/lib/navigation";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 

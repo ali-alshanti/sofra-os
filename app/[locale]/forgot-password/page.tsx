@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import { ArrowLeft, Loader2, UtensilsCrossed } from "lucide-react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/lib/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authService } from "@/services/auth";
 
 export default function ForgotPasswordPage() {
+  const t = useTranslations("auth.forgotPassword");
+
   const [email, setEmail]     = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState<string | null>(null);
@@ -17,12 +20,11 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
     try {
       await authService.sendPasswordResetEmail(email);
       setSent(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to send reset email.");
+      setError(err instanceof Error ? err.message : t("submit"));
     } finally {
       setLoading(false);
     }
@@ -38,10 +40,10 @@ export default function ForgotPasswordPage() {
             <UtensilsCrossed className="h-6 w-6 text-primary-foreground" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Reset Password
+            {t("title")}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Enter your email and we&apos;ll send you a reset link
+            {t("subtitle")}
           </p>
         </div>
 
@@ -49,17 +51,17 @@ export default function ForgotPasswordPage() {
           <div className="space-y-4 text-center">
             <div className="rounded-lg border border-primary/30 bg-primary/8 px-4 py-6">
               <p className="text-sm font-medium text-foreground">
-                Reset link sent!
+                {t("successTitle")}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Check your inbox at <strong>{email}</strong>
+                {t("successMessage", { email })}
               </p>
             </div>
             <Link
               href="/login"
               className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
             >
-              <ArrowLeft size={14} /> Back to Sign In
+              <ArrowLeft size={14} /> {t("backToLogin")}
             </Link>
           </div>
         ) : (
@@ -72,12 +74,12 @@ export default function ForgotPasswordPage() {
 
             <div className="space-y-1.5">
               <label htmlFor="email" className="text-sm font-medium text-foreground">
-                Email address
+                {t("email")}
               </label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@sofra.os"
+                placeholder={t("emailPlaceholder")}
                 autoComplete="email"
                 required
                 disabled={loading}
@@ -90,11 +92,11 @@ export default function ForgotPasswordPage() {
             <Button type="submit" className="w-full" disabled={loading || !email}>
               {loading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Sending…
+                  <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                  {t("submitting")}
                 </>
               ) : (
-                "Send Reset Link"
+                t("submit")
               )}
             </Button>
 
@@ -103,7 +105,7 @@ export default function ForgotPasswordPage() {
                 href="/login"
                 className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                <ArrowLeft size={14} /> Back to Sign In
+                <ArrowLeft size={14} /> {t("backToLogin")}
               </Link>
             </div>
           </form>

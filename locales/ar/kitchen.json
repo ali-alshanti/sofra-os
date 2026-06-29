@@ -1,0 +1,48 @@
+{
+  "title":       "المطبخ",
+  "description": "شاشة عرض المطبخ — قائمة الطلبات الحية.",
+
+  "stats": {
+    "active":    "الطلبات النشطة",
+    "preparing": "قيد التحضير",
+    "ready":     "جاهزة",
+    "avgTime":   "متوسط وقت التحضير"
+  },
+
+  "columns": {
+    "pending":   "قيد الانتظار",
+    "preparing": "قيد التحضير",
+    "ready":     "جاهز",
+    "completed": "مكتمل"
+  },
+
+  "ticket": {
+    "elapsed": "مضى {time}",
+    "station": "محطة: {name}",
+    "cleared": "تم الإتمام منذ {time}",
+    "advance": "تقدم",
+    "type": {
+      "dine-in":  "على الطاولة",
+      "takeaway": "للاستلام",
+      "delivery": "توصيل"
+    }
+  },
+
+  "priority": {
+    "urgent": "عاجل",
+    "high":   "مرتفع",
+    "normal": "عادي"
+  },
+
+  "filters": {
+    "all":     "جميع المحطات",
+    "station": "المحطة"
+  },
+
+  "empty": {
+    "pending":   "لا توجد طلبات منتظرة",
+    "preparing": "لا يوجد شيء قيد التحضير",
+    "ready":     "لا توجد طلبات جاهزة",
+    "completed": "لا توجد طلبات مكتملة بعد"
+  }
+}

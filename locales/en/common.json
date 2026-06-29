@@ -1,0 +1,94 @@
+{
+  "appName": "Sofra OS",
+  "appTagline": "Sofra Restaurant Operations Platform",
+
+  "nav": {
+    "dashboard":  "Dashboard",
+    "orders":     "Orders",
+    "menu":       "Menu",
+    "tables":     "Tables",
+    "kitchen":    "Kitchen",
+    "inventory":  "Inventory",
+    "customers":  "Customers",
+    "employees":  "Employees",
+    "reports":    "Reports",
+    "settings":   "Settings"
+  },
+
+  "actions": {
+    "save":       "Save Changes",
+    "saving":     "Saving…",
+    "cancel":     "Cancel",
+    "discard":    "Discard",
+    "delete":     "Delete",
+    "edit":       "Edit",
+    "view":       "View",
+    "add":        "Add",
+    "create":     "Create",
+    "search":     "Search",
+    "filter":     "Filter",
+    "reset":      "Reset",
+    "refresh":    "Refresh",
+    "export":     "Export",
+    "download":   "Download",
+    "close":      "Close",
+    "confirm":    "Confirm",
+    "back":       "Back",
+    "connect":    "Connect",
+    "disconnect": "Disconnect",
+    "retry":      "Retry"
+  },
+
+  "status": {
+    "loading":    "Loading…",
+    "error":      "Something went wrong. Please try again.",
+    "empty":      "No data available",
+    "saved":      "Changes saved successfully.",
+    "saveFailed": "Failed to save changes."
+  },
+
+  "pagination": {
+    "showing":    "Showing {from}–{to} of {total} {label}",
+    "previous":   "Previous",
+    "next":       "Next"
+  },
+
+  "user": {
+    "profile":    "Profile",
+    "settings":   "Settings",
+    "signOut":    "Sign Out",
+    "signingOut": "Signing out…"
+  },
+
+  "theme": {
+    "toggle": "Toggle theme",
+    "light":  "Light",
+    "dark":   "Dark",
+    "system": "System"
+  },
+
+  "language": {
+    "switch": "Switch language",
+    "en":     "English",
+    "ar":     "العربية"
+  },
+
+  "notifications": {
+    "button": "Notifications"
+  },
+
+  "search": {
+    "placeholder": "Search…"
+  },
+
+  "table": {
+    "noResults": "No results found.",
+    "actions":   "Actions"
+  },
+
+  "badge": {
+    "best":       "Best",
+    "new":        "New",
+    "featured":   "Featured"
+  }
+}

@@ -12,25 +12,15 @@ import {
   BarChart2,
   Settings,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { usePathname } from "@/lib/navigation";
+import { Link } from "@/lib/navigation";
 import { APP_NAME } from "@/lib/constants/app";
 import { ROUTES } from "@/lib/constants/routes";
-import { SidebarNav, type NavItem } from "@/components/layout/sidebar/sidebar-nav";
+import { SidebarNav } from "@/components/layout/sidebar/sidebar-nav";
 import { SidebarNavItem } from "@/components/layout/sidebar/sidebar-nav-item";
-
-// ─── Navigation Config ───────────────────────────────────────────────────────
-
-const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard", icon: LayoutDashboard, href: ROUTES.DASHBOARD },
-  { label: "Orders",    icon: ShoppingBag,    href: ROUTES.ORDERS },
-  { label: "Menu",      icon: UtensilsCrossed, href: ROUTES.MENU },
-  { label: "Tables",    icon: LayoutGrid,     href: ROUTES.TABLES },
-  { label: "Kitchen",   icon: ChefHat,        href: ROUTES.KITCHEN },
-  { label: "Inventory", icon: Package,        href: ROUTES.INVENTORY },
-  { label: "Customers", icon: Users,          href: ROUTES.CUSTOMERS },
-  { label: "Employees", icon: UserCog,        href: ROUTES.EMPLOYEES },
-  { label: "Reports",   icon: BarChart2,      href: ROUTES.REPORTS },
-];
+import { useCurrentUser } from "@/lib/hooks/use-auth";
+import { initials } from "@/lib/utils/string";
 
 // ─── Logo ─────────────────────────────────────────────────────────────────────
 
@@ -50,29 +40,36 @@ function SidebarLogo() {
 // ─── Bottom ───────────────────────────────────────────────────────────────────
 
 function SidebarBottom() {
+  const t        = useTranslations("common.nav");
   const pathname = usePathname();
-  const settingsActive = pathname === ROUTES.SETTINGS || pathname.startsWith(ROUTES.SETTINGS + "/");
+  const { user } = useCurrentUser();
+
+  const settingsActive =
+    pathname === ROUTES.SETTINGS || pathname.startsWith(ROUTES.SETTINGS + "/");
+
+  const displayName = user?.full_name ?? "User";
+  const displayRole = user?.role      ?? "Staff";
 
   return (
     <div className="shrink-0 border-t border-sidebar-border px-3 py-4">
       <SidebarNavItem
         icon={Settings}
-        label="Settings"
+        label={t("settings")}
         href={ROUTES.SETTINGS}
         active={settingsActive}
       />
 
-      {/* User profile placeholder */}
+      {/* User profile */}
       <div className="mt-2 flex items-center gap-3 rounded-lg px-3 py-2">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
-          U
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+          {initials(displayName)}
         </div>
         <div className="flex min-w-0 flex-col">
           <span className="truncate text-sm font-medium text-sidebar-foreground">
-            User Name
+            {displayName}
           </span>
-          <span className="typography-caption truncate text-muted-foreground">
-            user@sofra.os
+          <span className="typography-caption truncate text-muted-foreground capitalize">
+            {displayRole}
           </span>
         </div>
       </div>
@@ -83,8 +80,22 @@ function SidebarBottom() {
 // ─── Sidebar ─────────────────────────────────────────────────────────────────
 
 export function Sidebar() {
+  const t = useTranslations("common.nav");
+
+  const NAV_ITEMS = [
+    { label: t("dashboard"),  icon: LayoutDashboard, href: ROUTES.DASHBOARD },
+    { label: t("orders"),     icon: ShoppingBag,    href: ROUTES.ORDERS },
+    { label: t("menu"),       icon: UtensilsCrossed, href: ROUTES.MENU },
+    { label: t("tables"),     icon: LayoutGrid,     href: ROUTES.TABLES },
+    { label: t("kitchen"),    icon: ChefHat,        href: ROUTES.KITCHEN },
+    { label: t("inventory"),  icon: Package,        href: ROUTES.INVENTORY },
+    { label: t("customers"),  icon: Users,          href: ROUTES.CUSTOMERS },
+    { label: t("employees"),  icon: UserCog,        href: ROUTES.EMPLOYEES },
+    { label: t("reports"),    icon: BarChart2,      href: ROUTES.REPORTS },
+  ];
+
   return (
-    <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
+    <aside className="flex h-screen w-64 shrink-0 flex-col border-e border-sidebar-border bg-sidebar">
       <SidebarLogo />
       <SidebarNav items={NAV_ITEMS} />
       <SidebarBottom />

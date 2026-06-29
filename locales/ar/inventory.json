@@ -1,0 +1,50 @@
+{
+  "title":       "المخزون",
+  "description": "تتبع مستويات المخزون والموردين وأوامر الشراء.",
+
+  "summary": {
+    "totalItems":  "إجمالي الأصناف",
+    "lowStock":    "مخزون منخفض",
+    "outOfStock":  "نفد المخزون",
+    "totalValue":  "القيمة الإجمالية"
+  },
+
+  "filters": {
+    "searchPlaceholder": "البحث في الأصناف…",
+    "category":          "الفئة",
+    "supplier":          "المورد",
+    "status":            "الحالة",
+    "allCategories":     "جميع الفئات",
+    "allSuppliers":      "جميع الموردين",
+    "allStatuses":       "جميع الحالات"
+  },
+
+  "table": {
+    "item":     "الصنف",
+    "sku":      "رمز المنتج",
+    "category": "الفئة",
+    "supplier": "المورد",
+    "quantity": "الكمية",
+    "reorder":  "نقطة إعادة الطلب",
+    "status":   "الحالة",
+    "updated":  "آخر تحديث",
+    "actions":  "الإجراءات"
+  },
+
+  "status": {
+    "in_stock":    "متوفر",
+    "low_stock":   "مخزون منخفض",
+    "out_of_stock":"نفد المخزون"
+  },
+
+  "actions": {
+    "edit":   "تعديل الصنف",
+    "delete": "حذف الصنف",
+    "restock":"إعادة التخزين"
+  },
+
+  "empty": {
+    "title":       "لا توجد أصناف في المخزون",
+    "description": "أضف أول صنف لبدء تتبع مستويات المخزون."
+  }
+}

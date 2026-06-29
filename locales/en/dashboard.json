@@ -1,0 +1,43 @@
+{
+  "title":       "Dashboard",
+  "description": "Live overview of your restaurant's performance.",
+
+  "kpi": {
+    "revenue":      "Revenue Today",
+    "orders":       "Orders Today",
+    "tables":       "Active Tables",
+    "kitchen":      "Kitchen Status",
+    "vs":           "vs yesterday",
+    "occupied":     "{active} of {total} tables occupied",
+    "kitchenStatus": {
+      "optimal":  "Optimal",
+      "moderate": "Moderate",
+      "busy":     "Busy"
+    }
+  },
+
+  "revenue": {
+    "title":       "Revenue Overview",
+    "description": "Hourly revenue for today",
+    "empty":       "No revenue data yet today."
+  },
+
+  "topItems": {
+    "title":       "Top Selling Items",
+    "description": "Most ordered items today",
+    "orders":      "{count} orders",
+    "empty":       "No orders yet today."
+  },
+
+  "inventory": {
+    "title":       "Inventory Alerts",
+    "description": "Items requiring attention",
+    "empty":       "All stock levels are healthy.",
+    "unit":        "{quantity} {unit} remaining",
+    "reorder":     "Reorder at {point} {unit}",
+    "status": {
+      "low_stock":    "Low Stock",
+      "out_of_stock": "Out of Stock"
+    }
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "title":       "الإعدادات",
+  "description": "إدارة إعدادات مطعمك وتفضيلاته وتكاملاته.",
+
+  "sidebar": {
+    "general":       "معلومات عامة",
+    "businessHours": "ساعات العمل",
+    "currencyTax":   "العملة والضريبة",
+    "system":        "النظام",
+    "notifications": "الإشعارات",
+    "integrations":  "التكاملات"
+  },
+
+  "general": {
+    "title":       "المعلومات العامة",
+    "description": "الهوية العامة لمطعمك.",
+    "logo":        "شعار المطعم",
+    "logoHint":    "PNG أو JPG — يُفضل 256×256 بكسل",
+    "name":        "اسم المطعم",
+    "namePlaceholder": "مثال: مطعم صفرة",
+    "email":       "البريد الإلكتروني",
+    "emailPlaceholder": "contact@restaurant.com",
+    "phone":       "رقم الهاتف",
+    "phonePlaceholder": "+966 5X XXX XXXX",
+    "address":     "العنوان",
+    "addressPlaceholder": "123 شارع رئيسي، المدينة، الدولة"
+  },
+
+  "businessHours": {
+    "title":       "ساعات العمل",
+    "description": "حدد أوقات الفتح والإغلاق لكل يوم.",
+    "open":        "مفتوح",
+    "closed":      "مغلق",
+    "openTime":    "فتح",
+    "closeTime":   "إغلاق",
+    "to":          "حتى",
+    "days": {
+      "monday":    "الاثنين",
+      "tuesday":   "الثلاثاء",
+      "wednesday": "الأربعاء",
+      "thursday":  "الخميس",
+      "friday":    "الجمعة",
+      "saturday":  "السبت",
+      "sunday":    "الأحد"
+    }
+  },
+
+  "currency": {
+    "title":          "العملة والضريبة",
+    "description":    "تكوين العملة والضريبة المطبقة على جميع الطلبات.",
+    "currency":       "العملة",
+    "currencySelect": "اختر العملة",
+    "taxRate":        "معدل الضريبة",
+    "taxRateHint":    "النسبة المئوية المطبقة على جميع الأصناف الخاضعة للضريبة",
+    "taxLabel":       "تسمية الضريبة",
+    "taxLabelHint":   "تظهر على الإيصالات — مثال: ضريبة القيمة المضافة",
+    "taxLabelPlaceholder": "ضريبة القيمة المضافة"
+  },
+
+  "system": {
+    "title":          "النظام",
+    "description":    "تفضيلات المظهر واللغة.",
+    "theme":          "المظهر",
+    "themeSelect":    "اختر المظهر",
+    "language":       "اللغة",
+    "languageSelect": "اختر اللغة",
+    "timezone":       "المنطقة الزمنية",
+    "timezoneSelect": "اختر المنطقة الزمنية",
+    "dateFormat":     "تنسيق التاريخ",
+    "dateFormatSelect": "اختر تنسيق التاريخ",
+    "themes": {
+      "light":  "فاتح",
+      "dark":   "داكن",
+      "system": "النظام"
+    }
+  },
+
+  "notifications": {
+    "title":              "الإشعارات",
+    "description":        "اختر الأحداث التي تُفعّل التنبيهات.",
+    "newOrder":           "طلب جديد",
+    "newOrderDesc":       "تنبيه عند تقديم طلب جديد.",
+    "orderReady":         "الطلب جاهز",
+    "orderReadyDesc":     "تنبيه عند تحضير الطلب في المطبخ.",
+    "lowStock":           "مخزون منخفض",
+    "lowStockDesc":       "تنبيه عند انخفاض مستوى صنف عن نقطة إعادة الطلب.",
+    "newReservation":     "حجز جديد",
+    "newReservationDesc": "تنبيه عند إنشاء حجز أو تعديله.",
+    "staffAlert":         "تنبيه الموظفين",
+    "staffAlertDesc":     "تنبيه عند تغييرات الورديات أو الأحداث المتعلقة بالموظفين.",
+    "dailySummary":       "ملخص يومي",
+    "dailySummaryDesc":   "تلقّ ملخص العمليات في نهاية اليوم."
+  },
+
+  "integrations": {
+    "title":       "التكاملات",
+    "description": "ربط خدمات الطرف الثالث.",
+    "connected":   "متصل",
+    "disconnected":"غير متصل",
+    "connect":     "اتصال",
+    "disconnect":  "قطع الاتصال",
+    "empty": {
+      "title":       "لا تتوفر تكاملات",
+      "description": "ستظهر التكاملات هنا عند إضافتها لخطتك."
+    }
+  },
+
+  "actionBar": {
+    "unsaved": "لديك تغييرات غير محفوظة.",
+    "discard": "تجاهل",
+    "save":    "حفظ التغييرات",
+    "saving":  "جارٍ الحفظ…"
+  }
+}

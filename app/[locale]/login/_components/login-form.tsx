@@ -2,14 +2,18 @@
 
 import { useState } from "react";
 import { Eye, EyeOff, Loader2, UtensilsCrossed } from "lucide-react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/lib/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/lib/hooks/use-login";
 
 export function LoginForm() {
-  const [email, setEmail]             = useState("");
-  const [password, setPassword]       = useState("");
+  const t  = useTranslations("auth.login");
+  const tc = useTranslations("common");
+
+  const [email, setEmail]               = useState("");
+  const [password, setPassword]         = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const login = useLogin();
@@ -29,10 +33,10 @@ export function LoginForm() {
             <UtensilsCrossed className="h-6 w-6 text-primary-foreground" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Sofra OS
+            {t("title")}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Sign in to your restaurant account
+            {t("subtitle")}
           </p>
         </div>
 
@@ -43,7 +47,7 @@ export function LoginForm() {
           {login.isError && (
             <div className="rounded-lg border border-destructive/30 bg-destructive/8 px-4 py-3">
               <p className="text-sm text-destructive">
-                {login.error?.message ?? "Something went wrong. Please try again."}
+                {login.error?.message ?? t("error")}
               </p>
             </div>
           )}
@@ -51,12 +55,12 @@ export function LoginForm() {
           {/* Email */}
           <div className="space-y-1.5">
             <label htmlFor="email" className="text-sm font-medium text-foreground">
-              Email address
+              {t("email")}
             </label>
             <Input
               id="email"
               type="email"
-              placeholder="you@sofra.os"
+              placeholder={t("emailPlaceholder")}
               autoComplete="email"
               required
               disabled={login.isPending}
@@ -70,20 +74,20 @@ export function LoginForm() {
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <label htmlFor="password" className="text-sm font-medium text-foreground">
-                Password
+                {t("password")}
               </label>
               <Link
                 href="/forgot-password"
                 className="text-xs text-primary hover:underline"
               >
-                Forgot password?
+                {t("forgotPassword")}
               </Link>
             </div>
             <div className="relative">
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
+                placeholder={t("passwordPlaceholder")}
                 autoComplete="current-password"
                 required
                 disabled={login.isPending}
@@ -96,7 +100,7 @@ export function LoginForm() {
                 tabIndex={-1}
                 onClick={() => setShowPassword((v) => !v)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-label={showPassword ? t("hidePassword") : t("showPassword")}
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -111,17 +115,17 @@ export function LoginForm() {
           >
             {login.isPending ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Signing in…
+                <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                {t("signingIn")}
               </>
             ) : (
-              "Sign in"
+              t("signIn")
             )}
           </Button>
         </form>
 
         <p className="text-center text-xs text-muted-foreground">
-          Sofra Restaurant Operations Platform
+          {tc("appTagline")}
         </p>
       </div>
     </div>

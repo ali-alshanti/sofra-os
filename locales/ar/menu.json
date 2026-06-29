@@ -1,0 +1,41 @@
+{
+  "title":       "القائمة",
+  "description": "إدارة أصناف ومحتوى قائمة الطعام.",
+
+  "categories": {
+    "all":   "جميع الأصناف",
+    "items": "{count} أصناف",
+    "empty": "لا توجد فئات بعد."
+  },
+
+  "item": {
+    "available":   "متاح",
+    "unavailable": "غير متاح",
+    "bestSeller":  "الأكثر مبيعاً",
+    "featured":    "مميز",
+    "outOfStock":  "نفد المخزون"
+  },
+
+  "status": {
+    "available":    "متاح",
+    "unavailable":  "غير متاح",
+    "out_of_stock": "نفد المخزون"
+  },
+
+  "actions": {
+    "add":    "إضافة صنف",
+    "edit":   "تعديل",
+    "delete": "حذف",
+    "toggleAvailability": "تبديل توفر {name}"
+  },
+
+  "empty": {
+    "title":       "لا توجد أصناف في القائمة",
+    "description": "أضف أول صنف للبدء.",
+    "category":    "لا توجد أصناف في هذه الفئة."
+  },
+
+  "search": {
+    "placeholder": "البحث في الأصناف…"
+  }
+}

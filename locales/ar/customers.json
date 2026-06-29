@@ -1,0 +1,65 @@
+{
+  "title":       "العملاء",
+  "description": "إدارة ملفات العملاء وبرامج الولاء.",
+
+  "summary": {
+    "total":    "إجمالي العملاء",
+    "vip":      "عملاء VIP",
+    "today":    "نشطون اليوم",
+    "avgSpend": "متوسط الإنفاق"
+  },
+
+  "filters": {
+    "searchPlaceholder": "البحث في العملاء…",
+    "status":            "الحالة",
+    "loyalty":           "الولاء",
+    "segment":           "الشريحة",
+    "allStatuses":       "جميع الحالات",
+    "allLoyalty":        "جميع المستويات",
+    "allSegments":       "جميع العملاء"
+  },
+
+  "table": {
+    "customer":   "العميل",
+    "loyalty":    "الولاء",
+    "status":     "الحالة",
+    "visits":     "الزيارات",
+    "totalSpent": "إجمالي الإنفاق",
+    "lastVisit":  "آخر زيارة",
+    "joined":     "تاريخ الانضمام",
+    "actions":    "الإجراءات"
+  },
+
+  "status": {
+    "vip":      "VIP",
+    "active":   "نشط",
+    "inactive": "غير نشط"
+  },
+
+  "loyalty": {
+    "platinum": "بلاتيني",
+    "gold":     "ذهبي",
+    "silver":   "فضي",
+    "bronze":   "برونزي",
+    "none":     "لا يوجد"
+  },
+
+  "segment": {
+    "all":     "الكل",
+    "vip":     "VIP فقط",
+    "regular": "عادي"
+  },
+
+  "actions": {
+    "view":   "عرض الملف",
+    "edit":   "تعديل",
+    "delete": "حذف"
+  },
+
+  "visits": "{count} زيارات",
+
+  "empty": {
+    "title":       "لا يوجد عملاء",
+    "description": "ستظهر ملفات العملاء هنا. حاول تعديل الفلاتر."
+  }
+}

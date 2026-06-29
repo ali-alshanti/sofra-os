@@ -1,0 +1,81 @@
+{
+  "title":       "الموظفون",
+  "description": "إدارة الموظفين والورديات والحضور.",
+
+  "summary": {
+    "total":      "إجمالي الموظفين",
+    "onShift":    "في الوردية",
+    "offShift":   "خارج الوردية",
+    "attendance": "متوسط الحضور"
+  },
+
+  "filters": {
+    "searchPlaceholder": "البحث في الموظفين…",
+    "department":        "القسم",
+    "role":              "الدور",
+    "status":            "الحالة",
+    "allDepartments":    "جميع الأقسام",
+    "allRoles":          "جميع الأدوار",
+    "allStatuses":       "جميع الحالات"
+  },
+
+  "table": {
+    "employee":   "الموظف",
+    "department": "القسم",
+    "role":       "الدور",
+    "shift":      "الوردية",
+    "status":     "الحالة",
+    "attendance": "الحضور",
+    "hireDate":   "تاريخ التوظيف",
+    "actions":    "الإجراءات"
+  },
+
+  "status": {
+    "on_shift":  "في الوردية",
+    "break":     "استراحة",
+    "off_shift": "خارج الوردية",
+    "on_leave":  "في إجازة"
+  },
+
+  "department": {
+    "kitchen":    "المطبخ",
+    "service":    "الخدمة",
+    "management": "الإدارة",
+    "cashier":    "الصندوق",
+    "delivery":   "التوصيل"
+  },
+
+  "role": {
+    "manager":         "مدير",
+    "head_chef":       "رئيس الطهاة",
+    "chef":            "طاهٍ",
+    "waiter":          "نادل",
+    "cashier":         "أمين صندوق",
+    "delivery_driver": "سائق توصيل"
+  },
+
+  "shift": {
+    "label": "{start} – {end}",
+    "none":  "—"
+  },
+
+  "attendance": {
+    "rate": "{rate}%"
+  },
+
+  "hireDate": {
+    "none": "—"
+  },
+
+  "actions": {
+    "view":         "عرض الملف",
+    "edit":         "تعديل",
+    "updateStatus": "تحديث الحالة",
+    "delete":       "إزالة الموظف"
+  },
+
+  "empty": {
+    "title":       "لا يوجد موظفون",
+    "description": "ستظهر سجلات الموظفين هنا. حاول تعديل الفلاتر."
+  }
+}

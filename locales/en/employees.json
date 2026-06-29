@@ -1,0 +1,81 @@
+{
+  "title":       "Employees",
+  "description": "Manage staff, shifts, and attendance.",
+
+  "summary": {
+    "total":       "Total Employees",
+    "onShift":     "On Shift",
+    "offShift":    "Off Shift",
+    "attendance":  "Avg. Attendance"
+  },
+
+  "filters": {
+    "searchPlaceholder": "Search employees…",
+    "department":        "Department",
+    "role":              "Role",
+    "status":            "Status",
+    "allDepartments":    "All Departments",
+    "allRoles":          "All Roles",
+    "allStatuses":       "All Statuses"
+  },
+
+  "table": {
+    "employee":   "Employee",
+    "department": "Department",
+    "role":       "Role",
+    "shift":      "Shift",
+    "status":     "Status",
+    "attendance": "Attendance",
+    "hireDate":   "Hire Date",
+    "actions":    "Actions"
+  },
+
+  "status": {
+    "on_shift":  "On Shift",
+    "break":     "Break",
+    "off_shift": "Off Shift",
+    "on_leave":  "On Leave"
+  },
+
+  "department": {
+    "kitchen":    "Kitchen",
+    "service":    "Service",
+    "management": "Management",
+    "cashier":    "Cashier",
+    "delivery":   "Delivery"
+  },
+
+  "role": {
+    "manager":         "Manager",
+    "head_chef":       "Head Chef",
+    "chef":            "Chef",
+    "waiter":          "Waiter",
+    "cashier":         "Cashier",
+    "delivery_driver": "Delivery Driver"
+  },
+
+  "shift": {
+    "label": "{start} – {end}",
+    "none":  "—"
+  },
+
+  "attendance": {
+    "rate": "{rate}%"
+  },
+
+  "hireDate": {
+    "none": "—"
+  },
+
+  "actions": {
+    "view":         "View Profile",
+    "edit":         "Edit",
+    "updateStatus": "Update Status",
+    "delete":       "Remove Employee"
+  },
+
+  "empty": {
+    "title":       "No employees found",
+    "description": "Employee records will appear here. Try adjusting your filters."
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { UtensilsCrossed } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { ChartCard } from "@/components/shared/chart-card";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
@@ -9,13 +10,15 @@ import { useTopSellingItems } from "@/lib/hooks/use-dashboard";
 import { formatCurrency } from "@/lib/utils/format-currency";
 
 export function PopularItemsCard() {
+  const t   = useTranslations("dashboard.topItems");
+  const tc  = useTranslations("common.status");
   const { data, isLoading, error } = useTopSellingItems();
 
   const rows: MenuItemRowData[] = (data ?? []).map((item) => ({
     name:     item.name,
     category: item.category,
     price:    formatCurrency(item.price),
-    orders:   `${item.orderCount} orders`,
+    orders:   t("orders", { count: item.orderCount }),
     trend:    "",
     trendUp:  true,
     imageSrc: item.imageSrc ?? undefined,
@@ -23,24 +26,18 @@ export function PopularItemsCard() {
 
   return (
     <ChartCard
-      title="Popular Items"
+      title={t("title")}
       loading={isLoading}
       empty={!isLoading && rows.length === 0}
-      actions={
-        <Button variant="ghost" size="sm" className="text-primary hover:text-primary">
-          View Analytics
-        </Button>
-      }
     >
       {error ? (
         <p className="typography-small text-muted-foreground py-4 text-center">
-          Failed to load popular items.
+          {tc("error")}
         </p>
       ) : rows.length === 0 ? (
         <EmptyState
           icon={UtensilsCrossed}
-          title="No orders yet today"
-          description="Popular items will appear once orders are placed."
+          title={t("empty")}
           className="border-0 bg-transparent py-8"
         />
       ) : (

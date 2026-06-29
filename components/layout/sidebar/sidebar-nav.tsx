@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/lib/navigation";
 import type { LucideIcon } from "lucide-react";
 import { SidebarNavItem } from "@/components/layout/sidebar/sidebar-nav-item";
 
@@ -16,8 +16,6 @@ interface SidebarNavProps {
 }
 
 function isActive(pathname: string, href: string): boolean {
-  // Exact match for root-level routes prevents false positives.
-  // e.g., /orders should NOT match /orders-history if it existed.
   return pathname === href || pathname.startsWith(href + "/");
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { AppShell }   from "@/components/layout/app-shell";
 import { Pagination } from "@/components/shared/pagination";
 import { InventoryHeader }  from "./components/inventory-header";
@@ -25,11 +26,12 @@ import { QUERY_KEYS } from "@/lib/constants/query-keys";
 const PAGE_SIZE = 10;
 
 export function InventoryFeature() {
-  const [filters, setFilters]           = useState<InventoryFiltersValue>(DEFAULT_INVENTORY_FILTERS);
-  const [currentPage, setCurrentPage]   = useState(1);
-  const queryClient                     = useQueryClient();
+  const t = useTranslations("inventory");
 
-  // ─── Data ──────────────────────────────────────────────────────────────────
+  const [filters, setFilters]         = useState<InventoryFiltersValue>(DEFAULT_INVENTORY_FILTERS);
+  const [currentPage, setCurrentPage] = useState(1);
+  const queryClient                   = useQueryClient();
+
   const { data: summary, isLoading: summaryLoading } = useInventorySummary();
   const { data: categories = [] }                    = useInventoryCategories();
   const { data: suppliers  = [] }                    = useSuppliers();
@@ -49,7 +51,6 @@ export function InventoryFeature() {
   const totalItems = itemsData?.total  ?? 0;
   const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
 
-  // ─── Filter handlers ────────────────────────────────────────────────────────
   function handleRefresh() {
     queryClient.invalidateQueries({ queryKey: QUERY_KEYS.inventory.all });
   }
@@ -95,7 +96,7 @@ export function InventoryFeature() {
                 totalPages={totalPages}
                 totalItems={totalItems}
                 pageSize={PAGE_SIZE}
-                itemLabel="items"
+                itemLabel={t("title").toLowerCase()}
                 onPageChange={setCurrentPage}
               />
             ) : undefined

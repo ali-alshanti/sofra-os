@@ -1,0 +1,48 @@
+{
+  "title":       "Kitchen",
+  "description": "Kitchen Display System — live order queue.",
+
+  "stats": {
+    "active":    "Active Orders",
+    "preparing": "Preparing",
+    "ready":     "Ready",
+    "avgTime":   "Avg. Prep Time"
+  },
+
+  "columns": {
+    "pending":   "Pending",
+    "preparing": "Preparing",
+    "ready":     "Ready",
+    "completed": "Completed"
+  },
+
+  "ticket": {
+    "elapsed":   "{time} elapsed",
+    "station":   "Station: {name}",
+    "cleared":   "Cleared {time}",
+    "advance":   "Advance",
+    "type": {
+      "dine-in":  "Dine In",
+      "takeaway": "Takeaway",
+      "delivery": "Delivery"
+    }
+  },
+
+  "priority": {
+    "urgent": "Urgent",
+    "high":   "High",
+    "normal": "Normal"
+  },
+
+  "filters": {
+    "all":      "All Stations",
+    "station":  "Station"
+  },
+
+  "empty": {
+    "pending":   "No pending orders",
+    "preparing": "Nothing in preparation",
+    "ready":     "No orders ready",
+    "completed": "No completed orders yet"
+  }
+}

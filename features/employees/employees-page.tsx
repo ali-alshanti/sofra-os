@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { AppShell }   from "@/components/layout/app-shell";
 import { Pagination } from "@/components/shared/pagination";
 import { EmployeeHeader }  from "./components/employee-header";
@@ -21,11 +22,12 @@ import { QUERY_KEYS } from "@/lib/constants/query-keys";
 const PAGE_SIZE = 10;
 
 export function EmployeesFeature() {
-  const [filters, setFilters]           = useState<EmployeeFiltersValue>(DEFAULT_EMPLOYEE_FILTERS);
-  const [currentPage, setCurrentPage]   = useState(1);
-  const queryClient                     = useQueryClient();
+  const t = useTranslations("employees");
 
-  // ─── Data ──────────────────────────────────────────────────────────────────
+  const [filters, setFilters]         = useState<EmployeeFiltersValue>(DEFAULT_EMPLOYEE_FILTERS);
+  const [currentPage, setCurrentPage] = useState(1);
+  const queryClient                   = useQueryClient();
+
   const { data: summary, isLoading: summaryLoading } = useEmployeeSummary();
 
   const { data: employeesData, isLoading: employeesLoading } = useEmployees({
@@ -43,7 +45,6 @@ export function EmployeesFeature() {
   const totalItems = employeesData?.total     ?? 0;
   const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
 
-  // ─── Handlers ──────────────────────────────────────────────────────────────
   function handleRefresh() {
     queryClient.invalidateQueries({ queryKey: QUERY_KEYS.employees.all });
   }
@@ -87,7 +88,7 @@ export function EmployeesFeature() {
                 totalPages={totalPages}
                 totalItems={totalItems}
                 pageSize={PAGE_SIZE}
-                itemLabel="employees"
+                itemLabel={t("title").toLowerCase()}
                 onPageChange={setCurrentPage}
               />
             ) : undefined

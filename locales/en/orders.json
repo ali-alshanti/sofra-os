@@ -1,0 +1,65 @@
+{
+  "title":       "Orders",
+  "description": "Manage and track all restaurant orders.",
+
+  "summary": {
+    "totalToday":     "Total Today",
+    "pending":        "Pending",
+    "completed":      "Completed",
+    "revenue":        "Revenue Today"
+  },
+
+  "filters": {
+    "searchPlaceholder": "Search orders…",
+    "status":            "Status",
+    "table":             "Table",
+    "waiter":            "Waiter",
+    "type":              "Type",
+    "date":              "Date",
+    "all":               "All",
+    "allStatuses":       "All Statuses",
+    "allTables":         "All Tables",
+    "allTypes":          "All Types"
+  },
+
+  "table": {
+    "order":     "Order",
+    "table":     "Table",
+    "customer":  "Customer",
+    "waiter":    "Waiter",
+    "items":     "Items",
+    "total":     "Total",
+    "status":    "Status",
+    "time":      "Time",
+    "actions":   "Actions"
+  },
+
+  "status": {
+    "pending":   "Pending",
+    "preparing": "Preparing",
+    "ready":     "Ready",
+    "served":    "Served",
+    "cancelled": "Cancelled",
+    "all":       "All"
+  },
+
+  "type": {
+    "dine_in":  "Dine In",
+    "takeaway": "Takeaway",
+    "delivery": "Delivery"
+  },
+
+  "actions": {
+    "view":      "View Order",
+    "updateStatus": "Update Status",
+    "delete":    "Delete Order"
+  },
+
+  "empty": {
+    "title":       "No orders found",
+    "description": "Orders will appear here once customers place them. Try adjusting your filters."
+  },
+
+  "items": "{count} items",
+  "guestCustomer": "Guest"
+}

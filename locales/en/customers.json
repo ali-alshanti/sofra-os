@@ -1,0 +1,65 @@
+{
+  "title":       "Customers",
+  "description": "Manage customer profiles and loyalty.",
+
+  "summary": {
+    "total":   "Total Customers",
+    "vip":     "VIP Customers",
+    "today":   "Active Today",
+    "avgSpend":"Avg. Spend"
+  },
+
+  "filters": {
+    "searchPlaceholder": "Search customers…",
+    "status":            "Status",
+    "loyalty":           "Loyalty",
+    "segment":           "Segment",
+    "allStatuses":       "All Statuses",
+    "allLoyalty":        "All Tiers",
+    "allSegments":       "All Customers"
+  },
+
+  "table": {
+    "customer":   "Customer",
+    "loyalty":    "Loyalty",
+    "status":     "Status",
+    "visits":     "Visits",
+    "totalSpent": "Total Spent",
+    "lastVisit":  "Last Visit",
+    "joined":     "Joined",
+    "actions":    "Actions"
+  },
+
+  "status": {
+    "vip":      "VIP",
+    "active":   "Active",
+    "inactive": "Inactive"
+  },
+
+  "loyalty": {
+    "platinum": "Platinum",
+    "gold":     "Gold",
+    "silver":   "Silver",
+    "bronze":   "Bronze",
+    "none":     "None"
+  },
+
+  "segment": {
+    "all":     "All",
+    "vip":     "VIP Only",
+    "regular": "Regular"
+  },
+
+  "actions": {
+    "view":   "View Profile",
+    "edit":   "Edit",
+    "delete": "Delete"
+  },
+
+  "visits": "{count} visits",
+
+  "empty": {
+    "title":       "No customers found",
+    "description": "Customer profiles will appear here. Try adjusting your filters."
+  }
+}

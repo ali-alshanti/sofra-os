@@ -1,0 +1,114 @@
+{
+  "title":       "Settings",
+  "description": "Manage your restaurant's configuration, preferences, and integrations.",
+
+  "sidebar": {
+    "general":       "General",
+    "businessHours": "Business Hours",
+    "currencyTax":   "Currency & Tax",
+    "system":        "System",
+    "notifications": "Notifications",
+    "integrations":  "Integrations"
+  },
+
+  "general": {
+    "title":       "General Information",
+    "description": "Your restaurant's public identity.",
+    "logo":        "Restaurant Logo",
+    "logoHint":    "PNG or JPG — recommended 256×256px",
+    "name":        "Restaurant Name",
+    "namePlaceholder": "e.g. Sofra Kitchen",
+    "email":       "Email Address",
+    "emailPlaceholder": "contact@restaurant.com",
+    "phone":       "Phone Number",
+    "phonePlaceholder": "+1 (555) 000-0000",
+    "address":     "Address",
+    "addressPlaceholder": "123 Main St, City, Country"
+  },
+
+  "businessHours": {
+    "title":       "Business Hours",
+    "description": "Set your opening and closing times for each day.",
+    "open":        "Open",
+    "closed":      "Closed",
+    "openTime":    "Open",
+    "closeTime":   "Close",
+    "to":          "to",
+    "days": {
+      "monday":    "Monday",
+      "tuesday":   "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday":  "Thursday",
+      "friday":    "Friday",
+      "saturday":  "Saturday",
+      "sunday":    "Sunday"
+    }
+  },
+
+  "currency": {
+    "title":           "Currency & Tax",
+    "description":     "Configure currency and tax applied to all orders.",
+    "currency":        "Currency",
+    "currencySelect":  "Select currency",
+    "taxRate":         "Tax Rate",
+    "taxRateHint":     "Percentage applied to all taxable items",
+    "taxLabel":        "Tax Label",
+    "taxLabelHint":    "Shown on receipts — e.g. VAT, GST, Sales Tax",
+    "taxLabelPlaceholder": "VAT"
+  },
+
+  "system": {
+    "title":       "System",
+    "description": "Appearance and localisation preferences.",
+    "theme":       "Theme",
+    "themeSelect": "Select theme",
+    "language":    "Language",
+    "languageSelect": "Select language",
+    "timezone":    "Timezone",
+    "timezoneSelect": "Select timezone",
+    "dateFormat":  "Date Format",
+    "dateFormatSelect": "Select date format",
+    "themes": {
+      "light":  "Light",
+      "dark":   "Dark",
+      "system": "System"
+    }
+  },
+
+  "notifications": {
+    "title":       "Notifications",
+    "description": "Choose which events trigger alerts.",
+    "newOrder":       "New Order",
+    "newOrderDesc":   "Alert when a new order is placed.",
+    "orderReady":     "Order Ready",
+    "orderReadyDesc": "Alert when the kitchen marks an order ready.",
+    "lowStock":       "Low Stock",
+    "lowStockDesc":   "Alert when an inventory item falls below its reorder point.",
+    "newReservation": "New Reservation",
+    "newReservationDesc": "Alert when a reservation is created or modified.",
+    "staffAlert":     "Staff Alert",
+    "staffAlertDesc": "Alert on shift changes or staff-related events.",
+    "dailySummary":   "Daily Summary",
+    "dailySummaryDesc":"Receive an end-of-day operations summary."
+  },
+
+  "integrations": {
+    "title":       "Integrations",
+    "description": "Connect third-party services.",
+    "connected":   "Connected",
+    "disconnected":"Not Connected",
+    "connect":     "Connect",
+    "disconnect":  "Disconnect",
+    "empty": {
+      "title":       "No integrations available",
+      "description": "Integrations will appear here once added to your plan."
+    }
+  },
+
+  "actionBar": {
+    "unsaved": "You have unsaved changes.",
+    "discard": "Discard",
+    "save":    "Save Changes",
+    "saving":  "Saving…"
+  }
+}

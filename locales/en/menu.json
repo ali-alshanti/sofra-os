@@ -1,0 +1,41 @@
+{
+  "title":       "Menu",
+  "description": "Manage your restaurant menu items and categories.",
+
+  "categories": {
+    "all":   "All Items",
+    "items": "{count} items",
+    "empty": "No categories yet."
+  },
+
+  "item": {
+    "available":   "Available",
+    "unavailable": "Unavailable",
+    "bestSeller":  "Best Seller",
+    "featured":    "Featured",
+    "outOfStock":  "Out of Stock"
+  },
+
+  "status": {
+    "available":   "Available",
+    "unavailable": "Unavailable",
+    "out_of_stock":"Out of Stock"
+  },
+
+  "actions": {
+    "add":         "Add Item",
+    "edit":        "Edit",
+    "delete":      "Delete",
+    "toggleAvailability": "Toggle availability for {name}"
+  },
+
+  "empty": {
+    "title":       "No menu items",
+    "description": "Add your first menu item to get started.",
+    "category":    "No items in this category."
+  },
+
+  "search": {
+    "placeholder": "Search items…"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "title":       "Tables",
+  "description": "Manage tables and reservations.",
+
+  "floorPlan": {
+    "title":   "Floor Plan",
+    "squares": "Dining Tables",
+    "bar":     "Bar Seating"
+  },
+
+  "status": {
+    "available":      "Available",
+    "occupied":       "Occupied",
+    "reserved":       "Reserved",
+    "cleaning":       "Cleaning",
+    "out_of_service": "Out of Service"
+  },
+
+  "legend": {
+    "title": "Status Legend"
+  },
+
+  "table": {
+    "number":   "Table {number}",
+    "capacity": "{capacity} seats",
+    "duration": "Occupied for {duration}",
+    "guest":    "{name}"
+  },
+
+  "reservation": {
+    "title":      "Upcoming Reservations",
+    "guest":      "{name}",
+    "guests":     "{count} guests",
+    "at":         "at {time}",
+    "table":      "Table {number}",
+    "tbd":        "TBD",
+    "cancel":     "Cancel",
+    "status": {
+      "upcoming": "Upcoming",
+      "seated":   "Seated",
+      "completed":"Completed",
+      "cancelled":"Cancelled",
+      "no_show":  "No Show"
+    },
+    "empty": {
+      "title":       "No reservations today",
+      "description": "Upcoming reservations will appear here."
+    }
+  },
+
+  "empty": {
+    "title":       "No tables configured",
+    "description": "Contact your administrator to set up the floor plan."
+  }
+}

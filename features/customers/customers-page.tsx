@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { AppShell }   from "@/components/layout/app-shell";
 import { Pagination } from "@/components/shared/pagination";
 import { CustomerHeader }  from "./components/customer-header";
@@ -21,11 +22,12 @@ import { QUERY_KEYS } from "@/lib/constants/query-keys";
 const PAGE_SIZE = 10;
 
 export function CustomersFeature() {
-  const [filters, setFilters]           = useState<CustomerFiltersValue>(DEFAULT_CUSTOMER_FILTERS);
-  const [currentPage, setCurrentPage]   = useState(1);
-  const queryClient                     = useQueryClient();
+  const t = useTranslations("customers");
 
-  // ─── Data ──────────────────────────────────────────────────────────────────
+  const [filters, setFilters]         = useState<CustomerFiltersValue>(DEFAULT_CUSTOMER_FILTERS);
+  const [currentPage, setCurrentPage] = useState(1);
+  const queryClient                   = useQueryClient();
+
   const { data: summary, isLoading: summaryLoading } = useCustomerSummary();
 
   const { data: customersData, isLoading: customersLoading } = useCustomers({
@@ -43,7 +45,6 @@ export function CustomersFeature() {
   const totalItems = customersData?.total     ?? 0;
   const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
 
-  // ─── Handlers ──────────────────────────────────────────────────────────────
   function handleRefresh() {
     queryClient.invalidateQueries({ queryKey: QUERY_KEYS.customers.all });
   }
@@ -87,7 +88,7 @@ export function CustomersFeature() {
                 totalPages={totalPages}
                 totalItems={totalItems}
                 pageSize={PAGE_SIZE}
-                itemLabel="customers"
+                itemLabel={t("title").toLowerCase()}
                 onPageChange={setCurrentPage}
               />
             ) : undefined

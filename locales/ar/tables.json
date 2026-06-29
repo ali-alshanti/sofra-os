@@ -1,0 +1,55 @@
+{
+  "title":       "الطاولات",
+  "description": "إدارة الطاولات والحجوزات.",
+
+  "floorPlan": {
+    "title":   "مخطط الطابق",
+    "squares": "طاولات المطعم",
+    "bar":     "مقاعد البار"
+  },
+
+  "status": {
+    "available":      "متاحة",
+    "occupied":       "مشغولة",
+    "reserved":       "محجوزة",
+    "cleaning":       "قيد التنظيف",
+    "out_of_service": "خارج الخدمة"
+  },
+
+  "legend": {
+    "title": "دليل الحالات"
+  },
+
+  "table": {
+    "number":   "طاولة {number}",
+    "capacity": "{capacity} مقاعد",
+    "duration": "مشغولة منذ {duration}",
+    "guest":    "{name}"
+  },
+
+  "reservation": {
+    "title":    "الحجوزات القادمة",
+    "guest":    "{name}",
+    "guests":   "{count} أشخاص",
+    "at":       "الساعة {time}",
+    "table":    "طاولة {number}",
+    "tbd":      "غير محدد",
+    "cancel":   "إلغاء",
+    "status": {
+      "upcoming":  "قادم",
+      "seated":    "جالس",
+      "completed": "مكتمل",
+      "cancelled": "ملغي",
+      "no_show":   "لم يحضر"
+    },
+    "empty": {
+      "title":       "لا توجد حجوزات اليوم",
+      "description": "ستظهر الحجوزات القادمة هنا."
+    }
+  },
+
+  "empty": {
+    "title":       "لا توجد طاولات",
+    "description": "تواصل مع المسؤول لإعداد مخطط الطابق."
+  }
+}

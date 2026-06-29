@@ -1,0 +1,65 @@
+{
+  "title":       "الطلبات",
+  "description": "إدارة وتتبع جميع طلبات المطعم.",
+
+  "summary": {
+    "totalToday": "إجمالي اليوم",
+    "pending":    "قيد الانتظار",
+    "completed":  "مكتملة",
+    "revenue":    "إيرادات اليوم"
+  },
+
+  "filters": {
+    "searchPlaceholder": "البحث في الطلبات…",
+    "status":            "الحالة",
+    "table":             "الطاولة",
+    "waiter":            "النادل",
+    "type":              "النوع",
+    "date":              "التاريخ",
+    "all":               "الكل",
+    "allStatuses":       "جميع الحالات",
+    "allTables":         "جميع الطاولات",
+    "allTypes":          "جميع الأنواع"
+  },
+
+  "table": {
+    "order":    "الطلب",
+    "table":    "الطاولة",
+    "customer": "العميل",
+    "waiter":   "النادل",
+    "items":    "الأصناف",
+    "total":    "الإجمالي",
+    "status":   "الحالة",
+    "time":     "الوقت",
+    "actions":  "الإجراءات"
+  },
+
+  "status": {
+    "pending":   "قيد الانتظار",
+    "preparing": "قيد التحضير",
+    "ready":     "جاهز",
+    "served":    "تم التقديم",
+    "cancelled": "ملغي",
+    "all":       "الكل"
+  },
+
+  "type": {
+    "dine_in":  "على الطاولة",
+    "takeaway": "للاستلام",
+    "delivery": "توصيل"
+  },
+
+  "actions": {
+    "view":         "عرض الطلب",
+    "updateStatus": "تحديث الحالة",
+    "delete":       "حذف الطلب"
+  },
+
+  "empty": {
+    "title":       "لا توجد طلبات",
+    "description": "ستظهر الطلبات هنا عند تقديمها. حاول تعديل الفلاتر."
+  },
+
+  "items":         "{count} أصناف",
+  "guestCustomer": "زائر"
+}
