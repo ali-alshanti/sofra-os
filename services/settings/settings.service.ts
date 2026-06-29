@@ -1,4 +1,5 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { fromDbTime, toDbTime } from "@/lib/utils/date";
 import type {
   RestaurantSettings,
   GeneralSettingsFormValues,
@@ -27,11 +28,6 @@ function indexToDay(i: number): DayOfWeek {
   return DAY_INDEX[i] ?? "monday";
 }
 
-// Postgres time columns return "HH:MM:SS" — trim to "HH:MM"
-function trimTime(t: string | null | undefined): string {
-  if (!t) return "08:00";
-  return t.slice(0, 5);
-}
 
 // ─── DEFAULT_NOTIFICATION_PREFS ───────────────────────────────────────────────
 
@@ -154,8 +150,8 @@ export async function getRestaurantSettings(
     const day = indexToDay(row.day_of_week);
     businessHours[day] = {
       open:      !row.is_closed,
-      openTime:  trimTime(row.open_time),
-      closeTime: trimTime(row.close_time),
+      openTime:  fromDbTime(row.open_time),
+      closeTime: fromDbTime(row.close_time),
     };
   }
 
@@ -229,8 +225,8 @@ export async function updateRestaurantSettings(
           currency:                 currency.currency,
           tax_rate:                 currency.taxRate,
           tax_label:                currency.taxLabel,
-          language:                 system.language,
-          theme:                    system.theme,
+          language:                 system.language as "en" | "ar",
+          theme:                    system.theme as "light" | "dark" | "system",
           date_format:              system.dateFormat,
           notification_preferences: notifications,
           updated_at:               new Date().toISOString(),
@@ -267,8 +263,8 @@ export async function getBusinessHours(restaurantId: string): Promise<BusinessHo
     const day = indexToDay(row.day_of_week);
     hours[day] = {
       open:      !row.is_closed,
-      openTime:  trimTime(row.open_time),
-      closeTime: trimTime(row.close_time),
+      openTime:  fromDbTime(row.open_time),
+      closeTime: fromDbTime(row.close_time),
     };
   }
 
@@ -287,8 +283,8 @@ export async function updateBusinessHours(
     restaurant_id: restaurantId,
     day_of_week:   i,
     is_closed:     !hours[day].open,
-    open_time:     hours[day].openTime  + ":00",
-    close_time:    hours[day].closeTime + ":00",
+    open_time:     toDbTime(hours[day].openTime),
+    close_time:    toDbTime(hours[day].closeTime),
   }));
 
   const { error } = await supabase

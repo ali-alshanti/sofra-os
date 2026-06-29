@@ -18,9 +18,11 @@ import { IntegrationsSettings } from "./components/integrations-settings";
 import {
   useRestaurantSettings,
   useUpdateRestaurantSettings,
+  useUpdateBusinessHours,
   useIntegrations,
   useUpdateIntegration,
 } from "@/lib/hooks/use-settings";
+import { useToast } from "@/lib/providers/toast-provider";
 
 import type {
   RestaurantSettings,
@@ -45,31 +47,38 @@ const SECTION_ORDER: SettingsSection[] = [
 // ─── Settings Feature ─────────────────────────────────────────────────────────
 
 export function SettingsFeature() {
+  const { toastSuccess, toastError } = useToast();
+
   // ── Remote data ─────────────────────────────────────────────────────────────
   const { data: remoteSettings, isLoading } = useRestaurantSettings();
   const { data: remoteIntegrations }        = useIntegrations();
 
   const updateSettings    = useUpdateRestaurantSettings();
+  const updateHours       = useUpdateBusinessHours();
   const updateIntegration = useUpdateIntegration();
 
   // ── Local state (mirrors server state; enables dirty-check) ─────────────────
-  const [settings, setSettings]         = useState<RestaurantSettings | null>(null);
+  const [settings, setSettings]           = useState<RestaurantSettings | null>(null);
   const [savedSettings, setSavedSettings] = useState<RestaurantSettings | null>(null);
   const [activeSection, setActiveSection] = useState<SettingsSection>("general");
   const [isSaving, setIsSaving]           = useState(false);
   const [integrations, setIntegrations]   = useState<Integration[]>([]);
 
-  // Seed local state from DB once loaded
+  // Seed local state from DB on first successful load.
+  // Using a ref guard so the effect only runs once regardless of re-renders.
+  const seededRef = useRef(false);
   useEffect(() => {
-    if (remoteSettings && !settings) {
-      setSettings(remoteSettings);
-      setSavedSettings(remoteSettings);
+    if (remoteSettings && !seededRef.current) {
+      seededRef.current = true;
+      setSettings(remoteSettings);       // eslint-disable-line react-hooks/set-state-in-effect
+      setSavedSettings(remoteSettings);  // eslint-disable-line react-hooks/set-state-in-effect
     }
-  }, [remoteSettings, settings]);
+  }, [remoteSettings]);
 
-  // Keep integrations in sync with remote (catalogue)
   useEffect(() => {
-    if (remoteIntegrations) setIntegrations(remoteIntegrations);
+    if (remoteIntegrations) {
+      setIntegrations(remoteIntegrations); // eslint-disable-line react-hooks/set-state-in-effect
+    }
   }, [remoteIntegrations]);
 
   // ── Derived ─────────────────────────────────────────────────────────────────
@@ -114,14 +123,21 @@ export function SettingsFeature() {
     }) : s);
   }
 
-  // ── Save ─────────────────────────────────────────────────────────────────────
+  // ── Save — persists all sections atomically ───────────────────────────────────
 
   async function handleSave() {
     if (!settings) return;
     setIsSaving(true);
     try {
-      await updateSettings.mutateAsync(settings);
+      await Promise.all([
+        updateSettings.mutateAsync(settings),
+        updateHours.mutateAsync(settings.businessHours),
+      ]);
       setSavedSettings(settings);
+      toastSuccess("Settings saved successfully.");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "An unexpected error occurred.";
+      toastError(`Failed to save settings: ${message}`);
     } finally {
       setIsSaving(false);
     }
@@ -134,13 +150,23 @@ export function SettingsFeature() {
   // ── Integration handlers ──────────────────────────────────────────────────────
 
   async function handleConnect(id: string) {
-    const updated = await updateIntegration.mutateAsync({ id, status: "connected" });
-    setIntegrations(updated);
+    try {
+      const updated = await updateIntegration.mutateAsync({ id, status: "connected" });
+      setIntegrations(updated);
+      toastSuccess("Integration connected.");
+    } catch {
+      toastError("Failed to connect integration. Please try again.");
+    }
   }
 
   async function handleDisconnect(id: string) {
-    const updated = await updateIntegration.mutateAsync({ id, status: "disconnected" });
-    setIntegrations(updated);
+    try {
+      const updated = await updateIntegration.mutateAsync({ id, status: "disconnected" });
+      setIntegrations(updated);
+      toastSuccess("Integration disconnected.");
+    } catch {
+      toastError("Failed to disconnect integration. Please try again.");
+    }
   }
 
   // ── Render (loading state) ────────────────────────────────────────────────────

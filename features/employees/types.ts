@@ -79,7 +79,7 @@ export interface Employee {
   shift:        EmployeeShift;
   status:       EmployeeStatus;
   attendance:   Attendance;
-  hireDate:     Date | string;
+  hireDate:     Date | string | null;
 }
 
 // ─── Filter value ─────────────────────────────────────────────────────────────

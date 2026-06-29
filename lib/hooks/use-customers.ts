@@ -22,7 +22,7 @@ export function useCustomers(params: UseCustomersParams = {}) {
   const fullParams: GetCustomersParams = { restaurantId, ...params };
 
   return useQuery({
-    queryKey: QUERY_KEYS.customers.list(fullParams as Record<string, unknown>),
+    queryKey: QUERY_KEYS.customers.list(fullParams as unknown as Record<string, unknown>),
     queryFn:  () => getCustomers(fullParams),
     enabled:  !!restaurantId,
     staleTime: 2 * 60 * 1000,

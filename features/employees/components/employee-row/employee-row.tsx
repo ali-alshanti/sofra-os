@@ -92,8 +92,9 @@ interface EmployeeRowProps {
 }
 
 export function EmployeeRow({ employee, onView, onEdit, onDelete }: EmployeeRowProps) {
-  const hireDate =
-    employee.hireDate instanceof Date ? employee.hireDate : new Date(employee.hireDate);
+  const hireDate = employee.hireDate
+    ? (employee.hireDate instanceof Date ? employee.hireDate : new Date(employee.hireDate))
+    : null;
 
   return (
     <TableRow className="group border-border hover:bg-primary/[0.02] transition-colors">
@@ -144,7 +145,7 @@ export function EmployeeRow({ employee, onView, onEdit, onDelete }: EmployeeRowP
 
       {/* Hire Date */}
       <TableCell className="px-6 py-4 text-sm text-muted-foreground whitespace-nowrap">
-        {formatDate(hireDate, "en-US")}
+        {hireDate ? formatDate(hireDate, "en-US") : "—"}
       </TableCell>
 
       {/* Actions — hidden until row hover */}

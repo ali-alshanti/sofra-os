@@ -4,8 +4,6 @@ export {
   getCategorySalesReport,
   getTopSellingItemsReport,
   getCustomerAnalytics,
-  getEmployeeAnalytics,
-  getInventoryAnalytics,
   getGeneratedReports,
 } from "./reports.service";
 
@@ -14,6 +12,4 @@ export type {
   GetGeneratedReportsResult,
   TopSellingItem,
   CustomerAnalytics,
-  EmployeeAnalytics,
-  InventoryAnalytics,
 } from "./reports.service";

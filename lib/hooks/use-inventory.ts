@@ -53,7 +53,7 @@ export function useInventoryItems(params: UseInventoryItemsParams = {}) {
   const fullParams: GetInventoryItemsParams = { restaurantId, ...params };
 
   return useQuery({
-    queryKey: QUERY_KEYS.inventory.list(fullParams as Record<string, unknown>),
+    queryKey: QUERY_KEYS.inventory.list(fullParams as unknown as Record<string, unknown>),
     queryFn:  () => getInventoryItems(fullParams),
     enabled:  !!restaurantId,
     staleTime: 2 * 60 * 1000,

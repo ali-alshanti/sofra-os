@@ -24,7 +24,7 @@ export function useEmployees(params: UseEmployeesParams = {}) {
   const fullParams: GetEmployeesParams = { restaurantId, ...params };
 
   return useQuery({
-    queryKey: QUERY_KEYS.employees.list(fullParams as Record<string, unknown>),
+    queryKey: QUERY_KEYS.employees.list(fullParams as unknown as Record<string, unknown>),
     queryFn:  () => getEmployees(fullParams),
     enabled:  !!restaurantId,
     staleTime: 60 * 1000,          // 1 min — status changes frequently

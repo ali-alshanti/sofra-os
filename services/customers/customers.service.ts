@@ -1,5 +1,6 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { formatCurrency } from "@/lib/utils/format-currency";
+import { todayStart } from "@/lib/utils/date";
 import type {
   Customer,
   CustomerStatus,
@@ -49,43 +50,31 @@ export async function getCustomers({
     )
     .eq("restaurant_id", restaurantId)
     .eq("is_active", true)
-    .order("total_spent", { ascending: false })
-    .range(from, to);
+    .order("total_spent", { ascending: false });
 
-  // Status filter
-  if (status && status !== "all") query = query.eq("status", status);
-
-  // Loyalty filter
+  // Server-side filters (must come before range to keep count accurate)
+  if (status  && status  !== "all") query = query.eq("status", status);
   if (loyalty && loyalty !== "all") query = query.eq("loyalty", loyalty);
-
-  // Segment: "vip" = status is vip, "regular" = status is not vip
   if (segment === "vip")     query = query.eq("status", "vip");
   if (segment === "regular") query = query.neq("status", "vip");
 
-  const { data, count, error } = await query;
-  if (error) throw new Error(error.message);
-
-  let rows = (data ?? []) as CustomerRow[];
-
-  // Client-side search on name, email, phone
+  // Server-side search — applied before pagination so count is correct
   if (search) {
-    const q = search.toLowerCase();
-    rows = rows.filter(
-      (r) =>
-        r.full_name.toLowerCase().includes(q) ||
-        (r.email ?? "").toLowerCase().includes(q) ||
-        (r.phone ?? "").includes(q),
+    query = query.or(
+      `full_name.ilike.%${search}%,email.ilike.%${search}%,phone.ilike.%${search}%`,
     );
   }
 
-  return { customers: rows.map(mapRowToCustomer), total: count ?? 0 };
+  const { data, count, error } = await query.range(from, to);
+  if (error) throw new Error(error.message);
+
+  return { customers: (data ?? []).map(mapRowToCustomer), total: count ?? 0 };
 }
 
 // ─── getCustomerSummary ───────────────────────────────────────────────────────
 
 export async function getCustomerSummary(restaurantId: string): Promise<CustomerStats> {
-  const supabase  = getSupabaseBrowserClient();
-  const todayStart = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
+  const supabase = getSupabaseBrowserClient();
 
   const { data, error } = await supabase
     .from("customers")
@@ -102,7 +91,7 @@ export async function getCustomerSummary(restaurantId: string): Promise<Customer
   return {
     totalCustomers: all.length,
     vipCustomers:   all.filter((c) => c.status === "vip").length,
-    activeToday:    all.filter((c) => c.last_visit_at && c.last_visit_at >= todayStart).length,
+    activeToday:    all.filter((c) => c.last_visit_at && c.last_visit_at >= todayStart()).length,
     avgSpend:       formatCurrency(avg),
   };
 }

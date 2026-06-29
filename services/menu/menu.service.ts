@@ -121,7 +121,7 @@ export async function updateMenuItemAvailability(
 
 export async function updateMenuItem(
   itemId: string,
-  patch: Partial<{ name: string; description: string; price: number; image_url: string; status: string }>,
+  patch: Partial<{ name: string; description: string; price: number; image_url: string; status: "available" | "unavailable" | "out_of_stock" }>,
 ): Promise<void> {
   const supabase = getSupabaseBrowserClient();
   const { error } = await supabase

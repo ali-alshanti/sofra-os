@@ -43,8 +43,7 @@ export function RevenueChartPlaceholder() {
         {BARS.map((bar, i) => (
           <div
             key={i}
-            className="flex-1 rounded-t-sm transition-opacity"
-            className={bar.primary ? "bg-primary opacity-90" : "bg-border"}
+            className={`flex-1 rounded-t-sm transition-opacity ${bar.primary ? "bg-primary opacity-90" : "bg-border"}`}
             style={{ height: `${bar.h}%` }}
           />
         ))}
@@ -54,8 +53,7 @@ export function RevenueChartPlaceholder() {
           {Y_LABELS.map((label) => (
             <div
               key={label}
-              className="w-full flex justify-end"
-              className="border-t border-border/30"
+              className="w-full flex justify-end border-t border-border/30"
             >
               <span className="typography-caption text-muted-foreground pr-2 -mt-2">
                 {label}

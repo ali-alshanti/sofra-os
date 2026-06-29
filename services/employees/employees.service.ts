@@ -50,28 +50,23 @@ export async function getEmployees({
     .eq("restaurant_id", restaurantId)
     .eq("is_active", true)
     .is("deleted_at", null)
-    .order("full_name")
-    .range(from, to);
+    .order("full_name");
 
+  // Server-side filters before pagination so count stays accurate
   if (department && department !== "all") query = query.eq("department", department);
-  if (role       && role       !== "all") query = query.eq("role", role);
-  if (status     && status     !== "all") query = query.eq("status", status);
-
-  const { data, count, error } = await query;
-  if (error) throw new Error(error.message);
-
-  let rows = (data ?? []) as EmployeeRow[];
+  if (role       && role       !== "all") query = query.eq("role",       role);
+  if (status     && status     !== "all") query = query.eq("status",     status);
 
   if (search) {
-    const q = search.toLowerCase();
-    rows = rows.filter(
-      (r) =>
-        r.full_name.toLowerCase().includes(q) ||
-        (r.employee_code ?? "").toLowerCase().includes(q),
+    query = query.or(
+      `full_name.ilike.%${search}%,employee_code.ilike.%${search}%`,
     );
   }
 
-  return { employees: rows.map(mapRowToEmployee), total: count ?? 0 };
+  const { data, count, error } = await query.range(from, to);
+  if (error) throw new Error(error.message);
+
+  return { employees: (data ?? []).map(mapRowToEmployee), total: count ?? 0 };
 }
 
 // ─── getEmployeeSummary ───────────────────────────────────────────────────────
@@ -179,6 +174,6 @@ function mapRowToEmployee(row: EmployeeRow): Employee {
     shift,
     status:       row.status as EmployeeStatus,
     attendance,
-    hireDate:     row.hire_date ?? new Date().toISOString(),
+    hireDate:     row.hire_date ?? null,
   };
 }

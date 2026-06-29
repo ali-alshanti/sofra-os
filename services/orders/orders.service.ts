@@ -1,4 +1,5 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { todayStart } from "@/lib/utils/date";
 import type { OrderData, OrderStatusValue, OrderStatusFilter } from "@/features/orders/types";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -31,9 +32,10 @@ export interface OrdersSummary {
 // ─── Mapping helpers ──────────────────────────────────────────────────────────
 
 // UI uses "dine-in" / "takeaway" / "delivery", DB uses "dine_in" etc.
-function uiTypeToDb(type: string): string {
+function uiTypeToDb(type: string): "dine_in" | "takeaway" | "delivery" {
   if (type === "dine-in") return "dine_in";
-  return type;
+  if (type === "takeaway") return "takeaway";
+  return "delivery";
 }
 
 function dbStatusToUi(status: string): OrderStatusValue {
@@ -45,10 +47,6 @@ function dbStatusToUi(status: string): OrderStatusValue {
     cancelled: "cancelled",
   };
   return map[status] ?? "pending";
-}
-
-function todayStart(): string {
-  return new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
 }
 
 // ─── getOrders ────────────────────────────────────────────────────────────────
@@ -88,42 +86,28 @@ export async function getOrders({
       { count: "exact" },
     )
     .eq("restaurant_id", restaurantId)
-    .order("created_at", { ascending: false })
-    .range(from, to);
+    .order("created_at", { ascending: false });
 
-  if (status && status !== "all") {
-    query = query.eq("status", status);
-  }
-  if (tableId && tableId !== "all") {
-    query = query.eq("table_id", tableId);
-  }
-  if (waiterId && waiterId !== "all") {
-    query = query.eq("waiter_id", waiterId);
-  }
-  if (orderType && orderType !== "all") {
-    query = query.eq("type", uiTypeToDb(orderType));
-  }
+  // Server-side filters — must come before .range() so count reflects filters
+  if (status    && status    !== "all") query = query.eq("status",    status);
+  if (tableId   && tableId   !== "all") query = query.eq("table_id",  tableId);
+  if (waiterId  && waiterId  !== "all") query = query.eq("waiter_id", waiterId);
+  if (orderType && orderType !== "all") query = query.eq("type",      uiTypeToDb(orderType));
   if (dateFrom) query = query.gte("created_at", dateFrom);
   if (dateTo)   query = query.lte("created_at", dateTo);
 
-  const { data, count, error } = await query;
-
-  if (error) throw new Error(error.message);
-
-  // Search is done client-side on order_number since Supabase full-text on this column
-  // requires a generated column — will be replaced with server-side FTS in a later ticket.
-  let rows = (data ?? []) as unknown as OrderRow[];
+  // Server-side search on order_number and customer name
   if (search) {
-    const q = search.toLowerCase();
-    rows = rows.filter(
-      (r) =>
-        r.order_number?.toLowerCase().includes(q) ||
-        (r.customers as CustomerRow | null)?.full_name?.toLowerCase().includes(q),
+    query = query.or(
+      `order_number.ilike.%${search}%,customers.full_name.ilike.%${search}%`,
     );
   }
 
+  const { data, count, error } = await query.range(from, to);
+  if (error) throw new Error(error.message);
+
   return {
-    orders: rows.map(mapRowToOrderData),
+    orders: ((data ?? []) as unknown as OrderRow[]).map(mapRowToOrderData),
     total:  count ?? 0,
   };
 }
@@ -137,7 +121,8 @@ export async function getOrdersSummary(restaurantId: string): Promise<OrdersSumm
     .from("orders")
     .select("status, total")
     .eq("restaurant_id", restaurantId)
-    .gte("created_at", todayStart());
+    .gte("created_at", todayStart())
+    .neq("status", "cancelled");
 
   if (error) throw new Error(error.message);
 

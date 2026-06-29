@@ -23,7 +23,7 @@ export function useOrders(params: UseOrdersParams = {}) {
   const fullParams: GetOrdersParams = { restaurantId, ...params };
 
   return useQuery({
-    queryKey: QUERY_KEYS.orders.list(fullParams as Record<string, unknown>),
+    queryKey: QUERY_KEYS.orders.list(fullParams as unknown as Record<string, unknown>),
     queryFn:  () => getOrders(fullParams),
     enabled:  !!restaurantId,
     staleTime: 30 * 1000,         // 30 seconds — orders change frequently

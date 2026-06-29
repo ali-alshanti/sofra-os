@@ -1,4 +1,5 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { todayStart } from "@/lib/utils/date";
 import type {
   KitchenOrder,
   TicketStatus,
@@ -10,15 +11,10 @@ import type { KitchenStats } from "@/features/kitchen/components/kitchen-header"
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function todayStart(): string {
-  return new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
-}
-
 function twoHoursAgo(): string {
   return new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
 }
 
-/** Format elapsed time as "MM:SS" display */
 function elapsedDisplay(createdAt: string): string {
   const diffMin = Math.floor((Date.now() - new Date(createdAt).getTime()) / 60000);
   const h = Math.floor(diffMin / 60);
@@ -26,7 +22,6 @@ function elapsedDisplay(createdAt: string): string {
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 }
 
-/** Derive priority from elapsed time */
 function derivePriority(createdAt: string): TicketPriority {
   const mins = (Date.now() - new Date(createdAt).getTime()) / 60000;
   if (mins > 15) return "urgent";
@@ -34,7 +29,6 @@ function derivePriority(createdAt: string): TicketPriority {
   return "normal";
 }
 
-/** Cleared-at display for completed tickets */
 function clearedDisplay(updatedAt: string): string {
   const mins = Math.round((Date.now() - new Date(updatedAt).getTime()) / 60000);
   return `${mins}m ago`;
@@ -45,7 +39,6 @@ function dbTypeToUi(type: string): KitchenOrderType {
   return type as KitchenOrderType;
 }
 
-/** Map DB order_status to KDS TicketStatus */
 function dbStatusToTicket(status: string): TicketStatus | null {
   const map: Record<string, TicketStatus> = {
     pending:   "pending",
@@ -83,7 +76,6 @@ export async function getKitchenOrders(restaurantId: string): Promise<KitchenOrd
     .eq("restaurant_id", restaurantId)
     .in("status", ["pending", "preparing", "ready", "served"])
     .gte("created_at", todayStart())
-    // Completed (served) — show only last 2 hours
     .or(`status.neq.served,and(status.eq.served,updated_at.gte.${twoHoursAgo()})`)
     .order("created_at");
 
@@ -93,12 +85,9 @@ export async function getKitchenOrders(restaurantId: string): Promise<KitchenOrd
     const ticketStatus = dbStatusToTicket(order.status);
     if (!ticketStatus) return acc;
 
-    const items = (order.order_items ?? []) as DbOrderItem[];
-
-    // Derive station from first item that has one (fallback: "General")
+    const items   = (order.order_items ?? []) as DbOrderItem[];
     const station = items.find((i) => i.kitchen_station)?.kitchen_station ?? "General";
 
-    // Build KDS items list
     const kitchenItems: OrderItem[] = items.map((i) => ({
       quantity: i.quantity,
       name:     i.item_name,
@@ -135,7 +124,8 @@ export async function advanceKitchenOrderStatus(
 ): Promise<void> {
   const supabase = getSupabaseBrowserClient();
 
-  const nextStatus: Record<TicketStatus, string | null> = {
+  type DbStatus = "pending" | "preparing" | "ready" | "served" | "cancelled";
+  const nextStatus: Record<TicketStatus, DbStatus | null> = {
     pending:   "preparing",
     preparing: "ready",
     ready:     "served",
@@ -168,9 +158,6 @@ export async function getKitchenStats(restaurantId: string): Promise<KitchenStat
   if (error) throw new Error(error.message);
 
   const all = data ?? [];
-
-  // Average prep time = avg minutes from created_at to when status became 'ready'
-  // We approximate: avg elapsed for ready+served orders
   const completedToday = all.filter((o) => o.status === "served" || o.status === "ready");
   const avgMin = completedToday.length > 0
     ? Math.round(
@@ -192,14 +179,14 @@ export async function getKitchenStats(restaurantId: string): Promise<KitchenStat
 // ─── Internal DB row types ────────────────────────────────────────────────────
 
 interface DbOrder {
-  id:          string;
+  id:           string;
   order_number: string | null;
-  type:        string;
-  status:      string;
-  created_at:  string;
-  updated_at:  string;
+  type:         string;
+  status:       string;
+  created_at:   string;
+  updated_at:   string;
   dining_tables: { number: string } | null;
-  order_items:  DbOrderItem[];
+  order_items:   DbOrderItem[];
 }
 
 interface DbOrderItem {

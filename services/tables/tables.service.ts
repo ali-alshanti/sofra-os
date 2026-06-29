@@ -1,5 +1,5 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { formatTime } from "@/lib/utils/format-date";
+import { todayStart } from "@/lib/utils/date";
 import type {
   RestaurantTable,
   TableStatus,
@@ -21,8 +21,7 @@ export interface TablesData {
 // ─── getTables ────────────────────────────────────────────────────────────────
 
 export async function getTables(restaurantId: string): Promise<TablesData> {
-  const supabase  = getSupabaseBrowserClient();
-  const todayStart = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
+  const supabase = getSupabaseBrowserClient();
 
   // Fetch dining tables, active orders on them, and upcoming reservations in parallel
   const [tablesResult, ordersResult, reservationsResult] = await Promise.all([
@@ -38,14 +37,14 @@ export async function getTables(restaurantId: string): Promise<TablesData> {
       .select("id, table_id, status, created_at, customers ( full_name ), total")
       .eq("restaurant_id", restaurantId)
       .in("status", ["pending", "preparing", "ready"])
-      .gte("created_at", todayStart),
+      .gte("created_at", todayStart()),
 
     supabase
       .from("reservations")
       .select("id, table_id, guest_name, party_size, reservation_time, status")
       .eq("restaurant_id", restaurantId)
       .eq("status", "upcoming")
-      .gte("reservation_time", todayStart)
+      .gte("reservation_time", todayStart())
       .order("reservation_time"),
   ]);
 
@@ -113,8 +112,7 @@ export async function updateTableStatus(tableId: string, status: TableStatus): P
 // ─── getReservations ──────────────────────────────────────────────────────────
 
 export async function getReservations(restaurantId: string): Promise<Reservation[]> {
-  const supabase   = getSupabaseBrowserClient();
-  const todayStart = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
+  const supabase = getSupabaseBrowserClient();
 
   const { data, error } = await supabase
     .from("reservations")
@@ -124,7 +122,7 @@ export async function getReservations(restaurantId: string): Promise<Reservation
     `)
     .eq("restaurant_id", restaurantId)
     .in("status", ["upcoming", "seated"])
-    .gte("reservation_time", todayStart)
+    .gte("reservation_time", todayStart())
     .order("reservation_time")
     .limit(20);
 

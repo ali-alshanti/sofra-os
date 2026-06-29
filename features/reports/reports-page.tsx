@@ -121,7 +121,7 @@ export function ReportsFeature() {
     dateTo:   filters.dateTo,
   };
 
-  const { data: dashboardData,  isLoading: dashLoading   } = useDashboardReports();
+  const { data: dashboardData } = useDashboardReports(dateFilters);
   const { data: revenueData,    isLoading: revenueLoading } = useRevenueReport(dateFilters);
   const { data: categoryData,   isLoading: catLoading     } = useCategorySalesReport(dateFilters);
   const { data: customerData } = useCustomerAnalytics();

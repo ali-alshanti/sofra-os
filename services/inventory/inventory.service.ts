@@ -89,29 +89,21 @@ export async function getInventoryItems({
       { count: "exact" },
     )
     .eq("restaurant_id", restaurantId)
-    .order("name")
-    .range(from, to);
+    .order("name");
 
+  // Server-side filters before pagination so count is accurate
   if (categoryId && categoryId !== "all") query = query.eq("category_id", categoryId);
   if (supplierId && supplierId !== "all") query = query.eq("supplier_id", supplierId);
-  if (status     && status     !== "all") query = query.eq("status", status);
+  if (status     && status     !== "all") query = query.eq("status",      status);
 
-  const { data, count, error } = await query;
-  if (error) throw new Error(error.message);
-
-  let rows = (data ?? []) as unknown as InventoryRow[];
-
-  // Client-side search on name + sku (pg_trgm FTS in next milestone)
   if (search) {
-    const q = search.toLowerCase();
-    rows = rows.filter(
-      (r) =>
-        r.name.toLowerCase().includes(q) ||
-        (r.sku ?? "").toLowerCase().includes(q),
-    );
+    query = query.or(`name.ilike.%${search}%,sku.ilike.%${search}%`);
   }
 
-  return { items: rows.map(mapRowToItem), total: count ?? 0 };
+  const { data, count, error } = await query.range(from, to);
+  if (error) throw new Error(error.message);
+
+  return { items: ((data ?? []) as unknown as InventoryRow[]).map(mapRowToItem), total: count ?? 0 };
 }
 
 // ─── getInventorySummary ──────────────────────────────────────────────────────

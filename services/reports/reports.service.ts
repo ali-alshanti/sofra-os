@@ -22,12 +22,11 @@ export interface GetGeneratedReportsResult {
   total:   number;
 }
 
-// ─── Internal helpers ─────────────────────────────────────────────────────────
+// ─── Date range helper ────────────────────────────────────────────────────────
 
-function getDateRange(filters: Pick<ReportsFiltersValue, "period" | "dateFrom" | "dateTo">): {
-  from: string;
-  to:   string;
-} {
+type DateFilters = Pick<ReportsFiltersValue, "period" | "dateFrom" | "dateTo">;
+
+function getDateRange(filters: DateFilters): { from: string; to: string } {
   const now = new Date();
   if (filters.period === "today") {
     const start = new Date(now);
@@ -48,10 +47,12 @@ function getDateRange(filters: Pick<ReportsFiltersValue, "period" | "dateFrom" |
   return { from: from.toISOString(), to: now.toISOString() };
 }
 
+// ─── DB → UI mappers ──────────────────────────────────────────────────────────
+
 function formatPeriod(start: string | null, end: string | null): string {
   if (!start) return "—";
-  const s = new Date(start);
-  const e = end ? new Date(end) : null;
+  const s   = new Date(start);
+  const e   = end ? new Date(end) : null;
   const fmt = (d: Date) =>
     d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
   if (!e || s.toDateString() === e.toDateString()) return fmt(s);
@@ -72,22 +73,31 @@ function dbTypeToUi(type: string): ReportType {
 }
 
 function dbStatusToUi(status: string): Report["status"] {
+  // draft = being prepared, published = ready to download, archived = no longer active
   if (status === "published") return "ready";
   if (status === "draft")     return "generating";
-  return "ready"; // archived → ready (was published)
+  if (status === "archived")  return "ready";   // archived was published; still downloadable
+  return "generating";
 }
 
 // ─── getDashboardReports ──────────────────────────────────────────────────────
+// KPIs are scoped to the active date range so cards reflect the selected filters.
 
-export async function getDashboardReports(restaurantId: string): Promise<DashboardReportStats> {
+export async function getDashboardReports(
+  restaurantId: string,
+  filters: DateFilters,
+): Promise<DashboardReportStats> {
   const supabase = getSupabaseBrowserClient();
+  const { from, to } = getDateRange(filters);
 
   const [ordersRes, reportsRes, categoryRes] = await Promise.all([
     supabase
       .from("orders")
       .select("total, status")
       .eq("restaurant_id", restaurantId)
-      .neq("status", "cancelled"),
+      .neq("status", "cancelled")
+      .gte("created_at", from)
+      .lte("created_at", to),
 
     supabase
       .from("reports")
@@ -97,18 +107,19 @@ export async function getDashboardReports(restaurantId: string): Promise<Dashboa
     supabase
       .from("order_items")
       .select("total_price, menu_items ( menu_categories ( name ) )")
-      .eq("restaurant_id", restaurantId),
+      .eq("restaurant_id", restaurantId)
+      .gte("created_at", from)
+      .lte("created_at", to),
   ]);
 
   if (ordersRes.error)   throw new Error(ordersRes.error.message);
   if (reportsRes.error)  throw new Error(reportsRes.error.message);
   if (categoryRes.error) throw new Error(categoryRes.error.message);
 
-  const orders = ordersRes.data ?? [];
-  const totalRevenue   = orders.reduce((s, o) => s + Number(o.total), 0);
-  const avgOrderValue  = orders.length > 0 ? totalRevenue / orders.length : 0;
+  const orders       = ordersRes.data ?? [];
+  const totalRevenue = orders.reduce((s, o) => s + Number(o.total), 0);
+  const avgOrderValue = orders.length > 0 ? totalRevenue / orders.length : 0;
 
-  // Tally revenue per category
   const catMap = new Map<string, number>();
   for (const item of categoryRes.data ?? []) {
     const name =
@@ -134,7 +145,7 @@ export async function getDashboardReports(restaurantId: string): Promise<Dashboa
 
 export async function getRevenueReport(
   restaurantId: string,
-  filters: Pick<ReportsFiltersValue, "period" | "dateFrom" | "dateTo">,
+  filters: DateFilters,
 ): Promise<RevenuePoint[]> {
   const supabase = getSupabaseBrowserClient();
   const { from, to } = getDateRange(filters);
@@ -153,7 +164,6 @@ export async function getRevenueReport(
   const rows = data ?? [];
 
   if (filters.period === "today") {
-    // Bucket by hour
     const hourMap = new Map<number, number>();
     for (const row of rows) {
       const h = new Date(row.created_at).getHours();
@@ -171,7 +181,6 @@ export async function getRevenueReport(
       });
   }
 
-  // Bucket by day
   const dayMap = new Map<string, number>();
   for (const row of rows) {
     const d   = new Date(row.created_at);
@@ -185,7 +194,7 @@ export async function getRevenueReport(
 
 export async function getCategorySalesReport(
   restaurantId: string,
-  filters: Pick<ReportsFiltersValue, "period" | "dateFrom" | "dateTo">,
+  filters: DateFilters,
 ): Promise<CategorySales[]> {
   const supabase = getSupabaseBrowserClient();
   const { from, to } = getDateRange(filters);
@@ -227,7 +236,7 @@ export interface TopSellingItem {
 
 export async function getTopSellingItemsReport(
   restaurantId: string,
-  filters: Pick<ReportsFiltersValue, "period" | "dateFrom" | "dateTo">,
+  filters: DateFilters,
   limit = 10,
 ): Promise<TopSellingItem[]> {
   const supabase = getSupabaseBrowserClient();
@@ -260,11 +269,11 @@ export async function getTopSellingItemsReport(
 // ─── getCustomerAnalytics ─────────────────────────────────────────────────────
 
 export interface CustomerAnalytics {
-  totalCustomers:    number;
-  activeCustomers:   number;
-  vipCustomers:      number;
-  avgSpend:          string;
-  returningRate:     number;
+  totalCustomers:  number;
+  activeCustomers: number;
+  vipCustomers:    number;
+  avgSpend:        string;
+  returningRate:   number;
 }
 
 export async function getCustomerAnalytics(restaurantId: string): Promise<CustomerAnalytics> {
@@ -278,7 +287,7 @@ export async function getCustomerAnalytics(restaurantId: string): Promise<Custom
 
   if (error) throw new Error(error.message);
 
-  const rows          = data ?? [];
+  const rows           = data ?? [];
   const totalCustomers = rows.length;
   const activeCustomers = rows.filter((c) => c.status === "active" || c.status === "vip").length;
   const vipCustomers    = rows.filter((c) => c.status === "vip").length;
@@ -296,75 +305,6 @@ export async function getCustomerAnalytics(restaurantId: string): Promise<Custom
   };
 }
 
-// ─── getEmployeeAnalytics ─────────────────────────────────────────────────────
-
-export interface EmployeeAnalytics {
-  totalEmployees:  number;
-  onShift:         number;
-  avgAttendance:   number;
-  departments:     { name: string; count: number }[];
-}
-
-export async function getEmployeeAnalytics(restaurantId: string): Promise<EmployeeAnalytics> {
-  const supabase = getSupabaseBrowserClient();
-
-  const { data, error } = await supabase
-    .from("employees")
-    .select("status, attendance_rate, department")
-    .eq("restaurant_id", restaurantId)
-    .eq("is_active", true);
-
-  if (error) throw new Error(error.message);
-
-  const rows           = data ?? [];
-  const totalEmployees = rows.length;
-  const onShift        = rows.filter((e) => e.status === "on_shift").length;
-  const avgAttendance  = totalEmployees > 0
-    ? Math.round(rows.reduce((s, e) => s + Number(e.attendance_rate), 0) / totalEmployees)
-    : 0;
-
-  const deptMap = new Map<string, number>();
-  for (const e of rows) {
-    const dept = e.department ?? "other";
-    deptMap.set(dept, (deptMap.get(dept) ?? 0) + 1);
-  }
-  const departments = Array.from(deptMap.entries())
-    .sort(([, a], [, b]) => b - a)
-    .map(([name, count]) => ({ name, count }));
-
-  return { totalEmployees, onShift, avgAttendance, departments };
-}
-
-// ─── getInventoryAnalytics ────────────────────────────────────────────────────
-
-export interface InventoryAnalytics {
-  totalItems:   number;
-  inStock:      number;
-  lowStock:     number;
-  outOfStock:   number;
-  totalValue:   string;
-}
-
-export async function getInventoryAnalytics(restaurantId: string): Promise<InventoryAnalytics> {
-  const supabase = getSupabaseBrowserClient();
-
-  const { data, error } = await supabase
-    .from("inventory_items")
-    .select("status, quantity, cost_per_unit")
-    .eq("restaurant_id", restaurantId);
-
-  if (error) throw new Error(error.message);
-
-  const rows       = data ?? [];
-  const totalItems = rows.length;
-  const inStock    = rows.filter((i) => i.status === "in_stock").length;
-  const lowStock   = rows.filter((i) => i.status === "low_stock").length;
-  const outOfStock = rows.filter((i) => i.status === "out_of_stock").length;
-  const totalValue = rows.reduce((s, i) => s + Number(i.quantity) * Number(i.cost_per_unit), 0);
-
-  return { totalItems, inStock, lowStock, outOfStock, totalValue: formatCurrency(totalValue) };
-}
-
 // ─── getGeneratedReports ──────────────────────────────────────────────────────
 
 export async function getGeneratedReports(
@@ -379,27 +319,23 @@ export async function getGeneratedReports(
 
   let query = supabase
     .from("reports")
-    .select("id, title, type, status, period_start, period_end, created_at, data", { count: "exact" })
+    .select("id, title, type, status, period_start, period_end, created_at", { count: "exact" })
     .eq("restaurant_id", restaurantId)
-    .order("created_at", { ascending: false })
-    .range(from, to);
+    .order("created_at", { ascending: false });
 
   if (filters.reportType && filters.reportType !== "all") {
-    // Map UI type back to possible DB types
-    const dbTypeMap: Record<string, string[]> = {
-      revenue:   ["sales", "orders"],
-      category:  ["sales"],
-      customers: ["customers"],
-      employees: ["staff"],
-      inventory: ["inventory"],
+    const dbTypeMap: Record<string, string> = {
+      revenue:   "sales",
+      category:  "sales",
+      customers: "customers",
+      employees: "staff",
+      inventory: "inventory",
     };
-    const dbTypes = dbTypeMap[filters.reportType];
-    if (dbTypes?.length === 1) {
-      query = query.eq("type", dbTypes[0]);
-    }
+    const dbType = dbTypeMap[filters.reportType];
+    if (dbType) query = query.eq("type", dbType);
   }
 
-  const { data, count, error } = await query;
+  const { data, count, error } = await query.range(from, to);
   if (error) throw new Error(error.message);
 
   const reports: Report[] = (data ?? []).map((row) => ({
@@ -409,7 +345,9 @@ export async function getGeneratedReports(
     status:      dbStatusToUi(row.status),
     period:      formatPeriod(row.period_start, row.period_end),
     generatedAt: row.created_at,
-    downloadUrl: row.status === "published" ? `#download-${row.id}` : undefined,
+    downloadUrl: (row.status === "published" || row.status === "archived")
+      ? `#download-${row.id}`
+      : undefined,
   }));
 
   return { reports, total: count ?? 0 };

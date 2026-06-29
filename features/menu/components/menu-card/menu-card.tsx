@@ -130,10 +130,9 @@ export function MenuCard({
           </h4>
           <span
             className={cn(
-              "text-[14px] font-bold shrink-0",
+              "text-[14px] font-bold shrink-0 text-primary",
               unavailable ? "opacity-60" : "",
             )}
-            className={cn(unavailable ? "opacity-60" : "", "text-primary")}
           >
             {formatCurrency(item.price)}
           </span>
@@ -152,8 +151,7 @@ export function MenuCard({
 
         {/* Availability toggle — pushed to bottom via mt-auto */}
         <div
-          className="mt-auto flex items-center justify-between pt-4"
-          className="border-t border-border/20"
+          className="mt-auto flex items-center justify-between pt-4 border-t border-border/20"
         >
           <span className="typography-caption text-muted-foreground">Availability</span>
           <Switch

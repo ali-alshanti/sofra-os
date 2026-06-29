@@ -1,4 +1,5 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { todayStart, yesterdayStart, yesterdayEnd } from "@/lib/utils/date";
 import type {
   DashboardSummary,
   RevenueDataPoint,
@@ -7,24 +8,6 @@ import type {
 } from "@/types/dashboard";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function todayStart(): string {
-  return new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
-}
-
-function yesterdayStart(): string {
-  const d = new Date();
-  d.setDate(d.getDate() - 1);
-  d.setHours(0, 0, 0, 0);
-  return d.toISOString();
-}
-
-function yesterdayEnd(): string {
-  const d = new Date();
-  d.setDate(d.getDate() - 1);
-  d.setHours(23, 59, 59, 999);
-  return d.toISOString();
-}
 
 function pct(a: number, b: number): number | null {
   if (b === 0) return null;
@@ -43,7 +26,6 @@ export async function getDashboardSummary(restaurantId: string): Promise<Dashboa
   const supabase = getSupabaseBrowserClient();
 
   const [todayOrders, yesterdayOrders, tables] = await Promise.all([
-    // Orders today
     supabase
       .from("orders")
       .select("total, status")
@@ -51,7 +33,6 @@ export async function getDashboardSummary(restaurantId: string): Promise<Dashboa
       .neq("status", "cancelled")
       .gte("created_at", todayStart()),
 
-    // Orders yesterday (for comparison)
     supabase
       .from("orders")
       .select("total, status")
@@ -60,7 +41,6 @@ export async function getDashboardSummary(restaurantId: string): Promise<Dashboa
       .gte("created_at", yesterdayStart())
       .lte("created_at", yesterdayEnd()),
 
-    // Dining tables
     supabase
       .from("dining_tables")
       .select("status")
@@ -68,17 +48,20 @@ export async function getDashboardSummary(restaurantId: string): Promise<Dashboa
       .eq("is_active", true),
   ]);
 
+  if (todayOrders.error)     throw new Error(todayOrders.error.message);
+  if (yesterdayOrders.error) throw new Error(yesterdayOrders.error.message);
+  if (tables.error)          throw new Error(tables.error.message);
+
   const todayRevenue = (todayOrders.data ?? []).reduce((s, o) => s + Number(o.total), 0);
   const yRevenue     = (yesterdayOrders.data ?? []).reduce((s, o) => s + Number(o.total), 0);
   const todayCount   = (todayOrders.data ?? []).length;
   const yCount       = (yesterdayOrders.data ?? []).length;
 
-  const allTables    = tables.data ?? [];
-  const activeCount  = allTables.filter((t) => t.status === "occupied").length;
-  const totalCount   = allTables.length;
-  const occupancy    = totalCount > 0 ? Math.round((activeCount / totalCount) * 100) : 0;
+  const allTables   = tables.data ?? [];
+  const activeCount = allTables.filter((t) => t.status === "occupied").length;
+  const totalCount  = allTables.length;
+  const occupancy   = totalCount > 0 ? Math.round((activeCount / totalCount) * 100) : 0;
 
-  // Rough kitchen load from order count relative to capacity
   let kitchenStatus: DashboardSummary["kitchenStatus"] = "optimal";
   if (occupancy > 80) kitchenStatus = "busy";
   else if (occupancy > 55) kitchenStatus = "moderate";
@@ -99,8 +82,7 @@ export async function getDashboardSummary(restaurantId: string): Promise<Dashboa
 
 export async function getRevenueAnalytics(restaurantId: string): Promise<RevenueDataPoint[]> {
   const supabase  = getSupabaseBrowserClient();
-  const now       = new Date();
-  const currentHr = now.getHours();
+  const currentHr = new Date().getHours();
 
   const { data, error } = await supabase
     .from("orders")
@@ -109,16 +91,14 @@ export async function getRevenueAnalytics(restaurantId: string): Promise<Revenue
     .neq("status", "cancelled")
     .gte("created_at", todayStart());
 
-  if (error || !data) return [];
+  if (error) throw new Error(error.message);
 
-  // Bucket revenue by hour
   const byHour: Record<number, number> = {};
-  for (const order of data) {
+  for (const order of data ?? []) {
     const hr = new Date(order.created_at).getHours();
     byHour[hr] = (byHour[hr] ?? 0) + Number(order.total);
   }
 
-  // Return operating hours 8 AM – current hour + 1
   const START = 8;
   const END   = Math.min(currentHr + 1, 24);
   return Array.from({ length: END - START }, (_, i) => {
@@ -154,12 +134,11 @@ export async function getTopSellingItems(restaurantId: string, limit = 4): Promi
     .neq("order.status", "cancelled")
     .gte("order.created_at", todayStart());
 
-  if (error || !data) return [];
+  if (error) throw new Error(error.message);
 
-  // Aggregate by menu item
   const agg: Record<string, { item: TopSellingItem; count: number }> = {};
 
-  for (const row of data) {
+  for (const row of data ?? []) {
     const mi = row.menu_item as {
       id: string; name: string; price: number;
       image_url: string | null;
@@ -177,7 +156,7 @@ export async function getTopSellingItems(restaurantId: string, limit = 4): Promi
           category:   mi.category?.name ?? "Uncategorized",
           price:      Number(mi.price),
           orderCount: 0,
-          imageSrc:   mi.image_url,
+          imageSrc:   mi.image_url ?? null,
         },
       };
     }
@@ -191,6 +170,9 @@ export async function getTopSellingItems(restaurantId: string, limit = 4): Promi
 }
 
 // ─── getInventoryAlerts ───────────────────────────────────────────────────────
+// Returns low/out-of-stock items with a computed stockPercent for the dashboard card.
+// Intentionally separate from inventory.getLowStockItems because this shape
+// includes stockPercent and is dashboard-specific.
 
 export async function getInventoryAlerts(restaurantId: string, limit = 3): Promise<InventoryAlert[]> {
   const supabase = getSupabaseBrowserClient();
@@ -200,16 +182,15 @@ export async function getInventoryAlerts(restaurantId: string, limit = 3): Promi
     .select("id, name, quantity, unit, reorder_point, status")
     .eq("restaurant_id", restaurantId)
     .in("status", ["low_stock", "out_of_stock"])
-    .order("status", { ascending: false }) // out_of_stock first
+    .order("status", { ascending: false })
     .order("quantity", { ascending: true })
     .limit(limit);
 
-  if (error || !data) return [];
+  if (error) throw new Error(error.message);
 
-  return data.map((item) => {
+  return (data ?? []).map((item) => {
     const qty     = Number(item.quantity);
     const reorder = Number(item.reorder_point);
-    // Stock percent relative to reorder point (0% = at or below, 100% = 2× reorder)
     const stockPercent = reorder > 0
       ? Math.min(100, Math.round((qty / (reorder * 2)) * 100))
       : 0;

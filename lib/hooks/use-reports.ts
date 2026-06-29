@@ -7,34 +7,31 @@ import {
   getDashboardReports,
   getRevenueReport,
   getCategorySalesReport,
-  getTopSellingItemsReport,
   getCustomerAnalytics,
-  getEmployeeAnalytics,
-  getInventoryAnalytics,
   getGeneratedReports,
 } from "@/services/reports";
 import type { ReportsFiltersValue } from "@/features/reports/types";
 
-const STALE_5MIN  = 5  * 60 * 1000;
-const STALE_1MIN  = 1  * 60 * 1000;
+const STALE_5MIN = 5  * 60 * 1000;
+const STALE_1MIN = 1  * 60 * 1000;
+
+type DateFilters = Pick<ReportsFiltersValue, "period" | "dateFrom" | "dateTo">;
 
 // ─── useDashboardReports ──────────────────────────────────────────────────────
 
-export function useDashboardReports() {
+export function useDashboardReports(filters: DateFilters) {
   const { user } = useCurrentUser();
   const restaurantId = user?.restaurant_id ?? "";
 
   return useQuery({
     queryKey: QUERY_KEYS.reports.dashboard(restaurantId),
-    queryFn:  () => getDashboardReports(restaurantId),
+    queryFn:  () => getDashboardReports(restaurantId, filters),
     enabled:  !!restaurantId,
     staleTime: STALE_5MIN,
   });
 }
 
 // ─── useRevenueReport ─────────────────────────────────────────────────────────
-
-type DateFilters = Pick<ReportsFiltersValue, "period" | "dateFrom" | "dateTo">;
 
 export function useRevenueReport(filters: DateFilters) {
   const { user } = useCurrentUser();
@@ -64,20 +61,6 @@ export function useCategorySalesReport(filters: DateFilters) {
   });
 }
 
-// ─── useTopSellingItemsReport ─────────────────────────────────────────────────
-
-export function useTopSellingItemsReport(filters: DateFilters) {
-  const { user } = useCurrentUser();
-  const restaurantId = user?.restaurant_id ?? "";
-
-  return useQuery({
-    queryKey: QUERY_KEYS.reports.topItems(restaurantId, filters as Record<string, unknown>),
-    queryFn:  () => getTopSellingItemsReport(restaurantId, filters),
-    enabled:  !!restaurantId,
-    staleTime: STALE_5MIN,
-  });
-}
-
 // ─── useCustomerAnalytics ─────────────────────────────────────────────────────
 
 export function useCustomerAnalytics() {
@@ -92,34 +75,6 @@ export function useCustomerAnalytics() {
   });
 }
 
-// ─── useEmployeeAnalytics ─────────────────────────────────────────────────────
-
-export function useEmployeeAnalytics() {
-  const { user } = useCurrentUser();
-  const restaurantId = user?.restaurant_id ?? "";
-
-  return useQuery({
-    queryKey: QUERY_KEYS.reports.employeeAnalytics(restaurantId),
-    queryFn:  () => getEmployeeAnalytics(restaurantId),
-    enabled:  !!restaurantId,
-    staleTime: STALE_5MIN,
-  });
-}
-
-// ─── useInventoryAnalytics ────────────────────────────────────────────────────
-
-export function useInventoryAnalytics() {
-  const { user } = useCurrentUser();
-  const restaurantId = user?.restaurant_id ?? "";
-
-  return useQuery({
-    queryKey: QUERY_KEYS.reports.inventoryAnalytics(restaurantId),
-    queryFn:  () => getInventoryAnalytics(restaurantId),
-    enabled:  !!restaurantId,
-    staleTime: STALE_5MIN,
-  });
-}
-
 // ─── useGeneratedReports ──────────────────────────────────────────────────────
 
 export function useGeneratedReports(
@@ -129,7 +84,7 @@ export function useGeneratedReports(
 ) {
   const { user } = useCurrentUser();
   const restaurantId = user?.restaurant_id ?? "";
-  const queryParams = { ...filters, page, pageSize };
+  const queryParams  = { ...filters, page, pageSize };
 
   return useQuery({
     queryKey: QUERY_KEYS.reports.generated(restaurantId, queryParams as Record<string, unknown>),
