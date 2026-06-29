@@ -6,20 +6,27 @@ The project follows a feature-based architecture with a dedicated service layer,
 
 ---
 
+## Live Demo
+
+🔗 https://sofra-os.netlify.app/
+
+---
+
 ## Features
 
-- Dashboard with business metrics
-- Order management
-- Menu and category management
-- Inventory management
-- Customer management
-- Employee management
-- Table and reservation management
-- Kitchen display system
-- Reports and analytics
-- Restaurant settings
-- English and Arabic support (RTL)
-- Secure authentication with Supabase
+* Dashboard with business metrics
+* Order management
+* Menu and category management
+* Inventory management
+* Customer management
+* Employee management
+* Table and reservation management
+* Kitchen display system
+* Reports and analytics
+* Restaurant settings
+* English and Arabic support (RTL)
+* Secure authentication with Supabase
+* Role-based access control
 
 ---
 
@@ -27,26 +34,26 @@ The project follows a feature-based architecture with a dedicated service layer,
 
 ### Frontend
 
-- Next.js 16
-- React 19
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
-- Radix UI
+* Next.js 16
+* React 19
+* TypeScript
+* Tailwind CSS
+* shadcn/ui
+* Radix UI
 
 ### Backend
 
-- Supabase
-- PostgreSQL
-- Supabase Auth
-- Row Level Security (RLS)
+* Supabase
+* PostgreSQL
+* Supabase Auth
+* Row Level Security (RLS)
 
 ### Libraries
 
-- TanStack React Query
-- React Hook Form
-- Zod
-- next-intl
+* TanStack React Query
+* React Hook Form
+* Zod
+* next-intl
 
 ---
 
@@ -100,20 +107,37 @@ pnpm start
 
 ---
 
-## Demo Account
+## Demo Accounts
 
-A demo account is available for testing.
+The application includes multiple demo accounts to test different user roles.
 
-```text
-Email: admin@sofra.com
-Password: Admin@123456
-```
+| Role              | Email                                             | Password     |
+| ----------------- | ------------------------------------------------- | ------------ |
+| Owner             | [owner@sofra.com](mailto:owner@sofra.com)         | Admin@123456 |
+| Manager           | [manager@sofra.com](mailto:manager@sofra.com)     | Admin@123456 |
+| Cashier           | [cashier@sofra.com](mailto:cashier@sofra.com)     | Admin@123456 |
+| Waiter            | [waiter@sofra.com](mailto:waiter@sofra.com)       | Admin@123456 |
+| Kitchen Staff     | [kitchen@sofra.com](mailto:kitchen@sofra.com)     | Admin@123456 |
+| Inventory Manager | [inventory@sofra.com](mailto:inventory@sofra.com) | Admin@123456 |
+
+---
+
+## User Roles
+
+The platform supports multiple user roles with different permissions:
+
+* Owner
+* Manager
+* Cashier
+* Waiter
+* Kitchen Staff
+* Inventory Manager
 
 ---
 
 ## Screenshots
 
-You can add screenshots of the dashboard, orders, menu, inventory, reports, and settings here.
+You can add screenshots of the Dashboard, Orders, Menu, Inventory, Kitchen, Reports, and Settings here.
 
 ---
 
