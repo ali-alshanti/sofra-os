@@ -109,31 +109,15 @@ pnpm start
 
 ## Demo Accounts
 
-The application includes multiple demo accounts to test different user roles.
+The application includes accounts to test it.
 
 | Role              | Email                                             | Password     |
 | ----------------- | ------------------------------------------------- | ------------ |
 | Owner             | [owner@sofra.com](mailto:owner@sofra.com)         | Admin@123456 |
-| Manager           | [manager@sofra.com](mailto:manager@sofra.com)     | Admin@123456 |
-| Cashier           | [cashier@sofra.com](mailto:cashier@sofra.com)     | Admin@123456 |
-| Waiter            | [waiter@sofra.com](mailto:waiter@sofra.com)       | Admin@123456 |
-| Kitchen Staff     | [kitchen@sofra.com](mailto:kitchen@sofra.com)     | Admin@123456 |
-| Inventory Manager | [inventory@sofra.com](mailto:inventory@sofra.com) | Admin@123456 |
+
 
 ---
 
-## User Roles
-
-The platform supports multiple user roles with different permissions:
-
-* Owner
-* Manager
-* Cashier
-* Waiter
-* Kitchen Staff
-* Inventory Manager
-
----
 
 ## Screenshots
 
