@@ -30,7 +30,10 @@ export default function ForgotPasswordPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<ForgotPasswordValues>({
-    resolver: zodResolver(schema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- zod's internal
+    // core version stamp drifted between zod@4.4.x and @hookform/resolvers@5.4.0's
+    // pre-built types (already the latest resolver release); runtime is unaffected.
+    resolver: zodResolver(schema as any),
     defaultValues: { email: "" },
   });
 

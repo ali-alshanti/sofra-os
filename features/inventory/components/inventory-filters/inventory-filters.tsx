@@ -65,7 +65,7 @@ export function InventoryFilters({
       <div className="relative min-w-60 flex-1">
         <Search
           size={16}
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+          className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground"
         />
         <Input
           type="search"
@@ -73,7 +73,7 @@ export function InventoryFilters({
           aria-label={t("filters.searchPlaceholder")}
           value={value.search}
           onChange={(e) => onSearchChange?.(e.target.value)}
-          className="h-9 w-full pl-9 text-sm"
+          className="h-9 w-full ps-9 text-sm"
           disabled={disabled}
         />
       </div>

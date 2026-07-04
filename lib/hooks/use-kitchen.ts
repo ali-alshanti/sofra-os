@@ -7,6 +7,7 @@ import { QUERY_KEYS } from "@/lib/constants/query-keys";
 import {
   getKitchenOrders,
   advanceKitchenOrderStatus,
+  setKitchenOrderStatus,
   getKitchenStats,
 } from "@/services/kitchen";
 import { createNotification } from "@/services/notifications";
@@ -110,6 +111,49 @@ export function useAdvanceKitchenOrderStatus() {
         message: meta.message,
         data: { key: meta.key, params: {} },
       }).catch(console.error);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.kitchen.all });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.orders.all });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.all });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.notifications.all });
+    },
+  });
+}
+
+// ─── useSetKitchenOrderStatus (drag-and-drop: move to an explicit column) ─────
+
+export function useSetKitchenOrderStatus() {
+  const queryClient  = useQueryClient();
+  const { user }     = useCurrentUser();
+  const restaurantId = user?.restaurant_id ?? "";
+  const { toastMutationError } = useAppToast();
+
+  return useMutation({
+    mutationFn: ({ orderId, status }: { orderId: string; status: TicketStatus }) =>
+      setKitchenOrderStatus(orderId, status),
+    onMutate: async ({ orderId, status }) => {
+      await queryClient.cancelQueries({ queryKey: QUERY_KEYS.kitchen.orders(restaurantId) });
+
+      const snap = queryClient.getQueryData(QUERY_KEYS.kitchen.orders(restaurantId));
+
+      queryClient.setQueryData(
+        QUERY_KEYS.kitchen.orders(restaurantId),
+        (old: unknown) => {
+          if (!Array.isArray(old)) return old;
+          return old.map((o: { id: string; status: TicketStatus }) =>
+            o.id === orderId ? { ...o, status } : o,
+          );
+        },
+      );
+
+      return { snap };
+    },
+    onError: (err, _vars, ctx) => {
+      if (ctx?.snap !== undefined) {
+        queryClient.setQueryData(QUERY_KEYS.kitchen.orders(restaurantId), ctx.snap);
+      }
+      toastMutationError(err);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.kitchen.all });

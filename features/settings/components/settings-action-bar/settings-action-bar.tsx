@@ -1,4 +1,5 @@
 import { Save, RotateCcw } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -22,6 +23,8 @@ export function SettingsActionBar({
   onDiscard,
   className,
 }: SettingsActionBarProps) {
+  const t = useTranslations("settings.actionBar");
+
   return (
     <div
       aria-hidden={!isDirty}
@@ -42,7 +45,7 @@ export function SettingsActionBar({
     >
       {/* Left — unsaved changes label */}
       <p className="typography-small text-muted-foreground">
-        You have unsaved changes.
+        {t("unsaved")}
       </p>
 
       {/* Right — actions */}
@@ -55,7 +58,7 @@ export function SettingsActionBar({
           onClick={onDiscard}
         >
           <RotateCcw size={14} />
-          Discard
+          {t("discard")}
         </Button>
 
         <Button
@@ -65,7 +68,7 @@ export function SettingsActionBar({
           onClick={onSave}
         >
           <Save size={14} />
-          {loading ? "Saving…" : "Save Changes"}
+          {loading ? t("saving") : t("save")}
         </Button>
       </div>
     </div>

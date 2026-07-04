@@ -132,7 +132,10 @@
     "today":   "اليوم",
     "last7d":  "آخر 7 أيام",
     "last30d": "آخر 30 يوم",
-    "custom":  "مخصص"
+    "custom":  "مخصص",
+    "from":    "من",
+    "to":      "إلى",
+    "apply":   "تطبيق"
   },
 
   "search": {
@@ -164,30 +167,40 @@
         "loggedOut": "تم تسجيل الخروج بنجاح."
       },
       "employees": {
+        "created":       "تمت إضافة الموظف بنجاح.",
         "updated":       "تم تحديث بيانات الموظف بنجاح.",
         "statusUpdated": "تم تحديث حالة الموظف.",
         "deleted":       "تمت إزالة الموظف بنجاح."
       },
       "customers": {
+        "created": "تمت إضافة العميل بنجاح.",
         "updated": "تم تحديث بيانات العميل بنجاح.",
         "deleted": "تم حذف العميل بنجاح."
       },
       "orders": {
+        "created":       "تم إنشاء الطلب بنجاح.",
         "statusUpdated": "تم تحديث حالة الطلب.",
         "deleted":       "تم حذف الطلب بنجاح."
       },
       "menu": {
+        "itemAdded":         "تمت إضافة عنصر القائمة بنجاح.",
+        "itemUpdated":       "تم تحديث عنصر القائمة بنجاح.",
+        "categoryCreated":   "تم إنشاء الفئة بنجاح.",
+        "categoryDeleted":   "تم حذف الفئة بنجاح.",
         "markedAvailable":   "تم تحديد العنصر كمتاح.",
         "markedUnavailable": "تم تحديد العنصر كغير متاح.",
         "deleted":           "تم حذف عنصر القائمة بنجاح."
       },
       "inventory": {
+        "created": "تمت إضافة العنصر بنجاح.",
         "updated": "تم تحديث عنصر المخزون بنجاح.",
         "deleted": "تم حذف عنصر المخزون بنجاح."
       },
       "tables": {
         "statusUpdated":        "تم تحديث حالة الطاولة.",
-        "reservationCancelled": "تم إلغاء الحجز بنجاح."
+        "reservationCancelled": "تم إلغاء الحجز بنجاح.",
+        "reservationCreated":   "تم إنشاء الحجز بنجاح.",
+        "tableCreated":         "تمت إضافة الطاولة بنجاح."
       },
       "settings": {
         "saved":                   "تم حفظ الإعدادات بنجاح.",

@@ -103,6 +103,58 @@ export async function getMenuItems({
   return items.map(mapRowToMenuItem);
 }
 
+// ─── createMenuItem ───────────────────────────────────────────────────────────
+
+export interface CreateMenuItemPayload {
+  restaurantId: string;
+  categoryId:   string;
+  name:         string;
+  description?: string;
+  price:        number;
+  imageUrl?:    string;
+  available?:   boolean;
+}
+
+export async function createMenuItem(payload: CreateMenuItemPayload): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+  const { error } = await supabase.from("menu_items").insert({
+    restaurant_id: payload.restaurantId,
+    category_id:   payload.categoryId,
+    name:          payload.name,
+    description:   payload.description || null,
+    price:         payload.price,
+    image_url:     payload.imageUrl || null,
+    status:        payload.available === false ? "unavailable" : "available",
+  });
+  if (error) throw new Error(error.message);
+}
+
+// ─── createCategory ───────────────────────────────────────────────────────────
+
+export async function createCategory(
+  restaurantId: string,
+  name: string,
+): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+  const { error } = await supabase.from("menu_categories").insert({
+    restaurant_id: restaurantId,
+    name,
+    is_active: true,
+  });
+  if (error) throw new Error(error.message);
+}
+
+// ─── deleteCategory ───────────────────────────────────────────────────────────
+
+export async function deleteCategory(categoryId: string): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+  const { error } = await supabase
+    .from("menu_categories")
+    .update({ is_active: false })
+    .eq("id", categoryId);
+  if (error) throw new Error(error.message);
+}
+
 // ─── updateMenuItemAvailability ───────────────────────────────────────────────
 
 export async function updateMenuItemAvailability(

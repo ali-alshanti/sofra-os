@@ -35,7 +35,7 @@ export function Toaster() {
         return (
           <Toast key={id} variant={variant} {...props}>
             {/* Color bar */}
-            <span className={`absolute left-0 top-0 h-full w-1 rounded-l-xl ${barClass}`} />
+            <span className={`absolute start-0 top-0 h-full w-1 rounded-s-xl ${barClass}`} />
 
             {/* Icon */}
             <Icon size={18} className={`mt-0.5 shrink-0 ${iconClass}`} />

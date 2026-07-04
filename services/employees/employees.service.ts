@@ -117,8 +117,9 @@ export async function createEmployee(payload: CreateEmployeePayload): Promise<vo
   const supabase = getSupabaseBrowserClient();
   const { restaurantId, ...fields } = payload;
   const { error } = await supabase.from("employees").insert({
-    restaurant_id: restaurantId,
-    is_active:     true,
+    restaurant_id:   restaurantId,
+    employee_code:   `EMP-${Date.now().toString(36).toUpperCase()}`,
+    is_active:       true,
     attendance_rate: 100,
     ...fields,
   });

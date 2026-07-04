@@ -46,6 +46,7 @@ export function ReportsFilters({
   className,
 }: ReportsFiltersProps) {
   const tc = useTranslations("common.actions");
+  const t  = useTranslations("reports");
   const tr = useTranslations("reports.filters");
   const active = hasActiveFilters(filters);
 
@@ -53,13 +54,11 @@ export function ReportsFilters({
   const activePreset: DateRangePreset | null =
     PERIOD_TO_PRESET[filters.period] ?? null;
 
-  // Custom label shows the selected date range when period === "custom"
-  const customLabel =
-    filters.dateFrom
-      ? filters.dateTo
-        ? `${filters.dateFrom} → ${filters.dateTo}`
-        : filters.dateFrom
-      : undefined;
+  // Custom range shown in the picker when period === "custom"
+  const customRange =
+    filters.dateFrom && filters.dateTo
+      ? { from: filters.dateFrom, to: filters.dateTo }
+      : null;
 
   return (
     <div
@@ -74,7 +73,7 @@ export function ReportsFilters({
       <div className="relative flex-1 min-w-65">
         <Search
           size={16}
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+          className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground"
         />
         <Input
           type="search"
@@ -82,7 +81,7 @@ export function ReportsFilters({
           aria-label={tr("searchPlaceholder")}
           value={filters.search}
           onChange={(e) => onFiltersChange?.({ search: e.target.value })}
-          className="pl-9 h-10 bg-background text-sm"
+          className="ps-9 h-10 bg-background text-sm"
           disabled={disabled}
         />
       </div>
@@ -101,7 +100,7 @@ export function ReportsFilters({
         <SelectContent>
           {REPORT_TYPE_OPTIONS.map((opt) => (
             <SelectItem key={opt.value} value={opt.value}>
-              {opt.label}
+              {t(opt.labelKey as Parameters<typeof t>[0])}
             </SelectItem>
           ))}
         </SelectContent>
@@ -119,7 +118,7 @@ export function ReportsFilters({
         <SelectContent>
           {CATEGORY_OPTIONS.map((opt) => (
             <SelectItem key={opt.value} value={opt.value}>
-              {opt.label}
+              {t(opt.labelKey as Parameters<typeof t>[0])}
             </SelectItem>
           ))}
         </SelectContent>
@@ -135,10 +134,14 @@ export function ReportsFilters({
             dateTo:   "",
           })
         }
-        onCustomClick={() =>
-          onFiltersChange?.({ period: "custom" })
+        customRange={customRange}
+        onCustomRangeChange={(range) =>
+          onFiltersChange?.({
+            period:   "custom",
+            dateFrom: range.from,
+            dateTo:   range.to,
+          })
         }
-        customLabel={customLabel}
       />
 
       {/* Clear */}

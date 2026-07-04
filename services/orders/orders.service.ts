@@ -175,7 +175,7 @@ export async function createOrder(payload: CreateOrderPayload): Promise<string> 
       status:        "pending",
       total:         0,
       table_id:      payload.tableId   || null,
-      employee_id:   payload.waiterId  || null,
+      waiter_id:     payload.waiterId  || null,
       customer_id:   payload.customerId || null,
       notes:         payload.notes     || null,
     })

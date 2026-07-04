@@ -45,6 +45,7 @@
     "items":     "Items",
     "total":     "Total",
     "status":    "Status",
+    "date":      "Date",
     "time":      "Time",
     "actions":   "Actions"
   },

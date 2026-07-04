@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCurrentUser } from "./use-auth";
 import { QUERY_KEYS } from "@/lib/constants/query-keys";
-import { presetToDateRange } from "@/lib/utils/date";
+import { presetToDateRange, type DateRange } from "@/lib/utils/date";
 import {
   getDashboardSummary,
   getRevenueAnalytics,
@@ -11,17 +11,16 @@ import {
   getInventoryAlerts,
 } from "@/services/dashboard";
 
-type Preset = "Today" | "Last 7d" | "Last 30d";
+const DEFAULT_RANGE = presetToDateRange("Today");
 
 // ─── useDashboardSummary ──────────────────────────────────────────────────────
 
-export function useDashboardSummary(preset: Preset = "Today") {
+export function useDashboardSummary(dateRange: DateRange = DEFAULT_RANGE) {
   const { user } = useCurrentUser();
   const restaurantId = user?.restaurant_id ?? "";
-  const dateRange = presetToDateRange(preset);
 
   return useQuery({
-    queryKey: [...QUERY_KEYS.dashboard.summary(restaurantId), preset],
+    queryKey: [...QUERY_KEYS.dashboard.summary(restaurantId), dateRange.from, dateRange.to],
     queryFn:  () => getDashboardSummary(restaurantId, dateRange),
     enabled:  !!restaurantId,
     staleTime: 60 * 1000,
@@ -31,13 +30,12 @@ export function useDashboardSummary(preset: Preset = "Today") {
 
 // ─── useRevenueAnalytics ──────────────────────────────────────────────────────
 
-export function useRevenueAnalytics(preset: Preset = "Today") {
+export function useRevenueAnalytics(dateRange: DateRange = DEFAULT_RANGE) {
   const { user } = useCurrentUser();
   const restaurantId = user?.restaurant_id ?? "";
-  const dateRange = presetToDateRange(preset);
 
   return useQuery({
-    queryKey: [...QUERY_KEYS.dashboard.revenue(restaurantId), preset],
+    queryKey: [...QUERY_KEYS.dashboard.revenue(restaurantId), dateRange.from, dateRange.to],
     queryFn:  () => getRevenueAnalytics(restaurantId, dateRange),
     enabled:  !!restaurantId,
     staleTime: 5 * 60 * 1000,

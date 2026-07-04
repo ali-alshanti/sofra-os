@@ -102,6 +102,7 @@ export function useCreateInventoryItem() {
   const queryClient = useQueryClient();
   const { user } = useCurrentUser();
   const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.inventory");
 
   return useMutation({
     mutationFn: (payload: Omit<CreateInventoryItemPayload, "restaurantId">) => {
@@ -112,7 +113,7 @@ export function useCreateInventoryItem() {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.inventory.all });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.all });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.notifications.all });
-      toastSuccess("Item added successfully.");
+      toastSuccess(t("created"));
 
       if (!user?.restaurant_id || !user?.id) return;
       createNotification({

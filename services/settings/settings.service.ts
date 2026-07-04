@@ -122,6 +122,8 @@ export async function getRestaurantSettings(
   ]);
 
   if (restaurantRes.error) throw new Error(restaurantRes.error.message);
+  if (settingsRes.error) throw new Error(settingsRes.error.message);
+  if (hoursRes.error) throw new Error(hoursRes.error.message);
 
   // restaurant row may not exist yet for a freshly set-up account
   const r   = (restaurantRes.data ?? {}) as Partial<RestaurantRow>;

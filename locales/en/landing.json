@@ -1,0 +1,155 @@
+{
+  "nav": {
+    "features": "Features",
+    "preview": "Dashboard Preview",
+    "pricing": "Pricing",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "login": "Login",
+    "liveDemo": "Live Demo"
+  },
+
+  "hero": {
+    "badge": "Now available for restaurants everywhere",
+    "headline": "Restaurant Operations,\nSimplified.",
+    "subheadline": "Manage your restaurant from one modern platform. Handle orders, inventory, menu, kitchen, reservations, reports and employees with ease.",
+    "primaryCta": "Live Demo",
+    "secondaryCta": "Login"
+  },
+
+  "stats": {
+    "ordersProcessed": "Orders Processed",
+    "restaurantsManaged": "Restaurants Managed",
+    "avgResponseTime": "Average Response Time",
+    "customerSatisfaction": "Customer Satisfaction"
+  },
+
+  "features": {
+    "title": "Everything your restaurant needs",
+    "subtitle": "One platform to run every part of your operation.",
+    "dashboard": { "title": "Dashboard", "description": "Real-time overview of sales, orders, and performance at a glance." },
+    "orders": { "title": "Orders", "description": "Track every order from placement to delivery in real time." },
+    "kitchen": { "title": "Kitchen Display", "description": "Streamline ticket flow and keep your kitchen running fast." },
+    "inventory": { "title": "Inventory", "description": "Automatic stock alerts so you never run out of key ingredients." },
+    "menu": { "title": "Menu Management", "description": "Build and update your menu with categories, pricing, and availability." },
+    "reservations": { "title": "Reservations", "description": "Manage tables and bookings without the back-and-forth." },
+    "customers": { "title": "Customers", "description": "Understand your regulars and build lasting relationships." },
+    "employees": { "title": "Employees", "description": "Schedule shifts, track roles, and manage your team in one place." },
+    "reports": { "title": "Reports", "description": "Actionable insights into revenue, trends, and top-selling items." },
+    "settings": { "title": "Restaurant Settings", "description": "Configure branches, taxes, currencies, and preferences with ease." }
+  },
+
+  "preview": {
+    "title": "See Sofra OS in action",
+    "subtitle": "A closer look at the tools your team will use every day.",
+    "tabs": {
+      "dashboard": "Dashboard",
+      "orders": "Orders",
+      "kitchen": "Kitchen",
+      "menu": "Menu",
+      "inventory": "Inventory",
+      "reports": "Reports",
+      "settings": "Settings"
+    }
+  },
+
+  "workflow": {
+    "title": "One flow, start to finish",
+    "subtitle": "From the first order to the final report, Sofra OS keeps everything connected.",
+    "steps": {
+      "customers": "Customers",
+      "orders": "Orders",
+      "kitchen": "Kitchen",
+      "payments": "Payments",
+      "reports": "Reports"
+    }
+  },
+
+  "whyUs": {
+    "title": "Why Sofra OS",
+    "subtitle": "Leave the spreadsheets and disconnected tools behind.",
+    "traditional": {
+      "title": "Traditional Restaurant",
+      "items": [
+        "Manual management",
+        "Spreadsheet reports",
+        "Inventory mistakes",
+        "Multiple disconnected systems"
+      ]
+    },
+    "sofra": {
+      "title": "Sofra OS",
+      "items": [
+        "One platform",
+        "Live dashboard",
+        "Inventory alerts",
+        "Kitchen workflow",
+        "Reports",
+        "Multi-language"
+      ]
+    }
+  },
+
+  "gallery": {
+    "title": "A premium experience, everywhere",
+    "subtitle": "Sofra OS looks great on desktop, laptop, and tablet.",
+    "desktop": "Desktop",
+    "laptop": "Laptop",
+    "tablet": "Tablet"
+  },
+
+  "pricing": {
+    "title": "Simple, transparent pricing",
+    "subtitle": "Choose the plan that fits your restaurant.",
+    "perMonth": "/month",
+    "cta": "Get Started",
+    "mostPopular": "Most Popular",
+    "starter": {
+      "name": "Starter",
+      "price": "$29",
+      "description": "For small restaurants getting started.",
+      "features": ["1 branch", "Up to 5 employees", "Order & menu management", "Basic reports"]
+    },
+    "professional": {
+      "name": "Professional",
+      "price": "$79",
+      "description": "For growing restaurants that need more.",
+      "features": ["Up to 3 branches", "Up to 25 employees", "Kitchen display system", "Inventory alerts", "Advanced reports"]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "Custom",
+      "description": "For multi-branch restaurant groups.",
+      "features": ["Unlimited branches", "Unlimited employees", "Dedicated support", "Custom integrations"]
+    }
+  },
+
+  "faq": {
+    "title": "Frequently asked questions",
+    "subtitle": "Everything you need to know about Sofra OS.",
+    "items": [
+      { "question": "Does Sofra OS support Arabic?", "answer": "Yes, Sofra OS fully supports Arabic with complete right-to-left layout support alongside English." },
+      { "question": "Can I manage multiple branches?", "answer": "Yes, higher-tier plans let you manage multiple branches from a single account." },
+      { "question": "Is the system responsive?", "answer": "Sofra OS is fully responsive and works seamlessly on desktop, tablet, and mobile devices." },
+      { "question": "Does it support inventory?", "answer": "Yes, Sofra OS includes full inventory tracking with automatic low-stock alerts." },
+      { "question": "Can I export reports?", "answer": "Yes, all reports can be exported for accounting and analysis." }
+    ]
+  },
+
+  "finalCta": {
+    "headline": "Ready to simplify your restaurant operations?",
+    "primaryCta": "Try Live Demo",
+    "secondaryCta": "Login"
+  },
+
+  "footer": {
+    "tagline": "Restaurant operations, simplified.",
+    "product": "Product",
+    "features": "Features",
+    "pricing": "Pricing",
+    "github": "GitHub",
+    "liveDemo": "Live Demo",
+    "contact": "Contact",
+    "copyright": "© {year} Sofra OS. All rights reserved."
+  }
+}

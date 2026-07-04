@@ -32,6 +32,7 @@ import {
   type Insight,
 } from "./types";
 import type { DateRangePreset } from "@/components/shared/date-range-picker";
+import type { DateRange } from "@/lib/utils/date";
 import type { DashboardReportStats, CustomerAnalytics } from "@/services/reports";
 
 // ─── Preset ↔ period mapping ─────────────────────────────────────────────────
@@ -161,9 +162,10 @@ export function ReportsFeature() {
     setCurrentPage(1);
   }
 
-  function handleCustomClick() {
+  function handleCustomRangeChange(range: DateRange) {
     setActivePreset(null);
-    setFilters((prev) => ({ ...prev, period: "custom" }));
+    setFilters((prev) => ({ ...prev, period: "custom", dateFrom: range.from, dateTo: range.to }));
+    setCurrentPage(1);
   }
 
   function handleFiltersChange(patch: Partial<ReportsFiltersValue>) {
@@ -190,7 +192,8 @@ export function ReportsFeature() {
         <ReportHeader
           activePreset={activePreset}
           onPresetChange={handlePresetChange}
-          onCustomClick={handleCustomClick}
+          customRange={filters.dateFrom && filters.dateTo ? { from: filters.dateFrom, to: filters.dateTo } : null}
+          onCustomRangeChange={handleCustomRangeChange}
           onExport={  () => undefined }
           onRefresh={ refreshAll }
           onSchedule={() => undefined }

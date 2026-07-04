@@ -29,8 +29,11 @@
   "table": {
     "number":   "Table {number}",
     "capacity": "{capacity} seats",
-    "duration": "Occupied for {duration}",
-    "guest":    "{name}"
+    "duration": "Occupied for <iso>{duration}</iso>",
+    "reservedFor": "Reserved for <iso>{time}</iso>",
+    "seats":    "{capacity} Seats",
+    "guest":    "{name}",
+    "emptySeats": "Available for booking"
   },
 
   "reservation": {
@@ -58,6 +61,37 @@
     "cancelTitle":       "Cancel Reservation",
     "cancelDescription": "Are you sure you want to cancel this reservation? This action cannot be undone.",
     "cancelConfirm":     "Cancel Reservation"
+  },
+
+  "create": {
+    "title":           "New Reservation",
+    "description":     "Add a new reservation and assign a table.",
+    "nameLabel":        "Guest Name",
+    "namePlaceholder": "Enter guest name",
+    "partyLabel":      "Party Size",
+    "timeLabel":       "Reservation Time",
+    "tableLabel":      "Table",
+    "selectTable":     "Select a table (optional)"
+  },
+
+  "addTable": "New Table",
+
+  "createTable": {
+    "title":               "Add Table",
+    "description":         "Add a new physical table to the floor plan.",
+    "numberLabel":         "Table Number",
+    "numberPlaceholder":   "e.g. T16",
+    "capacityLabel":       "Capacity",
+    "shapeLabel":          "Shape",
+    "shapeSquare":         "Dining Table",
+    "shapeRound":          "Bar Seat",
+    "locationLabel":       "Location",
+    "locationPlaceholder": "e.g. Patio (optional)"
+  },
+
+  "details": {
+    "changeStatusLabel": "Change Status",
+    "saveStatus":        "Save Status"
   },
 
   "empty": {

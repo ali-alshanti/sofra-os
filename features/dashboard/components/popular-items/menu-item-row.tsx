@@ -50,7 +50,7 @@ export function MenuItemRow({ item }: MenuItemRowProps) {
       </div>
 
       {/* Orders + Trend */}
-      <div className="text-right shrink-0">
+      <div className="text-end shrink-0">
         <p className="text-[14px] leading-[1.5] font-bold text-primary">
           {item.orders}
         </p>

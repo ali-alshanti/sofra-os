@@ -22,9 +22,11 @@
     "description": "Hourly revenue for today",
     "descLast7d":  "Daily revenue – last 7 days",
     "descLast30d": "Daily revenue – last 30 days",
+    "descCustom":  "Daily revenue for the selected range",
     "empty":       "No revenue data yet today.",
     "actual":      "Actual",
-    "forecast":    "Forecast"
+    "forecast":    "Forecast",
+    "hoverHint":   "Hover or focus a bar to see its exact revenue."
   },
 
   "topItems": {
@@ -41,6 +43,7 @@
     "critical":    "Critical",
     "unit":        "{quantity} {unit} remaining",
     "reorder":     "Reorder at {point} {unit}",
+    "orderNow":    "Order Now",
     "status": {
       "low_stock":    "Low Stock",
       "out_of_stock": "Out of Stock"

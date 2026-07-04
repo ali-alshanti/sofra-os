@@ -56,6 +56,7 @@ export function useCreateCustomer() {
   const queryClient = useQueryClient();
   const { user } = useCurrentUser();
   const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.customers");
 
   return useMutation({
     mutationFn: (payload: Omit<CreateCustomerPayload, "restaurantId">) => {
@@ -65,7 +66,7 @@ export function useCreateCustomer() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.customers.all });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.notifications.all });
-      toastSuccess("Customer added successfully.");
+      toastSuccess(t("created"));
 
       if (!user?.restaurant_id || !user?.id) return;
       createNotification({

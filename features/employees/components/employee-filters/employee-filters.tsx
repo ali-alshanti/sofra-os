@@ -41,6 +41,7 @@ interface EmployeeFiltersProps {
   onDepartmentChange?: (department: EmployeeDepartment | "all") => void;
   onRoleChange?:      (role: EmployeeRole | "all") => void;
   onStatusChange?:    (status: EmployeeStatus | "all") => void;
+  onClearFilters?:    () => void;
   disabled?: boolean;
   className?: string;
 }
@@ -53,6 +54,7 @@ export function EmployeeFilters({
   onDepartmentChange,
   onRoleChange,
   onStatusChange,
+  onClearFilters,
   disabled = false,
   className,
 }: EmployeeFiltersProps) {
@@ -70,7 +72,7 @@ export function EmployeeFilters({
       <div className="relative min-w-50 flex-1">
         <Search
           size={16}
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+          className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground"
         />
         <Input
           type="search"
@@ -78,7 +80,7 @@ export function EmployeeFilters({
           aria-label={t("filters.searchPlaceholder")}
           value={value.search}
           onChange={(e) => onSearchChange?.(e.target.value)}
-          className="h-9 w-full pl-9 text-sm"
+          className="h-9 w-full ps-9 text-sm"
           disabled={disabled}
         />
       </div>
@@ -143,13 +145,15 @@ export function EmployeeFilters({
         </SelectContent>
       </Select>
 
-      {/* Advanced filters */}
+      {/* Clear filters */}
       <Button
         variant="ghost"
         size="icon"
         className="h-9 w-9 text-muted-foreground hover:text-foreground"
         disabled={disabled}
-        aria-label={t("filters.department")}
+        aria-label={t("filters.clear")}
+        title={t("filters.clear")}
+        onClick={() => onClearFilters?.()}
       >
         <SlidersHorizontal size={16} />
       </Button>

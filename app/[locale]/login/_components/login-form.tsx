@@ -36,7 +36,10 @@ export function LoginForm() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
-    resolver: zodResolver(schema),
+    // Cast needed: zod's internal core version stamp drifted between zod@4.4.x
+    // and @hookform/resolvers@5.4.0's pre-built types (already latest); runtime unaffected.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(schema as any),
     defaultValues: { email: "", password: "" },
   });
 
@@ -119,14 +122,14 @@ export function LoginForm() {
                 autoComplete="current-password"
                 disabled={login.isPending || isSubmitting}
                 aria-invalid={!!errors.password}
-                className="h-10 pr-10"
+                className="h-10 pe-10"
                 {...register("password")}
               />
               <button
                 type="button"
                 tabIndex={-1}
                 onClick={() => setShowPassword((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 aria-label={showPassword ? t("hidePassword") : t("showPassword")}
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}

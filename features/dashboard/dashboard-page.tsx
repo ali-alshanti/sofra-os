@@ -9,10 +9,14 @@ import { KpiSection } from "./components/kpi-section";
 import { RevenueTrendCard } from "./components/revenue-trend";
 import { PopularItemsCard } from "./components/popular-items";
 import { InventoryAlertsCard } from "./components/inventory-alerts";
+import { presetToDateRange, type DateRange } from "@/lib/utils/date";
 
 export function DashboardFeature() {
   const t = useTranslations("dashboard");
   const [activePreset, setActivePreset] = useState<DateRangePreset | null>("Today");
+  const [customRange, setCustomRange] = useState<DateRange | null>(null);
+
+  const dateRange = activePreset ? presetToDateRange(activePreset) : (customRange ?? presetToDateRange("Today"));
 
   return (
     <AppShell>
@@ -23,14 +27,21 @@ export function DashboardFeature() {
           actions={
             <DateRangePicker
               activePreset={activePreset}
-              onPresetChange={setActivePreset}
-              onCustomClick={() => setActivePreset(null)}
+              onPresetChange={(preset) => {
+                setActivePreset(preset);
+                setCustomRange(null);
+              }}
+              customRange={customRange}
+              onCustomRangeChange={(range) => {
+                setCustomRange(range);
+                setActivePreset(null);
+              }}
             />
           }
         />
 
-        <KpiSection preset={activePreset ?? "Today"} />
-        <RevenueTrendCard preset={activePreset ?? "Today"} />
+        <KpiSection dateRange={dateRange} />
+        <RevenueTrendCard dateRange={dateRange} preset={activePreset} />
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <PopularItemsCard />

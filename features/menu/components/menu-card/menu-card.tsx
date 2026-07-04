@@ -101,7 +101,7 @@ export function MenuCard({
 
         {/* Best Seller / custom badge */}
         {item.badge && item.available && (
-          <div className="absolute top-3 left-3 z-10">
+          <div className="absolute top-3 start-3 z-10">
             <span
               className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full"
               style={{ background: "#442800", color: "#ffffff" }}

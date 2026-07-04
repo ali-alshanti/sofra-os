@@ -1,7 +1,9 @@
 "use client";
 
-import { Utensils, CheckCircle, CheckCheck } from "lucide-react";
+import { Utensils, CheckCircle, CheckCheck, GripVertical } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
 import type {
   KitchenTicketProps,
@@ -155,6 +157,11 @@ export function KitchenTicket({
   const isCompleted = order.status === "completed";
   const isReady = order.status === "ready";
 
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: order.id,
+    data: { status: order.status },
+  });
+
   const orderTypeLabel =
     order.orderType === "dine-in"
       ? t("ticket.type.dine-in")
@@ -165,16 +172,36 @@ export function KitchenTicket({
   const priorityLabel = t(`priority.${order.priority}`);
 
   return (
-    <div className={cn(cardClassName(order.status, order.priority), className)}>
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: transform ? CSS.Translate.toString(transform) : undefined,
+        opacity: isDragging ? 0.4 : undefined,
+      }}
+      className={cn(cardClassName(order.status, order.priority), className)}
+    >
       {/* Header */}
       <div className="flex justify-between items-start">
-        <div>
-          <h5 className="text-primary font-bold text-sm">
-            {order.orderNumber}
-          </h5>
-          <p className="typography-caption text-muted-foreground mt-0.5">
-            {order.tableNumber} · {orderTypeLabel}
-          </p>
+        <div className="flex items-start gap-2">
+          {!isCompleted && (
+            <button
+              type="button"
+              {...attributes}
+              {...listeners}
+              className="mt-0.5 shrink-0 cursor-grab touch-none text-muted-foreground/50 hover:text-muted-foreground active:cursor-grabbing"
+              aria-label="Drag to move"
+            >
+              <GripVertical size={16} />
+            </button>
+          )}
+          <div>
+            <h5 className="text-primary font-bold text-sm">
+              {order.orderNumber}
+            </h5>
+            <p className="typography-caption text-muted-foreground mt-0.5">
+              {order.tableNumber} · {orderTypeLabel}
+            </p>
+          </div>
         </div>
 
         {isCompleted ? (
@@ -218,7 +245,7 @@ export function KitchenTicket({
 
           {order.note && (
             <div
-              className="px-2 py-1.5 rounded border-l-2 text-xs"
+              className="px-2 py-1.5 rounded border-s-2 text-xs"
               style={{
                 background: "oklch(0.362 0.072 165.670 / 0.05)",
                 borderColor: "#442800",

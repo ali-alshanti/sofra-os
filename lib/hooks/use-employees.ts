@@ -59,6 +59,7 @@ export function useCreateEmployee() {
   const queryClient = useQueryClient();
   const { user } = useCurrentUser();
   const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.employees");
 
   return useMutation({
     mutationFn: (payload: Omit<CreateEmployeePayload, "restaurantId">) => {
@@ -68,7 +69,7 @@ export function useCreateEmployee() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.employees.all });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.notifications.all });
-      toastSuccess("Employee added successfully.");
+      toastSuccess(t("created"));
 
       if (!user?.restaurant_id || !user?.id) return;
       createNotification({

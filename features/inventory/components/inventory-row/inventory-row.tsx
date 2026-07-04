@@ -160,7 +160,7 @@ export function InventoryRow({
       </TableCell>
 
       {/* Actions */}
-      <TableCell className="py-4 px-3 text-right">
+      <TableCell className="py-4 px-3 text-end">
         <InventoryActionsMenu
           item={item}
           onView={onView}

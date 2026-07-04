@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { AppShell }   from "@/components/layout/app-shell";
 import { Pagination } from "@/components/shared/pagination";
@@ -29,8 +30,12 @@ const PAGE_SIZE = 10;
 
 export function InventoryFeature() {
   const t = useTranslations("inventory");
+  const searchParams = useSearchParams();
 
-  const [filters, setFilters]               = useState<InventoryFiltersValue>(DEFAULT_INVENTORY_FILTERS);
+  const [filters, setFilters]               = useState<InventoryFiltersValue>(() => ({
+    ...DEFAULT_INVENTORY_FILTERS,
+    search: searchParams.get("search") ?? DEFAULT_INVENTORY_FILTERS.search,
+  }));
   const [currentPage, setCurrentPage]       = useState(1);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [addOpen, setAddOpen]               = useState(false);

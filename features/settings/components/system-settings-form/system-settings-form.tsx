@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -8,17 +8,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SettingsSectionCard } from "@/features/settings/components/settings-section-card";
+import { useRouter, usePathname } from "@/lib/navigation";
 import type { SystemSettings, ThemeMode } from "@/features/settings/types";
 
 // ─── Static options (labels are intentionally locale-neutral) ─────────────────
+// Only the locales the app actually supports — see i18n/routing.ts.
 
-const LANGUAGE_OPTIONS: { value: string; label: string }[] = [
-  { value: "en", label: "English"    },
-  { value: "ar", label: "العربية"   },
-  { value: "fr", label: "Français"  },
-  { value: "es", label: "Español"   },
-  { value: "de", label: "Deutsch"   },
-  { value: "tr", label: "Türkçe"    },
+const LANGUAGE_OPTIONS: { value: "en" | "ar"; label: string }[] = [
+  { value: "en", label: "English"  },
+  { value: "ar", label: "العربية"  },
 ];
 
 const TIMEZONE_OPTIONS: { value: string; label: string }[] = [
@@ -79,6 +77,14 @@ export function SystemSettingsForm({
   disabled = false,
 }: SystemSettingsFormProps) {
   const t = useTranslations("settings.system");
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  function handleLanguageChange(next: string) {
+    onChange({ language: next });
+    router.replace(pathname, { locale: next as "en" | "ar" });
+  }
 
   const THEME_OPTIONS: { value: ThemeMode; label: string }[] = [
     { value: "light",  label: t("themes.light")  },
@@ -112,8 +118,8 @@ export function SystemSettingsForm({
 
       <FieldRow label={t("language")} htmlFor="language">
         <Select
-          value={values.language}
-          onValueChange={(v) => onChange({ language: v })}
+          value={locale}
+          onValueChange={handleLanguageChange}
           disabled={disabled}
         >
           <SelectTrigger id="language" className="h-10">

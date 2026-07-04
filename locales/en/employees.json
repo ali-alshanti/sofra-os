@@ -16,7 +16,8 @@
     "status":            "Status",
     "allDepartments":    "All Departments",
     "allRoles":          "All Roles",
-    "allStatuses":       "All Statuses"
+    "allStatuses":       "All Statuses",
+    "clear":             "Clear filters"
   },
 
   "table": {
@@ -96,5 +97,10 @@
   "empty": {
     "title":       "No employees found",
     "description": "Employee records will appear here. Try adjusting your filters."
+  },
+
+  "toast": {
+    "refreshed": "Employee list refreshed.",
+    "exported":  "Employees exported to CSV."
   }
 }

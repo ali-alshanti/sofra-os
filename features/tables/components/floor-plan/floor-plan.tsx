@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { TableCard } from "@/features/tables/components/table-card";
 import type { RestaurantTable } from "@/features/tables/components/table-card";
@@ -61,6 +62,8 @@ export function FloorPlan({
   onTableSelect,
   className,
 }: FloorPlanProps) {
+  const t = useTranslations("tables.floorPlan");
+
   return (
     <div
       className={cn("relative overflow-auto", className)}
@@ -69,9 +72,12 @@ export function FloorPlan({
         backgroundSize: "24px 24px",
       }}
     >
-      <div className="p-8 min-w-[900px]">
+      <div className="p-8 min-w-225">
 
         {/* ── Main Dining Area ─────────────────────────────────────── */}
+        <h3 className="text-[15px] font-semibold text-foreground/80 mb-4">
+          {t("squares")}
+        </h3>
         <div className="grid grid-cols-6 gap-8">
           {tables.map((table) => {
             const isLarge = table.colSpan === 2;
@@ -79,7 +85,7 @@ export function FloorPlan({
               <div
                 key={table.id}
                 className={cn(
-                  isLarge ? "col-span-2 h-48" : "col-span-1 h-32",
+                  isLarge ? "col-span-2 min-h-48" : "col-span-1 min-h-32",
                 )}
               >
                 <TableCard
@@ -100,6 +106,9 @@ export function FloorPlan({
         <div className="my-8 border-b-2 border-dashed border-border" />
 
         {/* ── Bar Seats (round) ────────────────────────────────────── */}
+        <h3 className="text-[15px] font-semibold text-foreground/80 mb-4">
+          {t("bar")}
+        </h3>
         <div className="flex flex-wrap gap-8">
           {barSeats.map((seat) => (
             <TableCard

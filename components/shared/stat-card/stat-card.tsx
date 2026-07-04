@@ -157,7 +157,7 @@ export function StatCard({
           </div>
         )}
 
-        <div className="ml-auto">
+        <div className="ms-auto">
           {trend && TrendIcon && trendStyle ? (
             <span
               className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[13px] font-medium tracking-[0.02em]"

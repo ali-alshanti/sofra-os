@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, LayoutGrid } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { AppShell }   from "@/components/layout/app-shell";
 import { PageHeader } from "@/components/shared/page-header";
@@ -10,6 +10,9 @@ import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { FloorPlan }        from "./components/floor-plan";
 import { ReservationPanel } from "./components/reservation-panel";
 import { StatusLegend }     from "./components/status-legend";
+import { CreateReservationDialog } from "./components/create-reservation-dialog";
+import { CreateTableDialog } from "./components/create-table-dialog";
+import { TableDetailsDialog } from "./components/table-details-dialog";
 import { useTables, useReservations, useCancelReservation } from "@/lib/hooks/use-tables";
 
 export function TablesFeature() {
@@ -18,10 +21,17 @@ export function TablesFeature() {
 
   const [selectedTableId, setSelectedTableId]         = useState<string | undefined>();
   const [pendingCancelId, setPendingCancelId]          = useState<string | null>(null);
+  const [createOpen, setCreateOpen]                    = useState(false);
+  const [createTableOpen, setCreateTableOpen]          = useState(false);
 
   const { data: tablesData, isLoading: tablesLoading } = useTables();
   const { data: reservations = [] }                    = useReservations();
   const cancelReservation                              = useCancelReservation();
+
+  const selectedTable = [
+    ...(tablesData?.squareTables ?? []),
+    ...(tablesData?.barSeats ?? []),
+  ].find((table) => table.id === selectedTableId);
 
   return (
     <AppShell>
@@ -33,10 +43,16 @@ export function TablesFeature() {
               title={t("title")}
               description={t("description")}
               actions={
-                <Button size="sm" className="gap-2">
-                  <Plus size={16} />
-                  {ta("create")}
-                </Button>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" className="gap-2" onClick={() => setCreateTableOpen(true)}>
+                    <LayoutGrid size={16} />
+                    {t("addTable")}
+                  </Button>
+                  <Button size="sm" className="gap-2" onClick={() => setCreateOpen(true)}>
+                    <Plus size={16} />
+                    {ta("create")}
+                  </Button>
+                </div>
               }
             />
             <StatusLegend className="mt-3" />
@@ -53,8 +69,19 @@ export function TablesFeature() {
 
         <ReservationPanel
           reservations={reservations}
+          onBookTable={() => setCreateOpen(true)}
           onMoreActions={(id) => setPendingCancelId(id)}
           className="hidden md:flex shrink-0"
+        />
+
+        <CreateReservationDialog open={createOpen} onOpenChange={setCreateOpen} />
+
+        <CreateTableDialog open={createTableOpen} onOpenChange={setCreateTableOpen} />
+
+        <TableDetailsDialog
+          table={selectedTable}
+          open={!!selectedTableId}
+          onOpenChange={(open) => { if (!open) setSelectedTableId(undefined); }}
         />
 
         <ConfirmDialog

@@ -143,6 +143,30 @@ export async function advanceKitchenOrderStatus(
   if (error) throw new Error(error.message);
 }
 
+// ─── setKitchenOrderStatus ────────────────────────────────────────────────────
+
+export async function setKitchenOrderStatus(
+  orderId: string,
+  targetStatus: TicketStatus,
+): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+
+  type DbStatus = "pending" | "preparing" | "ready" | "served" | "cancelled";
+  const ticketToDbStatus: Record<TicketStatus, DbStatus> = {
+    pending:   "pending",
+    preparing: "preparing",
+    ready:     "ready",
+    completed: "served",
+  };
+
+  const { error } = await supabase
+    .from("orders")
+    .update({ status: ticketToDbStatus[targetStatus] })
+    .eq("id", orderId);
+
+  if (error) throw new Error(error.message);
+}
+
 // ─── getKitchenStats ──────────────────────────────────────────────────────────
 
 export async function getKitchenStats(restaurantId: string): Promise<KitchenStats> {

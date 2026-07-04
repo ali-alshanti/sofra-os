@@ -29,8 +29,11 @@
   "table": {
     "number":   "طاولة {number}",
     "capacity": "{capacity} مقاعد",
-    "duration": "مشغولة منذ {duration}",
-    "guest":    "{name}"
+    "duration": "مشغولة منذ <iso>{duration}</iso>",
+    "reservedFor": "محجوزة للساعة <iso>{time}</iso>",
+    "seats":    "{capacity} مقاعد",
+    "guest":    "{name}",
+    "emptySeats": "متاحة للحجز"
   },
 
   "reservation": {
@@ -58,6 +61,37 @@
     "cancelTitle":       "إلغاء الحجز",
     "cancelDescription": "هل أنت متأكد من إلغاء هذا الحجز؟ لا يمكن التراجع عن هذا الإجراء.",
     "cancelConfirm":     "إلغاء الحجز"
+  },
+
+  "create": {
+    "title":           "حجز طاولة جديد",
+    "description":     "أضف حجزاً جديداً وحدد الطاولة المناسبة.",
+    "nameLabel":       "اسم الضيف",
+    "namePlaceholder": "أدخل اسم الضيف",
+    "partyLabel":      "عدد الأشخاص",
+    "timeLabel":       "وقت الحجز",
+    "tableLabel":      "الطاولة",
+    "selectTable":     "اختر طاولة (اختياري)"
+  },
+
+  "addTable": "طاولة جديدة",
+
+  "createTable": {
+    "title":               "إضافة طاولة",
+    "description":         "أضف طاولة جديدة إلى مخطط الطابق.",
+    "numberLabel":         "رقم الطاولة",
+    "numberPlaceholder":   "مثال: T16",
+    "capacityLabel":       "عدد المقاعد",
+    "shapeLabel":          "النوع",
+    "shapeSquare":         "طاولة طعام",
+    "shapeRound":          "مقعد بار",
+    "locationLabel":       "الموقع",
+    "locationPlaceholder": "مثال: الشرفة (اختياري)"
+  },
+
+  "details": {
+    "changeStatusLabel": "تغيير الحالة",
+    "saveStatus":        "حفظ الحالة"
   },
 
   "empty": {

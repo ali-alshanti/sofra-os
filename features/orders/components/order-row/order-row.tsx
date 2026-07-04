@@ -18,7 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { initials } from "@/lib/utils/string";
 import { formatCurrency } from "@/lib/utils/format-currency";
-import { formatTime } from "@/lib/utils/format-date";
+import { formatDate, formatTime } from "@/lib/utils/format-date";
 import type { OrderStatusValue, OrderData } from "@/features/orders/types";
 
 export type { OrderData };
@@ -133,7 +133,7 @@ export function OrderRow({ order, onDelete }: OrderRowProps) {
         </span>
       </TableCell>
 
-      <TableCell className="text-right">
+      <TableCell className="text-end">
         <span className="text-sm font-bold text-foreground">
           {formatCurrency(order.total)}
         </span>
@@ -141,6 +141,10 @@ export function OrderRow({ order, onDelete }: OrderRowProps) {
 
       <TableCell>
         <StatusBadge status={order.status} />
+      </TableCell>
+
+      <TableCell className="typography-caption text-muted-foreground whitespace-nowrap">
+        {formatDate(createdDate)}
       </TableCell>
 
       <TableCell className="typography-caption text-muted-foreground whitespace-nowrap">

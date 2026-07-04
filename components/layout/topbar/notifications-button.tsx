@@ -15,6 +15,10 @@ import type { Notification } from "@/services/notifications";
 
 // ─── Relative time helper ─────────────────────────────────────────────────────
 
+function isJsonObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 function useRelativeTime(t: ReturnType<typeof useTranslations>) {
   return function relativeTime(dateStr: string): string {
     const now = Date.now();
@@ -46,6 +50,23 @@ function NotificationItem({
 }) {
   const t = useTranslations("common.notifications");
   const isUnread = notification.status === "unread";
+  const data = isJsonObject(notification.data) ? notification.data : undefined;
+
+  const key = typeof data?.key === "string" ? data.key : undefined;
+  const params = isJsonObject(data?.params)
+    ? (data.params as Record<string, string | number>)
+    : {};
+
+  let title = notification.title;
+  let message = notification.message;
+  if (key) {
+    try {
+      title = t(`${key}.title`, params);
+      message = t(`${key}.message`, params);
+    } catch {
+      // Translation template expects params we don't have (e.g. legacy rows) — fall back to stored text.
+    }
+  }
 
   return (
     <div
@@ -55,9 +76,7 @@ function NotificationItem({
     >
       {/* Unread dot */}
       <div className="mt-1.5 shrink-0 h-2 w-2">
-        {isUnread && (
-          <span className="block h-2 w-2 rounded-full bg-primary" />
-        )}
+        {isUnread && <span className="block h-2 w-2 rounded-full bg-primary" />}
       </div>
 
       {/* Content */}
@@ -65,10 +84,10 @@ function NotificationItem({
         className="flex-1 min-w-0 cursor-pointer"
         onClick={() => isUnread && onRead(notification.id)}
       >
-        <p className="text-sm font-medium leading-tight truncate">{notification.title}</p>
-        {notification.message && (
+        <p className="text-sm font-medium leading-tight truncate">{title}</p>
+        {message && (
           <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
-            {notification.message}
+            {message}
           </p>
         )}
         <p className="text-xs text-muted-foreground/70 mt-1">
@@ -82,7 +101,10 @@ function NotificationItem({
           <button
             title={t("markAllRead")}
             className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-            onClick={(e) => { e.stopPropagation(); onRead(notification.id); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onRead(notification.id);
+            }}
           >
             <Check className="h-3.5 w-3.5" />
           </button>
@@ -90,7 +112,10 @@ function NotificationItem({
         <button
           title={t("dismiss")}
           className="p-1 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
-          onClick={(e) => { e.stopPropagation(); onDismiss(notification.id); }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDismiss(notification.id);
+          }}
         >
           <Trash2 className="h-3.5 w-3.5" />
         </button>
@@ -103,6 +128,7 @@ function NotificationItem({
 
 export function NotificationsButton() {
   const t = useTranslations("common.notifications");
+  const tCommon = useTranslations("common");
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -118,7 +144,10 @@ export function NotificationsButton() {
   // Close on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setOpen(false);
       }
     }
@@ -171,13 +200,15 @@ export function NotificationsButton() {
           <div className="max-h-96 overflow-y-auto">
             {isLoading ? (
               <div className="py-8 text-center text-sm text-muted-foreground">
-                Loading…
+                {tCommon("status.loading")}
               </div>
             ) : sorted.length === 0 ? (
               <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
                 <BellOff className="h-8 w-8 text-muted-foreground/40" />
                 <p className="text-sm font-medium">{t("noNotifications")}</p>
-                <p className="text-xs text-muted-foreground">{t("noNotificationsDesc")}</p>
+                <p className="text-xs text-muted-foreground">
+                  {t("noNotificationsDesc")}
+                </p>
               </div>
             ) : (
               <div className="divide-y divide-border/50">

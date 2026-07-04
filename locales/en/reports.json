@@ -40,16 +40,27 @@
     "inventory": "Inventory"
   },
 
+  "categories": {
+    "mains":     "Mains",
+    "starters":  "Starters",
+    "beverages": "Beverages",
+    "desserts":  "Desserts",
+    "specials":  "Specials"
+  },
+
   "revenue": {
     "title":       "Revenue Overview",
     "description": "Revenue over the selected period",
-    "empty":       "No revenue data for the selected period."
+    "empty":       "No revenue data for the selected period.",
+    "actual":      "Actual",
+    "forecast":    "Forecast"
   },
 
   "categoryChart": {
     "title":       "Revenue by Category",
     "description": "Category contribution to total revenue",
-    "empty":       "No category data for the selected period."
+    "empty":       "No category data for the selected period.",
+    "caption":     "% of total revenue — sorted by contribution"
   },
 
   "insights": {

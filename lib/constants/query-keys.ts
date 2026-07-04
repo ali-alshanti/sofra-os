@@ -69,6 +69,7 @@ export const QUERY_KEYS = {
     all:          ["tables"] as const,
     floor:        (restaurantId: string) => [...QUERY_KEYS.tables.all, "floor",        restaurantId] as const,
     reservations: (restaurantId: string) => [...QUERY_KEYS.tables.all, "reservations", restaurantId] as const,
+    options:      (restaurantId: string) => [...QUERY_KEYS.tables.all, "options",      restaurantId] as const,
   },
 
   settings: {

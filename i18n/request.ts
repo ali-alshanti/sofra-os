@@ -17,6 +17,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
 async function loadMessages(locale: "en" | "ar") {
   const namespaces = [
     "common",
+    "landing",
     "auth",
     "dashboard",
     "orders",

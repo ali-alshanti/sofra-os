@@ -3,6 +3,7 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Providers } from "@/lib/providers/providers";
+import { LocaleAttributesSync } from "@/lib/providers/locale-attributes-sync";
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -29,6 +30,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       suppressHydrationWarning on it silences the React 19 console warning.
     */
     <NextIntlClientProvider messages={messages} locale={locale}>
+      <LocaleAttributesSync />
       <Providers>{children}</Providers>
     </NextIntlClientProvider>
   );

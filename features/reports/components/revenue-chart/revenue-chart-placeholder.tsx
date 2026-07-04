@@ -1,5 +1,9 @@
+"use client";
+
 // Static placeholder — replaced with a real chart library when ready.
 // Renders actual vs. forecast bars using only CSS — no dependencies.
+
+import { useTranslations } from "next-intl";
 
 const BARS = [
   { actual: 42, forecast: 50 },
@@ -28,6 +32,8 @@ const X_LABELS = [
 ] as const;
 
 function Legend() {
+  const t = useTranslations("reports.revenue");
+
   return (
     <div className="flex items-center gap-4 mb-4">
       <div className="flex items-center gap-2">
@@ -35,14 +41,14 @@ function Legend() {
           className="w-3 h-3 rounded-full"
           style={{ background: "oklch(0.596 0.145 163.225)" }}
         />
-        <span className="typography-small text-muted-foreground">Actual</span>
+        <span className="typography-small text-muted-foreground">{t("actual")}</span>
       </div>
       <div className="flex items-center gap-2">
         <span
           className="w-3 h-3 rounded-full opacity-40"
           style={{ background: "oklch(0.554 0.046 257.417)" }}
         />
-        <span className="typography-small text-muted-foreground">Forecast</span>
+        <span className="typography-small text-muted-foreground">{t("forecast")}</span>
       </div>
     </div>
   );
@@ -53,51 +59,53 @@ export function RevenueChartPlaceholder() {
     <div>
       <Legend />
 
-      {/* Bar area */}
-      <div className="relative h-64 flex items-end gap-1.5">
-        {/* Horizontal grid lines */}
-        <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-          {Y_LABELS.map((label) => (
-            <div key={label} className="w-full border-t border-border/30 flex justify-end">
-              <span className="typography-caption text-muted-foreground pr-2 -mt-2.5">
-                {label}
-              </span>
+      {/* Bar area — kept LTR so the time axis always flows chronologically, regardless of app language */}
+      <div dir="ltr">
+        <div className="relative h-64 flex items-end gap-1.5">
+          {/* Horizontal grid lines */}
+          <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+            {Y_LABELS.map((label) => (
+              <div key={label} className="w-full border-t border-border/30 flex justify-end">
+                <span className="typography-caption text-muted-foreground pe-2 -mt-2.5">
+                  {label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Bar pairs */}
+          {BARS.map((bar, i) => (
+            <div key={i} className="flex-1 flex items-end gap-px">
+              {/* Actual */}
+              <div
+                className="flex-1 rounded-t-sm"
+                style={{
+                  height:     `${bar.actual}%`,
+                  background: "oklch(0.596 0.145 163.225)",
+                  opacity:    0.9,
+                }}
+              />
+              {/* Forecast */}
+              <div
+                className="flex-1 rounded-t-sm"
+                style={{
+                  height:     `${bar.forecast}%`,
+                  background: "oklch(0.554 0.046 257.417)",
+                  opacity:    0.25,
+                }}
+              />
             </div>
           ))}
         </div>
 
-        {/* Bar pairs */}
-        {BARS.map((bar, i) => (
-          <div key={i} className="flex-1 flex items-end gap-px">
-            {/* Actual */}
-            <div
-              className="flex-1 rounded-t-sm"
-              style={{
-                height:     `${bar.actual}%`,
-                background: "oklch(0.596 0.145 163.225)",
-                opacity:    0.9,
-              }}
-            />
-            {/* Forecast */}
-            <div
-              className="flex-1 rounded-t-sm"
-              style={{
-                height:     `${bar.forecast}%`,
-                background: "oklch(0.554 0.046 257.417)",
-                opacity:    0.25,
-              }}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* X-axis labels */}
-      <div className="flex justify-between mt-3 px-1">
-        {X_LABELS.map((label) => (
-          <span key={label} className="typography-caption text-muted-foreground">
-            {label}
-          </span>
-        ))}
+        {/* X-axis labels */}
+        <div className="flex justify-between mt-3 px-1">
+          {X_LABELS.map((label) => (
+            <span key={label} className="typography-caption text-muted-foreground">
+              {label}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -1,17 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { FormDialog } from "@/components/shared/form-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -89,14 +80,18 @@ export function AddCustomerDialog({ open, onOpenChange }: AddCustomerDialogProps
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{t("add.title")}</DialogTitle>
-          <DialogDescription>{t("add.description")}</DialogDescription>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="grid gap-4 py-2">
+    <FormDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={t("add.title")}
+      description={t("add.description")}
+      onSubmit={handleSubmit}
+      onCancel={() => setForm(EMPTY_FORM)}
+      submitLabel={ta("add")}
+      cancelLabel={ta("cancel")}
+      submitDisabled={!form.full_name}
+      loading={create.isPending}
+    >
           {/* Name */}
           <div className="grid gap-1.5">
             <Label htmlFor="cust-name">{t("table.customer")}</Label>
@@ -167,18 +162,6 @@ export function AddCustomerDialog({ open, onOpenChange }: AddCustomerDialogProps
               </Select>
             </div>
           </div>
-
-          <DialogFooter className="pt-2">
-            <Button type="button" variant="outline" onClick={handleClose} disabled={create.isPending}>
-              {ta("cancel")}
-            </Button>
-            <Button type="submit" disabled={create.isPending || !form.full_name}>
-              {create.isPending && <Loader2 size={14} className="animate-spin" />}
-              {ta("add")}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+    </FormDialog>
   );
 }

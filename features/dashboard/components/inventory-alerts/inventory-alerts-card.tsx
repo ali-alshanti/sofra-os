@@ -29,6 +29,7 @@ export function InventoryAlertsCard() {
   const { data, isLoading, error } = useInventoryAlerts();
 
   const alerts: InventoryAlertItemData[] = (data ?? []).map((alert) => ({
+    id:           alert.id,
     name:         alert.name,
     amount:       t("unit", { quantity: alert.quantity, unit: alert.unit }),
     reorderPoint: t("reorder", { point: alert.reorderPoint, unit: alert.unit }),
@@ -57,7 +58,7 @@ export function InventoryAlertsCard() {
       ) : (
         <div className="space-y-6">
           {alerts.map((alert) => (
-            <InventoryAlertItem key={alert.name} item={alert} />
+            <InventoryAlertItem key={alert.id} item={alert} />
           ))}
         </div>
       )}

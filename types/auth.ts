@@ -1,4 +1,10 @@
-export type UserRole = "admin" | "manager" | "staff" | "kitchen" | "cashier";
+export type UserRole =
+  | "Owner"
+  | "Manager"
+  | "Cashier"
+  | "Waiter"
+  | "Kitchen Staff"
+  | "Inventory Manager";
 
 export interface AuthUser {
   id: string;

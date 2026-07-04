@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export const ORDERS_COLUMN_KEYS = [
-  "order", "table", "customer", "waiter", "items", "total", "status", "time", "actions",
+  "order", "table", "customer", "waiter", "items", "total", "status", "date", "time", "actions",
 ] as const;
 
 export type OrderColumnKey = (typeof ORDERS_COLUMN_KEYS)[number];
@@ -15,9 +15,10 @@ const COLUMN_WIDTHS: Record<OrderColumnKey, string> = {
   customer: "",
   waiter:   "",
   items:    "w-[70px] text-center",
-  total:    "w-[100px] text-right",
+  total:    "w-[100px] text-end",
   status:   "w-[120px]",
-  time:     "w-[130px]",
+  date:     "w-[100px]",
+  time:     "w-[90px]",
   actions:  "w-[48px]",
 };
 

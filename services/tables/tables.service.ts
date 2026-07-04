@@ -117,6 +117,30 @@ export async function getTablesFilterOptions(restaurantId: string): Promise<Tabl
   return (data ?? []).map((t) => ({ id: t.id, number: t.number }));
 }
 
+// ─── createTable ──────────────────────────────────────────────────────────────
+
+export interface CreateTablePayload {
+  restaurantId: string;
+  number:       string;
+  capacity:     number;
+  shape:        TableShape;
+  location?:    string;
+}
+
+export async function createTable(payload: CreateTablePayload): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+  const { error } = await supabase.from("dining_tables").insert({
+    restaurant_id: payload.restaurantId,
+    number:        payload.number,
+    capacity:      payload.capacity,
+    shape:         payload.shape,
+    location:      payload.location || null,
+    status:        "available",
+    is_active:     true,
+  });
+  if (error) throw new Error(error.message);
+}
+
 // ─── updateTableStatus ────────────────────────────────────────────────────────
 
 export async function updateTableStatus(tableId: string, status: TableStatus): Promise<void> {
@@ -173,6 +197,29 @@ export async function cancelReservation(reservationId: string): Promise<void> {
     .from("reservations")
     .update({ status: "cancelled" })
     .eq("id", reservationId);
+  if (error) throw new Error(error.message);
+}
+
+// ─── createReservation ────────────────────────────────────────────────────────
+
+export interface CreateReservationPayload {
+  restaurantId:     string;
+  guest_name:       string;
+  party_size:       number;
+  reservation_time: string;
+  table_id?:        string;
+}
+
+export async function createReservation(payload: CreateReservationPayload): Promise<void> {
+  const supabase = getSupabaseBrowserClient();
+  const { error } = await supabase.from("reservations").insert({
+    restaurant_id:    payload.restaurantId,
+    guest_name:       payload.guest_name,
+    party_size:       payload.party_size,
+    reservation_time: payload.reservation_time,
+    table_id:         payload.table_id || null,
+    status:           "upcoming",
+  });
   if (error) throw new Error(error.message);
 }
 

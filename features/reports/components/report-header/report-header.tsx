@@ -5,16 +5,18 @@ import { useTranslations } from "next-intl";
 import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
 import { DateRangePicker, type DateRangePreset } from "@/components/shared/date-range-picker";
+import type { DateRange } from "@/lib/utils/date";
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 interface ReportHeaderProps {
-  activePreset:    DateRangePreset | null;
-  onPresetChange:  (preset: DateRangePreset) => void;
-  onCustomClick:   () => void;
-  onExport?:       () => void;
-  onRefresh?:      () => void;
-  onSchedule?:     () => void;
+  activePreset:        DateRangePreset | null;
+  onPresetChange:      (preset: DateRangePreset) => void;
+  customRange?:        DateRange | null;
+  onCustomRangeChange: (range: DateRange) => void;
+  onExport?:           () => void;
+  onRefresh?:          () => void;
+  onSchedule?:         () => void;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -22,7 +24,8 @@ interface ReportHeaderProps {
 export function ReportHeader({
   activePreset,
   onPresetChange,
-  onCustomClick,
+  customRange,
+  onCustomRangeChange,
   onExport,
   onRefresh,
   onSchedule,
@@ -39,7 +42,8 @@ export function ReportHeader({
           <DateRangePicker
             activePreset={activePreset}
             onPresetChange={onPresetChange}
-            onCustomClick={onCustomClick}
+            customRange={customRange}
+            onCustomRangeChange={onCustomRangeChange}
           />
 
           <Button variant="outline" size="sm" className="gap-2" onClick={onRefresh}>

@@ -9,7 +9,12 @@ import {
   getCategories,
   getMenuItems,
   updateMenuItemAvailability,
+  updateMenuItem,
   deleteMenuItem,
+  createMenuItem,
+  createCategory,
+  deleteCategory,
+  type CreateMenuItemPayload,
 } from "@/services/menu";
 
 // ─── useMenuCategories ────────────────────────────────────────────────────────
@@ -37,6 +42,93 @@ export function useMenuItems(categoryId?: string, search?: string) {
     queryFn:  () => getMenuItems({ restaurantId, categoryId, search }),
     enabled:  !!restaurantId,
     staleTime: 2 * 60 * 1000,
+  });
+}
+
+// ─── useCreateMenuItem ────────────────────────────────────────────────────────
+
+export function useCreateMenuItem() {
+  const queryClient = useQueryClient();
+  const { user } = useCurrentUser();
+  const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.menu");
+
+  return useMutation({
+    mutationFn: (payload: Omit<CreateMenuItemPayload, "restaurantId">) => {
+      const restaurantId = user?.restaurant_id ?? "";
+      return createMenuItem({ restaurantId, ...payload });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.menu.all });
+      toastSuccess(t("itemAdded"));
+    },
+    onError: (err) => {
+      toastMutationError(err);
+    },
+  });
+}
+
+// ─── useUpdateMenuItem ────────────────────────────────────────────────────────
+
+export function useUpdateMenuItem() {
+  const queryClient = useQueryClient();
+  const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.menu");
+
+  return useMutation({
+    mutationFn: ({ itemId, patch }: {
+      itemId: string;
+      patch: Parameters<typeof updateMenuItem>[1];
+    }) => updateMenuItem(itemId, patch),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.menu.all });
+      toastSuccess(t("itemUpdated"));
+    },
+    onError: (err) => {
+      toastMutationError(err);
+    },
+  });
+}
+
+// ─── useCreateMenuCategory ────────────────────────────────────────────────────
+
+export function useCreateMenuCategory() {
+  const queryClient = useQueryClient();
+  const { user } = useCurrentUser();
+  const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.menu");
+
+  return useMutation({
+    mutationFn: (name: string) => {
+      const restaurantId = user?.restaurant_id ?? "";
+      return createCategory(restaurantId, name);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.menu.all });
+      toastSuccess(t("categoryCreated"));
+    },
+    onError: (err) => {
+      toastMutationError(err);
+    },
+  });
+}
+
+// ─── useDeleteMenuCategory ────────────────────────────────────────────────────
+
+export function useDeleteMenuCategory() {
+  const queryClient = useQueryClient();
+  const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.menu");
+
+  return useMutation({
+    mutationFn: (categoryId: string) => deleteCategory(categoryId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.menu.all });
+      toastSuccess(t("categoryDeleted"));
+    },
+    onError: (err) => {
+      toastMutationError(err);
+    },
   });
 }
 

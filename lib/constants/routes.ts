@@ -17,9 +17,13 @@ export const ROUTES = {
 
   EMPLOYEES: "/employees",
 
+  USERS: "/users",
+
   REPORTS: "/reports",
 
   SETTINGS: "/settings",
+
+  UNAUTHORIZED: "/403",
 } as const;
 
 export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES];

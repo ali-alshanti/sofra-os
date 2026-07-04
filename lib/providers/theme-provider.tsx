@@ -5,17 +5,26 @@ import type { ComponentProps } from "react";
 
 type ThemeProviderProps = ComponentProps<typeof NextThemesProvider>;
 
+// next-themes injects an inert anti-flash-of-unstyled-content <script> as part
+// of its React tree. React 19 logs a console error for any script tag
+// encountered outside of true SSR parsing, but this script is intentionally
+// inert on the client, so the warning is a known false positive
+// (see next-themes#263). No release fixes this yet as of next-themes 0.4.6.
+if (typeof window !== "undefined") {
+  const originalError = console.error;
+  console.error = (...args: unknown[]) => {
+    if (
+      typeof args[0] === "string" &&
+      args[0].includes("Encountered a script tag while rendering React component")
+    ) {
+      return;
+    }
+    originalError(...args);
+  };
+}
+
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return (
-    <NextThemesProvider
-      {...props}
-      // Suppress the React 19 warning about the inline <script> next-themes
-      // injects to prevent flash-of-unstyled-content before hydration.
-      // The script runs server-side only and is intentionally inert on the client.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      scriptProps={{ suppressHydrationWarning: true } as any}
-    >
-      {children}
-    </NextThemesProvider>
+    <NextThemesProvider {...props}>{children}</NextThemesProvider>
   );
 }

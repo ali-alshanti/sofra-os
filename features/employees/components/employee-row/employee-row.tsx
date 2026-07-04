@@ -149,7 +149,7 @@ export function EmployeeRow({ employee, onView, onEdit, onDelete }: EmployeeRowP
       </TableCell>
 
       {/* Actions — hidden until row hover */}
-      <TableCell className="px-6 py-4 text-right">
+      <TableCell className="px-6 py-4 text-end">
         <EmployeeActionsMenu
           employee={employee}
           onView={onView}

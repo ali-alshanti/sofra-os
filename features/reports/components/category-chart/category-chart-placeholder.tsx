@@ -1,12 +1,16 @@
+"use client";
+
 // Static placeholder — replaced with a real chart library when ready.
 // Renders a horizontal bar chart using only CSS — no dependencies.
 
+import { useTranslations } from "next-intl";
+
 const PLACEHOLDER_CATEGORIES = [
-  { category: "Mains",      percentage: 100, revenue: "$12,400" },
-  { category: "Beverages",  percentage: 72,  revenue: "$8,928"  },
-  { category: "Starters",   percentage: 55,  revenue: "$6,820"  },
-  { category: "Desserts",   percentage: 38,  revenue: "$4,712"  },
-  { category: "Specials",   percentage: 24,  revenue: "$2,976"  },
+  { key: "mains",     percentage: 100, revenue: "$12,400" },
+  { key: "beverages", percentage: 72,  revenue: "$8,928"  },
+  { key: "starters",  percentage: 55,  revenue: "$6,820"  },
+  { key: "desserts",  percentage: 38,  revenue: "$4,712"  },
+  { key: "specials",  percentage: 24,  revenue: "$2,976"  },
 ] as const;
 
 const BAR_COLORS = [
@@ -18,16 +22,18 @@ const BAR_COLORS = [
 ] as const;
 
 export function CategoryChartPlaceholder() {
+  const t = useTranslations("reports");
+
   return (
     <div className="space-y-4">
-      {PLACEHOLDER_CATEGORIES.map(({ category, percentage, revenue }, i) => (
-        <div key={category} className="space-y-1.5">
+      {PLACEHOLDER_CATEGORIES.map(({ key, percentage, revenue }, i) => (
+        <div key={key} className="space-y-1.5">
           {/* Label row */}
           <div className="flex justify-between items-center">
             <span className="typography-small font-medium text-foreground">
-              {category}
+              {t(`categories.${key}`)}
             </span>
-            <span className="typography-small text-muted-foreground">
+            <span className="typography-small text-muted-foreground" dir="ltr">
               {revenue}
             </span>
           </div>
@@ -47,7 +53,7 @@ export function CategoryChartPlaceholder() {
 
       {/* Legend */}
       <p className="typography-caption text-muted-foreground pt-2">
-        % of total revenue — sorted by contribution
+        {t("categoryChart.caption")}
       </p>
     </div>
   );

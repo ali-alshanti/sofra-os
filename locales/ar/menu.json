@@ -37,5 +37,35 @@
 
   "search": {
     "placeholder": "البحث في الأصناف…"
+  },
+
+  "create": {
+    "title":       "إضافة صنف للقائمة",
+    "description": "املأ التفاصيل لإضافة صنف جديد إلى القائمة.",
+    "name":                   "الاسم",
+    "namePlaceholder":        "مثال: برغر كلاسيك",
+    "description_label":     "الوصف",
+    "descriptionPlaceholder": "وصف مختصر يظهر للعملاء",
+    "price":                  "السعر",
+    "category":                "الفئة",
+    "categoryPlaceholder":     "اختر الفئة",
+    "imageUrl":                "رابط الصورة",
+    "imageUrlPlaceholder":    "https://…",
+    "available":   "متاح للطلب"
+  },
+
+  "createCategory": {
+    "title":           "فئة جديدة",
+    "description":     "أضف فئة جديدة لتنظيم القائمة.",
+    "name":            "الاسم",
+    "namePlaceholder": "اسم الفئة"
+  },
+
+  "confirm": {
+    "deleteTitle":               "حذف صنف القائمة",
+    "deleteDescription":         "سيتم إزالة هذا الصنف من القائمة. لا يمكن التراجع عن هذا الإجراء.",
+    "deleteCategoryTitle":       "حذف الفئة",
+    "deleteCategoryDescription": "سيتم إزالة هذه الفئة من القائمة. لن يتم حذف الأصناف الموجودة فيها، لكن سيلزم إعادة تصنيفها.",
+    "deleteConfirm":             "حذف"
   }
 }

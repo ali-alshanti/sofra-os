@@ -1,9 +1,12 @@
 import { AlertTriangle, AlertCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { Link } from "@/lib/navigation";
 
 export type AlertSeverity = "critical" | "warning";
 
 export interface InventoryAlertItemData {
+  id: string;
   name: string;
   amount: string;
   reorderPoint: string;
@@ -27,6 +30,7 @@ const SEVERITY_STYLE: Record<AlertSeverity, { color: string; Icon: React.Element
 };
 
 export function InventoryAlertItem({ item }: InventoryAlertItemProps) {
+  const t = useTranslations("dashboard.inventory");
   const { color, Icon } = SEVERITY_STYLE[item.severity];
 
   return (
@@ -56,8 +60,10 @@ export function InventoryAlertItem({ item }: InventoryAlertItemProps) {
       {/* Footer — reorder point + action */}
       <div className="flex justify-between items-center">
         <p className="typography-caption text-muted-foreground">{item.reorderPoint}</p>
-        <Button variant="outline" size="sm" className="text-xs h-7 px-3">
-          Order Now
+        <Button variant="outline" size="sm" className="text-xs h-7 px-3" asChild>
+          <Link href={{ pathname: "/inventory", query: { search: item.name } }}>
+            {t("orderNow")}
+          </Link>
         </Button>
       </div>
     </div>

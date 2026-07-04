@@ -12,7 +12,13 @@ const PUBLIC_SEGMENTS = ["/login", "/forgot-password", "/reset-password"];
 function isPublicPath(pathname: string): boolean {
   // Strip locale prefix if present (e.g. /ar/login → /login)
   const stripped = pathname.replace(/^\/(en|ar)/, "") || "/";
+  if (stripped === "/" || stripped === "") return true;
   return PUBLIC_SEGMENTS.some((p) => stripped === p || stripped.startsWith(p + "/"));
+}
+
+function isRootPath(pathname: string): boolean {
+  const stripped = pathname.replace(/^\/(en|ar)$/, "") || "/";
+  return stripped === "/" || stripped === "";
 }
 
 function getLocalePath(url: URL, path: string): URL {
@@ -65,27 +71,24 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
 
   const pub = isPublicPath(pathname);
+  const isRoot = isRootPath(pathname);
 
-  // Authenticated user visiting public page → send to dashboard
+  // Root "/" or "/{locale}" always renders the marketing landing page,
+  // for both authenticated and unauthenticated visitors.
+  if (isRoot) {
+    return response;
+  }
+
+  // Authenticated user visiting public page (e.g. /login) → send to dashboard
   if (user && pub) {
     return NextResponse.redirect(getLocalePath(request.nextUrl, "/dashboard"));
   }
 
   // Unauthenticated user visiting protected page → send to login
   if (!user && !pub) {
-    const stripped = pathname.replace(/^\/(en|ar)/, "") || "/";
-    if (stripped !== "/" && stripped !== "") {
-      const loginUrl = getLocalePath(request.nextUrl, "/login");
-      loginUrl.searchParams.set("redirectTo", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-  }
-
-  // Root "/" or "/{locale}" → redirect based on auth state
-  const stripped = pathname.replace(/^\/(en|ar)$/, "") ?? pathname;
-  if (stripped === "" || stripped === "/") {
-    const dest = user ? "/dashboard" : "/login";
-    return NextResponse.redirect(getLocalePath(request.nextUrl, dest));
+    const loginUrl = getLocalePath(request.nextUrl, "/login");
+    loginUrl.searchParams.set("redirectTo", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
   return response;

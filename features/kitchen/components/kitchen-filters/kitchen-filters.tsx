@@ -67,10 +67,10 @@ export function KitchenFilters({
       </div>
 
       {/* Right — Priority + Search */}
-      <div className="flex items-center gap-4 pl-2">
+      <div className="flex items-center gap-4 ps-2">
         {/* Priority select */}
         <div
-          className="flex items-center gap-2 pr-4"
+          className="flex items-center gap-2 pe-4"
           style={{ borderRight: "1px solid oklch(0.929 0.013 255.508 / 0.3)" }}
         >
           <span className="text-[13px] text-muted-foreground whitespace-nowrap">
@@ -80,7 +80,7 @@ export function KitchenFilters({
             value={value.priority}
             onValueChange={(v) => onPriorityChange?.(v as KitchenPriority)}
           >
-            <SelectTrigger className="h-8 w-28 border-none bg-transparent shadow-none text-[13px] font-medium text-primary focus:ring-0 p-0 pl-1">
+            <SelectTrigger className="h-8 w-28 border-none bg-transparent shadow-none text-[13px] font-medium text-primary focus:ring-0 p-0 ps-1">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -97,7 +97,7 @@ export function KitchenFilters({
         <div className="relative w-56">
           <Search
             size={15}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground"
           />
           <Input
             type="search"
@@ -105,7 +105,7 @@ export function KitchenFilters({
             aria-label={t("searchPlaceholder")}
             value={value.search}
             onChange={(e) => onSearchChange?.(e.target.value)}
-            className="h-9 w-full pl-9 text-[13px]"
+            className="h-9 w-full ps-9 text-[13px]"
           />
         </div>
       </div>

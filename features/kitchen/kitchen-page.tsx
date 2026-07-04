@@ -6,7 +6,7 @@ import { KitchenHeader }  from "./components/kitchen-header";
 import { KitchenFilters, DEFAULT_KITCHEN_FILTERS, type KitchenFiltersValue, type KitchenPriority } from "./components/kitchen-filters";
 import { KitchenBoard }  from "./components/kitchen-board";
 import type { TicketStatus } from "./components/kitchen-ticket";
-import { useKitchenOrders, useKitchenStats, useAdvanceKitchenOrderStatus } from "@/lib/hooks/use-kitchen";
+import { useKitchenOrders, useKitchenStats, useAdvanceKitchenOrderStatus, useSetKitchenOrderStatus } from "@/lib/hooks/use-kitchen";
 import { useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/lib/constants/query-keys";
 
@@ -18,6 +18,7 @@ export function KitchenFeature() {
   const { data: allOrders = [], isLoading: ordersLoading } = useKitchenOrders();
   const { data: stats, isLoading: statsLoading }           = useKitchenStats();
   const advanceStatus                                      = useAdvanceKitchenOrderStatus();
+  const setStatus                                           = useSetKitchenOrderStatus();
 
   // ─── Client-side filter (station, priority, search) ────────────────────────
   const filteredOrders = allOrders.filter((order) => {
@@ -37,6 +38,10 @@ export function KitchenFeature() {
 
   function handleAction(orderId: string, currentStatus: TicketStatus) {
     advanceStatus.mutate({ orderId, status: currentStatus });
+  }
+
+  function handleMove(orderId: string, _from: TicketStatus, to: TicketStatus) {
+    setStatus.mutate({ orderId, status: to });
   }
 
   function handleRefresh() {
@@ -65,6 +70,7 @@ export function KitchenFeature() {
           columns={columns}
           loading={ordersLoading}
           onAction={handleAction}
+          onMove={handleMove}
         />
       </div>
     </AppShell>

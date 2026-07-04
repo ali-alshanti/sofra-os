@@ -35,6 +35,10 @@ import type {
   Integration,
 } from "./types";
 
+// Language changes trigger an immediate locale navigation (see system-settings-form),
+// which remounts this component. Stash the in-progress draft so unsaved edits survive.
+const DRAFT_STORAGE_KEY = "sofra:settings:draft";
+
 // ─── Section order ─────────────────────────────────────────────────────────────
 
 const SECTION_ORDER: SettingsSection[] = [
@@ -78,7 +82,19 @@ export function SettingsFeature() {
   useEffect(() => {
     if (remoteSettings && !seededRef.current) {
       seededRef.current = true;
-      setSettings(remoteSettings);
+
+      let draft: RestaurantSettings | null = null;
+      const raw = sessionStorage.getItem(DRAFT_STORAGE_KEY);
+      if (raw) {
+        sessionStorage.removeItem(DRAFT_STORAGE_KEY);
+        try {
+          draft = JSON.parse(raw) as RestaurantSettings;
+        } catch {
+          draft = null;
+        }
+      }
+
+      setSettings(draft ?? remoteSettings);
       setSavedSettings(remoteSettings);
     }
   }, [remoteSettings]);
@@ -96,10 +112,46 @@ export function SettingsFeature() {
   // ── Section refs for scrollIntoView ─────────────────────────────────────────
   const sectionRefs = useRef<Partial<Record<SettingsSection, HTMLElement | null>>>({});
 
+  // Suppress the scrollspy while a click-triggered smooth scroll is still in flight,
+  // so the observer doesn't fight the section the user just chose.
+  const isProgrammaticScroll = useRef(false);
+
   const handleSectionChange = useCallback((section: SettingsSection) => {
     setActiveSection(section);
+    isProgrammaticScroll.current = true;
     sectionRefs.current[section]?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.setTimeout(() => { isProgrammaticScroll.current = false; }, 600);
   }, []);
+
+  // ── Scrollspy: highlight the sidebar section under the top of the viewport ──
+  useEffect(() => {
+    if (!settings) return;
+
+    const elements = SECTION_ORDER
+      .map((section) => ({ section, el: sectionRefs.current[section] }))
+      .filter((entry): entry is { section: SettingsSection; el: HTMLElement } => !!entry.el);
+
+    if (elements.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (isProgrammaticScroll.current) return;
+
+        const visible = entries.filter((entry) => entry.isIntersecting);
+        if (visible.length === 0) return;
+
+        const topMost = visible.reduce((a, b) =>
+          a.boundingClientRect.top <= b.boundingClientRect.top ? a : b
+        );
+        const match = elements.find(({ el }) => el === topMost.target);
+        if (match) setActiveSection(match.section);
+      },
+      { rootMargin: "-15% 0px -70% 0px", threshold: 0 }
+    );
+
+    elements.forEach(({ el }) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [settings]);
 
   // ── Patch helpers ────────────────────────────────────────────────────────────
 
@@ -122,7 +174,16 @@ export function SettingsFeature() {
   }
 
   function patchSystem(patch: Partial<RestaurantSettings["system"]>) {
-    setSettings((s) => s ? { ...s, system: { ...s.system, ...patch } } : s);
+    setSettings((s) => {
+      if (!s) return s;
+      const next = { ...s, system: { ...s.system, ...patch } };
+      // Language changes navigate to a new locale route (remounting this
+      // component) before the user can hit Save — persist the draft first.
+      if (patch.language) {
+        sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(next));
+      }
+      return next;
+    });
   }
 
   function patchNotification(type: NotificationType, enabled: boolean) {

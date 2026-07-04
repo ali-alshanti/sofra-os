@@ -132,7 +132,10 @@
     "today":   "Today",
     "last7d":  "Last 7d",
     "last30d": "Last 30d",
-    "custom":  "Custom"
+    "custom":  "Custom",
+    "from":    "From",
+    "to":      "To",
+    "apply":   "Apply"
   },
 
   "search": {
@@ -164,30 +167,40 @@
         "loggedOut": "Logged out successfully."
       },
       "employees": {
+        "created":       "Employee added successfully.",
         "updated":       "Employee updated successfully.",
         "statusUpdated": "Employee status updated.",
         "deleted":       "Employee removed successfully."
       },
       "customers": {
+        "created": "Customer added successfully.",
         "updated": "Customer updated successfully.",
         "deleted": "Customer deleted successfully."
       },
       "orders": {
+        "created":       "Order created successfully.",
         "statusUpdated": "Order status updated.",
         "deleted":       "Order deleted successfully."
       },
       "menu": {
+        "itemAdded":         "Menu item added successfully.",
+        "itemUpdated":       "Menu item updated successfully.",
+        "categoryCreated":   "Category created successfully.",
+        "categoryDeleted":   "Category deleted successfully.",
         "markedAvailable":   "Item marked as available.",
         "markedUnavailable": "Item marked as unavailable.",
         "deleted":           "Menu item deleted successfully."
       },
       "inventory": {
+        "created": "Item added successfully.",
         "updated": "Inventory item updated successfully.",
         "deleted": "Inventory item deleted successfully."
       },
       "tables": {
         "statusUpdated":        "Table status updated.",
-        "reservationCancelled": "Reservation cancelled successfully."
+        "reservationCancelled": "Reservation cancelled successfully.",
+        "reservationCreated":   "Reservation created successfully.",
+        "tableCreated":         "Table added successfully."
       },
       "settings": {
         "saved":                   "Settings saved successfully.",

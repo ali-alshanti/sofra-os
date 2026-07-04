@@ -3,32 +3,32 @@ import type { DateRangePreset } from "@/components/shared/date-range-picker";
 
 // ─── Static select options ────────────────────────────────────────────────────
 
-export const REPORT_TYPE_OPTIONS: { value: ReportType | "all"; label: string }[] = [
-  { value: "all",       label: "All Types"  },
-  { value: "revenue",   label: "Revenue"    },
-  { value: "category",  label: "Category"   },
-  { value: "customers", label: "Customers"  },
-  { value: "employees", label: "Employees"  },
-  { value: "inventory", label: "Inventory"  },
+export const REPORT_TYPE_OPTIONS: { value: ReportType | "all"; labelKey: string }[] = [
+  { value: "all",       labelKey: "filters.allTypes" },
+  { value: "revenue",   labelKey: "type.revenue"     },
+  { value: "category",  labelKey: "type.category"    },
+  { value: "customers", labelKey: "type.customers"   },
+  { value: "employees", labelKey: "type.employees"   },
+  { value: "inventory", labelKey: "type.inventory"   },
 ];
 
 export const PERIOD_OPTIONS: {
   value: ReportsFiltersValue["period"];
-  label: string;
+  labelKey: string;
 }[] = [
-  { value: "today", label: "Today"    },
-  { value: "7d",    label: "Last 7d"  },
-  { value: "30d",   label: "Last 30d" },
-  { value: "custom", label: "Custom"  },
+  { value: "today",  labelKey: "filters.today"  },
+  { value: "7d",     labelKey: "filters.last7"  },
+  { value: "30d",    labelKey: "filters.last30" },
+  { value: "custom", labelKey: "filters.custom" },
 ];
 
-export const CATEGORY_OPTIONS: { value: string; label: string }[] = [
-  { value: "all",       label: "All Categories" },
-  { value: "Mains",     label: "Mains"          },
-  { value: "Starters",  label: "Starters"       },
-  { value: "Beverages", label: "Beverages"      },
-  { value: "Desserts",  label: "Desserts"       },
-  { value: "Specials",  label: "Specials"       },
+export const CATEGORY_OPTIONS: { value: string; labelKey: string }[] = [
+  { value: "all",       labelKey: "filters.allCategories" },
+  { value: "Mains",     labelKey: "categories.mains"       },
+  { value: "Starters",  labelKey: "categories.starters"    },
+  { value: "Beverages", labelKey: "categories.beverages"   },
+  { value: "Desserts",  labelKey: "categories.desserts"    },
+  { value: "Specials",  labelKey: "categories.specials"    },
 ];
 
 // ─── Preset ↔ period mapping ──────────────────────────────────────────────────

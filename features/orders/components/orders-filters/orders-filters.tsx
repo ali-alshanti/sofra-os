@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, CalendarDays, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DateRangePicker, type DateRangePreset } from "@/components/shared/date-range-picker";
+import { presetToDateRange } from "@/lib/utils/date";
 import { cn } from "@/lib/utils";
 import { useTablesForFilter, useWaitersForFilter } from "@/lib/hooks/use-orders";
 import type { OrderStatusFilter, OrderType } from "@/features/orders/types";
@@ -28,6 +30,8 @@ export interface OrdersFiltersValue {
   orderType: OrderType;
   dateFrom:  string;
   dateTo:    string;
+  /** Active quick-preset, or null when a custom range (or none) is set. */
+  preset:    DateRangePreset | null;
 }
 
 export const DEFAULT_FILTERS: OrdersFiltersValue = {
@@ -38,6 +42,7 @@ export const DEFAULT_FILTERS: OrdersFiltersValue = {
   orderType: "all",
   dateFrom:  "",
   dateTo:    "",
+  preset:    null,
 };
 
 // ─── Status option values (static) ───────────────────────────────────────────
@@ -68,7 +73,8 @@ function hasActiveFilters(value: OrdersFiltersValue): boolean {
     value.waiterId  !== "all" ||
     value.orderType !== "all" ||
     value.dateFrom  !== "" ||
-    value.dateTo    !== ""
+    value.dateTo    !== "" ||
+    value.preset    !== null
   );
 }
 
@@ -105,7 +111,7 @@ export function OrdersFilters({
       <div className="relative min-w-55 flex-1">
         <Search
           size={16}
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+          className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground"
         />
         <Input
           type="search"
@@ -113,7 +119,7 @@ export function OrdersFilters({
           aria-label={t("filters.searchPlaceholder")}
           value={value.search}
           onChange={(e) => onChange({ search: e.target.value })}
-          className="h-9 pl-9 text-sm"
+          className="h-9 ps-9 text-sm"
         />
       </div>
 
@@ -190,16 +196,18 @@ export function OrdersFilters({
       </Select>
 
       {/* Date Range */}
-      <Button
-        variant="outline"
-        size="sm"
-        className="h-9 gap-2 text-sm text-muted-foreground"
-      >
-        <CalendarDays size={15} />
-        {value.dateFrom
-          ? `${value.dateFrom}${value.dateTo ? ` → ${value.dateTo}` : ""}`
-          : t("filters.dateRange")}
-      </Button>
+      <DateRangePicker
+        activePreset={value.preset}
+        onPresetChange={(preset) => {
+          const range = presetToDateRange(preset);
+          onChange({ preset, dateFrom: range.from, dateTo: range.to });
+        }}
+        customRange={value.dateFrom && value.dateTo ? { from: value.dateFrom, to: value.dateTo } : null}
+        onCustomRangeChange={(range) =>
+          onChange({ preset: null, dateFrom: range.from, dateTo: range.to })
+        }
+        className="h-9"
+      />
 
       {/* Clear all */}
       {active && (

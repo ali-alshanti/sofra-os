@@ -40,18 +40,38 @@ async function getSession() {
 
 // ─── User profile ─────────────────────────────────────────────────────────────
 
+interface ProfileRow {
+  id: string;
+  email: string;
+  full_name: string;
+  avatar_url: string | null;
+  restaurant_id: string | null;
+  user_roles: { roles: { name: string } | null }[] | null;
+}
+
 async function getProfile(userId: string): Promise<AuthUser | null> {
   const supabase = getSupabaseBrowserClient();
 
   const { data, error } = await supabase
     .from("users")
-    .select("id, email, full_name, avatar_url, role, restaurant_id")
+    .select("id, email, full_name, avatar_url, restaurant_id, user_roles(roles(name))")
     .eq("id", userId)
     .single();
 
   if (error || !data) return null;
 
-  return data as unknown as AuthUser;
+  const row = data as unknown as ProfileRow;
+  const role = row.user_roles?.[0]?.roles?.name;
+  if (!role) return null;
+
+  return {
+    id: row.id,
+    email: row.email,
+    full_name: row.full_name,
+    avatar_url: row.avatar_url,
+    restaurant_id: row.restaurant_id,
+    role: role as AuthUser["role"],
+  };
 }
 
 // ─── Current user (session + profile) ────────────────────────────────────────

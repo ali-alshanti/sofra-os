@@ -1,17 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { ShoppingBag, UtensilsCrossed, Bike, ClipboardList, UserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { FormDialog } from "@/components/shared/form-dialog";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -40,6 +33,12 @@ interface FormState {
 }
 
 const EMPTY_FORM: FormState = { type: "", tableId: "", waiterId: "" };
+
+const ORDER_TYPES: { value: OrderTypeValue; icon: typeof UtensilsCrossed }[] = [
+  { value: "dine-in",  icon: UtensilsCrossed },
+  { value: "takeaway", icon: ShoppingBag },
+  { value: "delivery", icon: Bike },
+];
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -84,82 +83,90 @@ export function CreateOrderDialog({ open, onOpenChange }: CreateOrderDialogProps
   const isDineIn = form.type === "dine-in";
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{t("create.title")}</DialogTitle>
-          <DialogDescription>{t("create.description")}</DialogDescription>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="grid gap-4 py-2">
+    <FormDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      icon={ClipboardList}
+      title={t("create.title")}
+      description={t("create.description")}
+      onSubmit={handleSubmit}
+      onCancel={() => setForm(EMPTY_FORM)}
+      submitLabel={ta("create")}
+      cancelLabel={ta("cancel")}
+      submitDisabled={!form.type}
+      loading={create.isPending}
+    >
           {/* Order Type */}
           <div className="grid gap-1.5">
-            <Label htmlFor="ord-type">{t("filters.type")}</Label>
-            <Select value={form.type} onValueChange={(v) => patch("type", v)}>
-              <SelectTrigger id="ord-type" className="h-9">
-                <SelectValue placeholder={t("filters.allTypes")} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="dine-in">
-                  {t("type.dine_in")}
-                </SelectItem>
-                <SelectItem value="takeaway">
-                  {t("type.takeaway")}
-                </SelectItem>
-                <SelectItem value="delivery">
-                  {t("type.delivery")}
-                </SelectItem>
-              </SelectContent>
-            </Select>
+            <Label>{t("filters.type")}</Label>
+            <div className="grid grid-cols-3 gap-2">
+              {ORDER_TYPES.map(({ value, icon: Icon }) => {
+                const selected = form.type === value;
+                return (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => patch("type", value)}
+                    className={cn(
+                      "flex flex-col items-center gap-1.5 rounded-lg border px-2 py-3 text-xs font-medium transition-colors",
+                      selected
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-muted/30 text-muted-foreground hover:bg-muted/60",
+                    )}
+                  >
+                    <Icon className="size-4.5" />
+                    {t(`type.${value === "dine-in" ? "dine_in" : value}`)}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Table (dine-in only) */}
-          {isDineIn && (
+          <div className="grid gap-4 rounded-lg bg-muted/30 p-3">
+            {/* Table (dine-in only) */}
+            {isDineIn && (
+              <div className="grid gap-1.5">
+                <Label htmlFor="ord-table">{t("filters.table")}</Label>
+                <Select value={form.tableId} onValueChange={(v) => patch("tableId", v)}>
+                  <SelectTrigger id="ord-table" className="h-9 w-full bg-background">
+                    <SelectValue placeholder={t("filters.allTables")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {tables.map((table) => (
+                      <SelectItem key={table.id} value={table.id}>
+                        {t("filters.tableLabel", { number: table.number })}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {/* Waiter */}
             <div className="grid gap-1.5">
-              <Label htmlFor="ord-table">{t("filters.table")}</Label>
-              <Select value={form.tableId} onValueChange={(v) => patch("tableId", v)}>
-                <SelectTrigger id="ord-table" className="h-9">
-                  <SelectValue placeholder={t("filters.allTables")} />
+              <Label htmlFor="ord-waiter">{t("filters.waiter")}</Label>
+              <Select value={form.waiterId} onValueChange={(v) => patch("waiterId", v)}>
+                <SelectTrigger id="ord-waiter" className="h-9 w-full bg-background">
+                  <div className="flex items-center gap-2">
+                    <UserRound className="size-4 text-muted-foreground" />
+                    <SelectValue placeholder={t("filters.allWaiters")} />
+                  </div>
                 </SelectTrigger>
                 <SelectContent>
-                  {tables.map((table) => (
-                    <SelectItem key={table.id} value={table.id}>
-                      {t("filters.tableLabel", { number: table.number })}
+                  {waiters.map((w) => (
+                    <SelectItem key={w.id} value={w.id}>
+                      <div className="flex items-center gap-2">
+                        <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-semibold text-primary">
+                          {w.name.charAt(0).toUpperCase()}
+                        </span>
+                        {w.name}
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-          )}
-
-          {/* Waiter */}
-          <div className="grid gap-1.5">
-            <Label htmlFor="ord-waiter">{t("filters.waiter")}</Label>
-            <Select value={form.waiterId} onValueChange={(v) => patch("waiterId", v)}>
-              <SelectTrigger id="ord-waiter" className="h-9">
-                <SelectValue placeholder={t("filters.allWaiters")} />
-              </SelectTrigger>
-              <SelectContent>
-                {waiters.map((w) => (
-                  <SelectItem key={w.id} value={w.id}>
-                    {w.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
-
-          <DialogFooter className="pt-2">
-            <Button type="button" variant="outline" onClick={handleClose} disabled={create.isPending}>
-              {ta("cancel")}
-            </Button>
-            <Button type="submit" disabled={create.isPending || !form.type}>
-              {create.isPending && <Loader2 size={14} className="animate-spin" />}
-              {ta("create")}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+    </FormDialog>
   );
 }

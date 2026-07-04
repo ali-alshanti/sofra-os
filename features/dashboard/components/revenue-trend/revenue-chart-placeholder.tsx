@@ -36,7 +36,7 @@ const X_LABELS = [
 
 export function RevenueChartPlaceholder() {
   return (
-    <div>
+    <div dir="ltr">
       {/* Bar area */}
       <div className="relative h-64 flex items-end gap-1">
         {/* Bars */}
@@ -55,7 +55,7 @@ export function RevenueChartPlaceholder() {
               key={label}
               className="w-full flex justify-end border-t border-border/30"
             >
-              <span className="typography-caption text-muted-foreground pr-2 -mt-2">
+              <span className="typography-caption text-muted-foreground pe-2 -mt-2">
                 {label}
               </span>
             </div>

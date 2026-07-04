@@ -111,9 +111,9 @@ export function CurrencyTaxForm({
             value={values.taxRate}
             onChange={(e) => onChange({ taxRate: parseFloat(e.target.value) || 0 })}
             disabled={disabled}
-            className="h-10 pr-8"
+            className="h-10 pe-8"
           />
-          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+          <span className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
             %
           </span>
         </div>

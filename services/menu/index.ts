@@ -4,4 +4,8 @@ export {
   updateMenuItemAvailability,
   updateMenuItem,
   deleteMenuItem,
+  createMenuItem,
+  createCategory,
+  deleteCategory,
+  type CreateMenuItemPayload,
 } from "./menu.service";

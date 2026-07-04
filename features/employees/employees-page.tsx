@@ -20,6 +20,8 @@ import {
 import { useEmployees, useEmployeeSummary, useDeleteEmployee } from "@/lib/hooks/use-employees";
 import { useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/lib/constants/query-keys";
+import { downloadCsv } from "@/lib/utils/export-csv";
+import { useAppToast } from "@/lib/hooks/use-app-toast";
 
 const PAGE_SIZE = 10;
 
@@ -44,6 +46,7 @@ export function EmployeesFeature() {
   });
 
   const deleteEmployee = useDeleteEmployee();
+  const { toastSuccess } = useAppToast();
 
   const employees  = employeesData?.employees ?? [];
   const totalItems = employeesData?.total     ?? 0;
@@ -51,6 +54,25 @@ export function EmployeesFeature() {
 
   function handleRefresh() {
     queryClient.invalidateQueries({ queryKey: QUERY_KEYS.employees.all });
+    toastSuccess(t("toast.refreshed"));
+  }
+
+  function handleExport() {
+    downloadCsv(
+      "employees.csv",
+      ["Employee", "Code", "Department", "Role", "Shift", "Status", "Attendance", "Hire Date"],
+      employees.map((e) => [
+        e.name,
+        e.employeeCode,
+        e.department,
+        e.role,
+        `${e.shift.start} - ${e.shift.end}`,
+        e.status,
+        `${e.attendance.rate}%`,
+        e.hireDate ?? "",
+      ]),
+    );
+    toastSuccess(t("toast.exported"));
   }
 
   function handleConfirmDelete() {
@@ -64,7 +86,7 @@ export function EmployeesFeature() {
     <AppShell>
       <div className="space-y-6">
         <EmployeeHeader
-          onExport={() => undefined}
+          onExport={handleExport}
           onRefresh={handleRefresh}
           onAddEmployee={() => setAddOpen(true)}
         />
@@ -84,6 +106,7 @@ export function EmployeesFeature() {
           onDepartmentChange={(d) => { setFilters(f => ({ ...f, department: d as EmployeeDepartment | "all" })); setCurrentPage(1); }}
           onRoleChange={(r) => { setFilters(f => ({ ...f, role: r as EmployeeRole | "all" })); setCurrentPage(1); }}
           onStatusChange={(st) => { setFilters(f => ({ ...f, status: st as EmployeeStatus | "all" })); setCurrentPage(1); }}
+          onClearFilters={() => { setFilters(DEFAULT_EMPLOYEE_FILTERS); setCurrentPage(1); }}
         />
 
         <EmployeeTable

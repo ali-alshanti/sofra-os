@@ -5,10 +5,11 @@ import { useTranslations } from "next-intl";
 import { StatCard } from "@/components/shared/stat-card";
 import { useDashboardSummary } from "@/lib/hooks/use-dashboard";
 import { formatCurrency } from "@/lib/utils/format-currency";
+import { presetToDateRange, type DateRange } from "@/lib/utils/date";
 
-export function KpiSection({ preset = "Today" }: { preset?: "Today" | "Last 7d" | "Last 30d" }) {
+export function KpiSection({ dateRange = presetToDateRange("Today") }: { dateRange?: DateRange }) {
   const t   = useTranslations("dashboard.kpi");
-  const { data, isLoading } = useDashboardSummary(preset);
+  const { data, isLoading } = useDashboardSummary(dateRange);
 
   const revenueChange = data?.revenueChangePercent != null
     ? {

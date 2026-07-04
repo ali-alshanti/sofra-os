@@ -86,6 +86,7 @@ export function useCreateOrder() {
   const queryClient = useQueryClient();
   const { user } = useCurrentUser();
   const { toastSuccess, toastMutationError } = useAppToast();
+  const t = useTranslations("common.toast.success.orders");
 
   return useMutation({
     mutationFn: (payload: Omit<CreateOrderPayload, "restaurantId">) => {
@@ -95,7 +96,7 @@ export function useCreateOrder() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.orders.all });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.all });
-      toastSuccess("Order created successfully.");
+      toastSuccess(t("created"));
     },
     onError: (err) => {
       toastMutationError(err);

@@ -7,6 +7,7 @@ interface CategorySidebarProps {
   selectedId: string;
   onCategoryChange: (id: string) => void;
   onNewCategory?: () => void;
+  onDeleteCategory?: (id: string) => void;
   className?: string;
 }
 
@@ -15,6 +16,7 @@ export function CategorySidebar({
   selectedId,
   onCategoryChange,
   onNewCategory,
+  onDeleteCategory,
   className,
 }: CategorySidebarProps) {
   return (
@@ -35,6 +37,7 @@ export function CategorySidebar({
               {...cat}
               active={cat.id === selectedId}
               onClick={() => onCategoryChange(cat.id)}
+              onDelete={onDeleteCategory ? () => onDeleteCategory(cat.id) : undefined}
             />
           </li>
         ))}

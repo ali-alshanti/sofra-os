@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useDroppable } from "@dnd-kit/core";
 import { cn } from "@/lib/utils";
 import { KitchenTicket } from "@/features/kitchen/components/kitchen-ticket";
 import type { KitchenOrder, TicketStatus } from "@/features/kitchen/components/kitchen-ticket";
@@ -67,6 +68,7 @@ export function KitchenColumn({
 }: KitchenColumnProps) {
   const t   = useTranslations("kitchen.empty");
   const cfg = COLUMN_CONFIG[status];
+  const { setNodeRef, isOver } = useDroppable({ id: status });
 
   return (
     <div className={cn("flex min-w-0 flex-col gap-4", className)}>
@@ -87,8 +89,14 @@ export function KitchenColumn({
         </h4>
       </div>
 
-      {/* Ticket list — scrollable */}
-      <div className="flex flex-1 flex-col gap-4 overflow-y-auto pr-1">
+      {/* Ticket list — scrollable, droppable */}
+      <div
+        ref={setNodeRef}
+        className={cn(
+          "flex flex-1 flex-col gap-4 overflow-y-auto pe-1 rounded-xl transition-colors",
+          isOver && "bg-primary/5 ring-2 ring-primary/30",
+        )}
+      >
         {loading ? (
           <>
             <TicketSkeleton />

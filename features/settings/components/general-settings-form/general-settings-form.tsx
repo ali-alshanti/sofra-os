@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useRef } from "react";
 import { ImagePlus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
@@ -45,17 +45,51 @@ export function GeneralSettingsForm({
   disabled = false,
 }: GeneralSettingsFormProps) {
   const t = useTranslations("settings.general");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function handleLogoFile(file: File | undefined) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        onChange({ logoUrl: reader.result });
+      }
+    };
+    reader.readAsDataURL(file);
+  }
 
   return (
     <SettingsSectionCard
       title={t("title")}
       description={t("description")}
     >
-      {/* Logo placeholder */}
+      {/* Logo upload */}
       <div className="flex items-center gap-4">
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border-2 border-dashed border-border bg-muted text-muted-foreground">
-          <ImagePlus size={22} />
-        </div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/png,image/jpeg"
+          className="hidden"
+          disabled={disabled}
+          onChange={(e) => handleLogoFile(e.target.files?.[0])}
+        />
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={() => fileInputRef.current?.click()}
+          className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-border bg-muted text-muted-foreground disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {values.logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={values.logoUrl}
+              alt={t("logo")}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <ImagePlus size={22} />
+          )}
+        </button>
         <div className="space-y-1">
           <p className="text-sm font-medium text-foreground">{t("logo")}</p>
           <p className="typography-small text-muted-foreground">

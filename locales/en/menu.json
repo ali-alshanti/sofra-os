@@ -37,5 +37,35 @@
 
   "search": {
     "placeholder": "Search items…"
+  },
+
+  "create": {
+    "title":       "Add Menu Item",
+    "description": "Fill in the details to add a new item to your menu.",
+    "name":                   "Name",
+    "namePlaceholder":        "e.g. Classic Burger",
+    "description_label":     "Description",
+    "descriptionPlaceholder": "Short description shown to customers",
+    "price":                  "Price",
+    "category":                "Category",
+    "categoryPlaceholder":     "Select category",
+    "imageUrl":                "Image URL",
+    "imageUrlPlaceholder":    "https://…",
+    "available":   "Available for order"
+  },
+
+  "createCategory": {
+    "title":           "New Category",
+    "description":     "Add a new category to organize your menu.",
+    "name":            "Name",
+    "namePlaceholder": "Category name"
+  },
+
+  "confirm": {
+    "deleteTitle":               "Delete menu item",
+    "deleteDescription":         "This item will be removed from the menu. This action cannot be undone.",
+    "deleteCategoryTitle":       "Delete category",
+    "deleteCategoryDescription": "This category will be removed from the menu. Items in it will not be deleted, but will need to be reassigned.",
+    "deleteConfirm":             "Delete"
   }
 }
