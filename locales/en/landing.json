@@ -6,7 +6,9 @@
     "faq": "FAQ",
     "contact": "Contact",
     "login": "Login",
-    "liveDemo": "Live Demo"
+    "liveDemo": "Live Demo",
+    "signedIn": "You're signed in",
+    "goToDashboard": "Dashboard"
   },
 
   "hero": {
@@ -92,10 +94,8 @@
 
   "gallery": {
     "title": "A premium experience, everywhere",
-    "subtitle": "Sofra OS looks great on desktop, laptop, and tablet.",
-    "desktop": "Desktop",
-    "laptop": "Laptop",
-    "tablet": "Tablet"
+    "subtitle": "Sofra OS looks great on every screen.",
+    "desktop": "Desktop"
   },
 
   "pricing": {

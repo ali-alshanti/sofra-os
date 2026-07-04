@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { initials } from "@/lib/utils/string";
 import { useLogout } from "@/lib/hooks/use-logout";
 import { useCurrentUser } from "@/lib/hooks/use-auth";
@@ -57,7 +58,7 @@ export function UserMenu() {
           onClick={() => logout.mutate()}
           disabled={logout.isPending}
         >
-          <LogOut size={14} />
+          {logout.isPending ? <Spinner className="size-3.5" /> : <LogOut size={14} />}
           {logout.isPending ? t("signingOut") : t("signOut")}
         </DropdownMenuItem>
       </DropdownMenuContent>

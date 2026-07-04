@@ -25,7 +25,7 @@ export function TablesFeature() {
   const [createTableOpen, setCreateTableOpen]          = useState(false);
 
   const { data: tablesData, isLoading: tablesLoading } = useTables();
-  const { data: reservations = [] }                    = useReservations();
+  const { data: reservations = [], isLoading: reservationsLoading } = useReservations();
   const cancelReservation                              = useCancelReservation();
 
   const selectedTable = [
@@ -59,8 +59,9 @@ export function TablesFeature() {
           </div>
 
           <FloorPlan
-            tables={tablesLoading ? undefined : tablesData?.squareTables}
-            barSeats={tablesLoading ? undefined : tablesData?.barSeats}
+            tables={tablesData?.squareTables}
+            barSeats={tablesData?.barSeats}
+            loading={tablesLoading}
             selectedTableId={selectedTableId}
             onTableSelect={setSelectedTableId}
             className="flex-1"
@@ -69,6 +70,7 @@ export function TablesFeature() {
 
         <ReservationPanel
           reservations={reservations}
+          loading={reservationsLoading}
           onBookTable={() => setCreateOpen(true)}
           onMoreActions={(id) => setPendingCancelId(id)}
           className="hidden md:flex shrink-0"

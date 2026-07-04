@@ -16,7 +16,11 @@ const NAV_LINKS = [
   { href: "#contact", key: "contact" },
 ] as const;
 
-export function LandingNavbar() {
+interface LandingNavbarProps {
+  isAuthenticated?: boolean;
+}
+
+export function LandingNavbar({ isAuthenticated = false }: LandingNavbarProps) {
   const t = useTranslations("landing.nav");
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -63,9 +67,21 @@ export function LandingNavbar() {
 
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/login">{t("login")}</Link>
-          </Button>
+          {isAuthenticated ? (
+            <>
+              <span className="hidden items-center gap-1.5 text-sm text-muted-foreground sm:flex">
+                <span className="size-1.5 rounded-full bg-emerald-500" />
+                {t("signedIn")}
+              </span>
+              <Button asChild variant="secondary" size="sm">
+                <Link href="/dashboard">{t("goToDashboard")}</Link>
+              </Button>
+            </>
+          ) : (
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/login">{t("login")}</Link>
+            </Button>
+          )}
         </div>
       </nav>
     </motion.header>

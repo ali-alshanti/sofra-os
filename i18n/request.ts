@@ -27,6 +27,8 @@ async function loadMessages(locale: "en" | "ar") {
     "inventory",
     "customers",
     "employees",
+    "users",
+    "unauthorized",
     "reports",
     "settings",
   ];

@@ -1,10 +1,12 @@
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 import { CategoryItem, type CategoryItemData } from "./category-item";
 
 interface CategorySidebarProps {
   categories: CategoryItemData[];
   selectedId: string;
+  loading?: boolean;
   onCategoryChange: (id: string) => void;
   onNewCategory?: () => void;
   onDeleteCategory?: (id: string) => void;
@@ -14,6 +16,7 @@ interface CategorySidebarProps {
 export function CategorySidebar({
   categories,
   selectedId,
+  loading = false,
   onCategoryChange,
   onNewCategory,
   onDeleteCategory,
@@ -31,7 +34,13 @@ export function CategorySidebar({
       </p>
 
       <ul className="space-y-1">
-        {categories.map((cat) => (
+        {loading ? (
+          Array.from({ length: 5 }).map((_, i) => (
+            <li key={i}>
+              <Skeleton className="h-9 w-full rounded-lg" />
+            </li>
+          ))
+        ) : categories.map((cat) => (
           <li key={cat.id}>
             <CategoryItem
               {...cat}

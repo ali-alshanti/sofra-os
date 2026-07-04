@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 import { TableCard } from "@/features/tables/components/table-card";
 import type { RestaurantTable } from "@/features/tables/components/table-card";
 
@@ -48,9 +49,37 @@ type TableWithSpan = RestaurantTable & { colSpan?: number };
 interface FloorPlanProps {
   tables?: TableWithSpan[];
   barSeats?: RestaurantTable[];
+  loading?: boolean;
   selectedTableId?: string;
   onTableSelect?: (id: string) => void;
   className?: string;
+}
+
+// ─── Loading skeleton ─────────────────────────────────────────────────────────
+
+function FloorPlanSkeleton({ className }: { className?: string }) {
+  return (
+    <div className={cn("relative overflow-auto", className)}>
+      <div className="p-8 min-w-225">
+        <Skeleton className="mb-4 h-4 w-32" />
+        <div className="grid grid-cols-6 gap-8">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <Skeleton
+              key={i}
+              className={cn(i < 3 ? "col-span-2 min-h-48" : "col-span-1 min-h-32", "rounded-2xl")}
+            />
+          ))}
+        </div>
+        <div className="my-8 border-b-2 border-dashed border-border" />
+        <Skeleton className="mb-4 h-4 w-24" />
+        <div className="flex flex-wrap gap-8">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-24 w-24 rounded-full" />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // ─── FloorPlan ─────────────────────────────────────────────────────────────────
@@ -58,11 +87,14 @@ interface FloorPlanProps {
 export function FloorPlan({
   tables = PLACEHOLDER_TABLES,
   barSeats = PLACEHOLDER_BAR_SEATS,
+  loading = false,
   selectedTableId,
   onTableSelect,
   className,
 }: FloorPlanProps) {
   const t = useTranslations("tables.floorPlan");
+
+  if (loading) return <FloorPlanSkeleton className={className} />;
 
   return (
     <div

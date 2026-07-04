@@ -3,10 +3,10 @@
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
+import Image from "next/image";
 import { Link } from "@/lib/navigation";
 import { Button } from "@/components/ui/button";
 import { MockupFrame } from "@/features/landing/components/mockup-frame";
-import { ScreenMockup } from "@/features/landing/components/screen-mockup";
 
 export function HeroSection() {
   const t = useTranslations("landing.hero");
@@ -72,7 +72,14 @@ export function HeroSection() {
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           >
             <MockupFrame className="shadow-2xl">
-              <ScreenMockup variant="dashboard" />
+              <Image
+                src="/images/hero-dashboard.png"
+                alt={t("headline")}
+                width={1920}
+                height={1080}
+                priority
+                className="w-full h-auto"
+              />
             </MockupFrame>
           </motion.div>
         </motion.div>

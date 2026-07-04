@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -1391,6 +1391,7 @@ export type Database = {
           id: string
           is_active: boolean
           last_seen_at: string | null
+          phone: string | null
           restaurant_id: string | null
           role: Database["public"]["Enums"]["user_role"]
           updated_at: string
@@ -1403,6 +1404,7 @@ export type Database = {
           id: string
           is_active?: boolean
           last_seen_at?: string | null
+          phone?: string | null
           restaurant_id?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
@@ -1415,6 +1417,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           last_seen_at?: string | null
+          phone?: string | null
           restaurant_id?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
@@ -1435,6 +1438,7 @@ export type Database = {
     }
     Functions: {
       current_restaurant_id: { Args: never; Returns: string }
+      current_user_role: { Args: never; Returns: string }
     }
     Enums: {
       customer_loyalty: "platinum" | "gold" | "silver" | "bronze" | "none"
@@ -1670,4 +1674,3 @@ export const Constants = {
     },
   },
 } as const
-

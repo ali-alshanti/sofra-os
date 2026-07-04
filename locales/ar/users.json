@@ -1,0 +1,79 @@
+{
+  "title":       "إدارة المستخدمين",
+  "description": "إدارة حسابات الموظفين والأدوار وصلاحيات الوصول.",
+
+  "filters": {
+    "searchPlaceholder": "بحث عن مستخدم…",
+    "allRoles":          "كل الأدوار",
+    "allStatuses":       "كل الحالات",
+    "clear":             "مسح التصفية"
+  },
+
+  "table": {
+    "user":       "المستخدم",
+    "email":      "البريد الإلكتروني",
+    "phone":      "الهاتف",
+    "role":       "الدور",
+    "status":     "الحالة",
+    "lastLogin":  "آخر تسجيل دخول",
+    "createdAt":  "تاريخ الإنشاء"
+  },
+
+  "neverLoggedIn": "لم يسجّل الدخول",
+
+  "status": {
+    "active":   "نشط",
+    "inactive": "غير نشط"
+  },
+
+  "actions": {
+    "edit":       "تعديل",
+    "deactivate": "إلغاء التفعيل",
+    "reactivate": "إعادة التفعيل"
+  },
+
+  "add": {
+    "title":              "إضافة مستخدم",
+    "description":         "إنشاء حساب موظف جديد وتحديد دوره.",
+    "action":              "إضافة مستخدم",
+    "namePlaceholder":     "الاسم الكامل",
+    "emailPlaceholder":    "البريد الإلكتروني",
+    "phonePlaceholder":    "رقم الهاتف",
+    "selectRole":          "اختر الدور",
+    "password":            "كلمة المرور",
+    "confirmPassword":     "تأكيد كلمة المرور"
+  },
+
+  "edit": {
+    "title":       "تعديل المستخدم",
+    "description": "تحديث بيانات المستخدم ودوره."
+  },
+
+  "confirm": {
+    "deactivateTitle":       "إلغاء تفعيل المستخدم",
+    "deactivateDescription": "سيفقد هذا المستخدم الوصول فورًا. يمكنك إعادة تفعيله لاحقًا.",
+    "deactivateConfirm":     "إلغاء التفعيل",
+    "reactivateTitle":       "إعادة تفعيل المستخدم",
+    "reactivateDescription": "سيستعيد هذا المستخدم الوصول إلى النظام.",
+    "reactivateConfirm":     "إعادة التفعيل"
+  },
+
+  "empty": {
+    "title":       "لا يوجد مستخدمون",
+    "description": "ستظهر حسابات الموظفين هنا. حاول تعديل عوامل التصفية."
+  },
+
+  "toast": {
+    "refreshed": "تم تحديث قائمة المستخدمين."
+  },
+
+  "validation": {
+    "nameRequired":            "الاسم الكامل مطلوب.",
+    "emailRequired":           "البريد الإلكتروني مطلوب.",
+    "emailInvalid":            "يرجى إدخال بريد إلكتروني صحيح.",
+    "roleRequired":            "يرجى اختيار دور.",
+    "passwordMinLength":       "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.",
+    "confirmPasswordRequired":"يرجى تأكيد كلمة المرور.",
+    "passwordsMustMatch":      "كلمتا المرور غير متطابقتين."
+  }
+}

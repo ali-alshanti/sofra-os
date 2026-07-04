@@ -22,10 +22,12 @@ export const MODULE_ACCESS: Record<UserRole, AppRoute[]> = {
     ROUTES.REPORTS,
     ROUTES.SETTINGS,
   ],
-  Cashier: [ROUTES.DASHBOARD, ROUTES.ORDERS, ROUTES.CUSTOMERS, ROUTES.TABLES, ROUTES.SETTINGS],
-  Waiter: [ROUTES.DASHBOARD, ROUTES.ORDERS, ROUTES.TABLES, ROUTES.SETTINGS],
-  "Kitchen Staff": [ROUTES.DASHBOARD, ROUTES.KITCHEN, ROUTES.SETTINGS],
-  "Inventory Manager": [ROUTES.DASHBOARD, ROUTES.INVENTORY, ROUTES.SETTINGS],
+  // Settings holds restaurant-wide configuration (business hours, tax,
+  // integrations, etc.) — restricted to Owner/Manager, not day-to-day staff.
+  Cashier: [ROUTES.DASHBOARD, ROUTES.ORDERS, ROUTES.CUSTOMERS, ROUTES.TABLES],
+  Waiter: [ROUTES.DASHBOARD, ROUTES.ORDERS, ROUTES.TABLES],
+  "Kitchen Staff": [ROUTES.DASHBOARD, ROUTES.KITCHEN],
+  "Inventory Manager": [ROUTES.DASHBOARD, ROUTES.INVENTORY],
 };
 
 /** Routes with no explicit module (e.g. root/login) are always reachable once authenticated. */

@@ -1,0 +1,79 @@
+{
+  "title":       "User Management",
+  "description": "Manage staff accounts, roles, and access.",
+
+  "filters": {
+    "searchPlaceholder": "Search users…",
+    "allRoles":          "All Roles",
+    "allStatuses":       "All Statuses",
+    "clear":             "Clear filters"
+  },
+
+  "table": {
+    "user":       "User",
+    "email":      "Email",
+    "phone":      "Phone",
+    "role":       "Role",
+    "status":     "Status",
+    "lastLogin":  "Last Login",
+    "createdAt":  "Created At"
+  },
+
+  "neverLoggedIn": "Never",
+
+  "status": {
+    "active":   "Active",
+    "inactive": "Inactive"
+  },
+
+  "actions": {
+    "edit":       "Edit",
+    "deactivate": "Deactivate",
+    "reactivate": "Reactivate"
+  },
+
+  "add": {
+    "title":              "Add User",
+    "description":         "Create a new staff account and assign a role.",
+    "action":              "Add User",
+    "namePlaceholder":     "Full name",
+    "emailPlaceholder":    "Email address",
+    "phonePlaceholder":    "Phone number",
+    "selectRole":          "Select role",
+    "password":            "Password",
+    "confirmPassword":     "Confirm Password"
+  },
+
+  "edit": {
+    "title":       "Edit User",
+    "description": "Update this user's profile and role."
+  },
+
+  "confirm": {
+    "deactivateTitle":       "Deactivate User",
+    "deactivateDescription": "This user will lose access immediately. You can reactivate them later.",
+    "deactivateConfirm":     "Deactivate",
+    "reactivateTitle":       "Reactivate User",
+    "reactivateDescription": "This user will regain access to the system.",
+    "reactivateConfirm":     "Reactivate"
+  },
+
+  "empty": {
+    "title":       "No users found",
+    "description": "Staff accounts will appear here. Try adjusting your filters."
+  },
+
+  "toast": {
+    "refreshed": "User list refreshed."
+  },
+
+  "validation": {
+    "nameRequired":            "Full name is required.",
+    "emailRequired":           "Email address is required.",
+    "emailInvalid":            "Please enter a valid email address.",
+    "roleRequired":            "Please select a role.",
+    "passwordMinLength":       "Password must contain at least 6 characters.",
+    "confirmPasswordRequired":"Please confirm the password.",
+    "passwordsMustMatch":      "Passwords do not match."
+  }
+}

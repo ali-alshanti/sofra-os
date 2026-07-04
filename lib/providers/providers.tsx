@@ -5,6 +5,7 @@ import { useLocale } from "next-intl";
 import { Direction } from "radix-ui";
 import { ThemeProvider } from "@/lib/providers/theme-provider";
 import { ReactQueryProvider } from "@/lib/providers/react-query-provider";
+import { LoadingOverlayProvider } from "@/lib/providers/loading-overlay-provider";
 import { Toaster } from "@/components/ui/toaster";
 
 interface ProvidersProps {
@@ -24,7 +25,9 @@ export function Providers({ children }: ProvidersProps) {
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <LoadingOverlayProvider>
+            {children}
+          </LoadingOverlayProvider>
           <Toaster />
         </ThemeProvider>
       </ReactQueryProvider>

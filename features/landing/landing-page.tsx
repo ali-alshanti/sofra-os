@@ -11,10 +11,14 @@ import { FaqSection } from "@/features/landing/components/faq-section";
 import { FinalCtaSection } from "@/features/landing/components/final-cta-section";
 import { LandingFooter } from "@/features/landing/components/landing-footer";
 
-export function LandingPage() {
+interface LandingPageProps {
+  isAuthenticated?: boolean;
+}
+
+export function LandingPage({ isAuthenticated = false }: LandingPageProps) {
   return (
     <div className="min-h-screen">
-      <LandingNavbar />
+      <LandingNavbar isAuthenticated={isAuthenticated} />
       <main>
         <HeroSection />
         <StatsSection />

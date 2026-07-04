@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { CalendarDays } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/format-date";
 import { ReservationCard } from "@/features/tables/components/reservation-card";
@@ -13,6 +14,7 @@ import type { Reservation } from "@/features/tables/components/reservation-card"
 
 interface ReservationPanelProps {
   reservations?:       Reservation[];
+  loading?:            boolean;
   onBookTable?:        () => void;
   onReservationClick?: (id: string) => void;
   onMoreActions?:      (id: string) => void;
@@ -23,6 +25,7 @@ interface ReservationPanelProps {
 
 export function ReservationPanel({
   reservations = [],
+  loading = false,
   onBookTable,
   onReservationClick,
   onMoreActions,
@@ -52,7 +55,11 @@ export function ReservationPanel({
 
       {/* Scrollable reservation list */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {reservations.length === 0 ? (
+        {loading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="h-20 w-full rounded-xl" />
+          ))
+        ) : reservations.length === 0 ? (
           <p className="typography-small text-muted-foreground text-center py-8">
             {t("noReservations")}
           </p>

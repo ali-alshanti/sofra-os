@@ -125,7 +125,8 @@ export function MenuFeature() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr]">
 
           <CategorySidebar
-            categories={catsLoading ? [] : categories}
+            categories={categories}
+            loading={catsLoading}
             selectedId={activeCategoryId}
             onCategoryChange={setSelectedCategory}
             onNewCategory={() => setAddCategoryOpen(true)}

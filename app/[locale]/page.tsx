@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { LandingPage } from "@/features/landing";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -30,6 +31,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default function LocaleRootPage() {
-  return <LandingPage />;
+export default async function LocaleRootPage() {
+  const supabase = await getSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  return <LandingPage isAuthenticated={!!user} />;
 }

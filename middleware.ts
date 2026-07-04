@@ -2,6 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "@/i18n/routing";
+import { hasAccess } from "@/lib/permissions";
+import type { UserRole } from "@/types/auth";
 
 // ─── Locale middleware (handles language routing + Accept-Language detection) ──
 const intlMiddleware = createMiddleware(routing);
@@ -89,6 +91,17 @@ export async function middleware(request: NextRequest) {
     const loginUrl = getLocalePath(request.nextUrl, "/login");
     loginUrl.searchParams.set("redirectTo", pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  // Authenticated user visiting a page their role doesn't grant access to
+  if (user && !pub) {
+    const stripped = pathname.replace(/^\/(en|ar)/, "") || "/";
+    if (stripped !== "/403") {
+      const { data: roleName } = await supabase.rpc("current_user_role");
+      if (!hasAccess(roleName as UserRole | undefined, stripped)) {
+        return NextResponse.redirect(getLocalePath(request.nextUrl, "/403"));
+      }
+    }
   }
 
   return response;

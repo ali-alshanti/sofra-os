@@ -2,6 +2,11 @@
   "appName": "Sofra OS",
   "appTagline": "Sofra Restaurant Operations Platform",
 
+  "loadingOverlay": {
+    "signingIn":  "Signing you in…",
+    "signingOut": "Signing you out…"
+  },
+
   "nav": {
     "dashboard":  "Dashboard",
     "orders":     "Orders",
@@ -11,6 +16,7 @@
     "inventory":  "Inventory",
     "customers":  "Customers",
     "employees":  "Employees",
+    "users":      "User Management",
     "reports":    "Reports",
     "settings":   "Settings"
   },
@@ -171,6 +177,12 @@
         "updated":       "Employee updated successfully.",
         "statusUpdated": "Employee status updated.",
         "deleted":       "Employee removed successfully."
+      },
+      "users": {
+        "created":        "User created successfully.",
+        "updated":        "User updated successfully.",
+        "deactivated":    "User deactivated.",
+        "reactivated":    "User reactivated."
       },
       "customers": {
         "created": "Customer added successfully.",

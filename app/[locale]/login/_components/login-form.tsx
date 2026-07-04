@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Eye, EyeOff, Loader2, UtensilsCrossed } from "lucide-react";
+import { Eye, EyeOff, UtensilsCrossed } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import { Button } from "@/components/ui/button";
@@ -144,16 +144,9 @@ export function LoginForm() {
           <Button
             type="submit"
             className="w-full"
-            disabled={login.isPending || isSubmitting}
+            isLoading={login.isPending || isSubmitting}
           >
-            {(login.isPending || isSubmitting) ? (
-              <>
-                <Loader2 className="me-2 h-4 w-4 animate-spin" />
-                {t("signingIn")}
-              </>
-            ) : (
-              t("signIn")
-            )}
+            {(login.isPending || isSubmitting) ? t("signingIn") : t("signIn")}
           </Button>
         </form>
 
