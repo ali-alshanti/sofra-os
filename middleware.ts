@@ -97,9 +97,15 @@ export async function middleware(request: NextRequest) {
   if (user && !pub) {
     const stripped = pathname.replace(/^\/(en|ar)/, "") || "/";
     if (stripped !== "/403") {
-      const { data: roleName } = await supabase.rpc("current_user_role");
-      if (!hasAccess(roleName as UserRole | undefined, stripped)) {
-        return NextResponse.redirect(getLocalePath(request.nextUrl, "/403"));
+      try {
+        const { data: roleName } = await supabase.rpc("current_user_role");
+        if (!hasAccess(roleName as UserRole | undefined, stripped)) {
+          return NextResponse.redirect(getLocalePath(request.nextUrl, "/403"));
+        }
+      } catch (error) {
+        // Role check is a soft gate — never let a transient RPC/network
+        // failure take down the whole edge function for every request.
+        console.error("middleware: current_user_role check failed", error);
       }
     }
   }
