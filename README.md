@@ -1,4 +1,4 @@
-# Sofra OS
+# Sofra-OS
 
 Sofra OS is a restaurant management system built with Next.js and Supabase. The application helps manage daily restaurant operations through a single dashboard, including orders, menu items, inventory, employees, customers, reservations, reports, and restaurant settings.
 
